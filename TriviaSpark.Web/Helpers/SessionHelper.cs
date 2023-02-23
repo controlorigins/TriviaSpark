@@ -36,20 +36,20 @@ public static class SessionHelper
     /// <param name="session">The session instance.</param>
     /// <param name="key">The key of the stored object in the session.</param>
     /// <returns>The object retrieved from the session, or null if the object was not found or could not be deserialized.</returns>
-    public static T GetObjectFromJson<T>(this ISession session, string key) where T : class
+    public static T? GetObjectFromJson<T>(this ISession session, string key) where T : class
     {
-        if (session == null)
+        if (session is null)
         {
             throw new ArgumentNullException(nameof(session));
         }
 
-        if (key == null)
+        if (key is null)
         {
             throw new ArgumentNullException(nameof(key));
         }
 
-        string json = session.GetString(key);
-        if (json == null)
+        string? json = session.GetString(key);
+        if (json is null)
         {
             return default;
         }

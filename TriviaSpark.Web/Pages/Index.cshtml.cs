@@ -19,16 +19,14 @@ public class TriviaModel : PageModel
         _logger = logger;
         _service = getCallService;
         _httpContextAccessor = httpContextAccessor;
-        sessionMatch ??= httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<TriviaMatch>("TriviaMatch");
-        sessionMatch ??= new TriviaMatch();
+        sessionMatch ??= httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<TriviaMatch>("TriviaMatch") ?? new TriviaMatch();
     }
 
     private TriviaMatch TriviaMatch
     {
         get
         {
-            sessionMatch ??= _httpContextAccessor.HttpContext.Session.GetObjectFromJson<TriviaMatch>("TriviaMatch");
-            sessionMatch ??= new TriviaMatch();
+            sessionMatch ??= _httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<TriviaMatch>("TriviaMatch") ?? new TriviaMatch();
             return sessionMatch;
         }
     }
@@ -38,7 +36,7 @@ public class TriviaModel : PageModel
         if (TriviaMatch.TriviaQuestions.Count == 0 || TriviaMatch.IsMatchFinished())
         {
             await TriviaMatch.LoadTriviaQuestions(_service, 2, ct);
-            _httpContextAccessor.HttpContext.Session.SetObjectAsJson<TriviaMatch>("TriviaMatch", TriviaMatch);
+            _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson<TriviaMatch>("TriviaMatch", TriviaMatch);
         }
         TheTrivia = TriviaMatch.GetRandomTrivia() ?? new TriviaQuestion() { };
 

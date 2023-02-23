@@ -9,7 +9,7 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
         internal class OpenTBbResponse
         {
             public int response_code { get; set; }
-            public Trivia[] results { get; set; }
+            public Trivia[] results { get; set; } 
         }
 
         internal enum Difficulty
