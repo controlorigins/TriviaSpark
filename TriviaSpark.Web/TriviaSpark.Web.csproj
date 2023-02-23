@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Deterministic>false</Deterministic>
+		<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+		<AssemblyVersion>7.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(ddHH)).$([System.DateTime]::UtcNow.ToString(mmss))</AssemblyVersion>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/controlorigins/TriviaSpark</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\HttpClientDecorator\HttpClientDecorator.csproj" />
+	  <ProjectReference Include="..\TriviaSpark.Core\TriviaSpark.Core.csproj" />
+	  <ProjectReference Include="..\TriviaSpark.OpenTriviaDb\TriviaSpark.OpenTriviaDb.csproj" />
+	</ItemGroup>
+</Project>
