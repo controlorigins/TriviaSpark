@@ -1,7 +1,15 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("TriviaSparkWebContextConnection") ?? throw new InvalidOperationException("Connection string 'TriviaSparkWebContextConnection' not found.");
+
+builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(connectionString));
+
+builder.Services.AddDefaultIdentity<TriviaSparkWebUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TriviaSparkWebContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
