@@ -29,4 +29,9 @@
 	  <ProjectReference Include="..\TriviaSpark.Core\TriviaSpark.Core.csproj" />
 	  <ProjectReference Include="..\TriviaSpark.OpenTriviaDb\TriviaSpark.OpenTriviaDb.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="TriviaSpark.Web.db">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

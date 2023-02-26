@@ -34,7 +34,7 @@ public class TriviaModel : PageModel
             MatchQuestions = new List<MatchQuestion>(),
             MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
             MatchDate = DateTime.Now,
-            MatchId = 1,
+            MatchId = 4,
             MatchName = "Trivia Match"
         };
     }
@@ -131,12 +131,9 @@ public class TriviaModel : PageModel
         var TriviaMatch = GetTriviaMatch();
         if (TriviaMatch.MatchQuestions.Count == 0 || TriviaMatch.IsMatchFinished())
         {
-            await GetMoreQuestions(ct);
-
-            // _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
+            TriviaMatch = await GetMoreQuestions(ct);
         }
         TheTrivia = TriviaMatch.GetRandomTrivia() ?? new Question() { };
-
     }
 
     public async Task<IActionResult> OnPostAsync()
