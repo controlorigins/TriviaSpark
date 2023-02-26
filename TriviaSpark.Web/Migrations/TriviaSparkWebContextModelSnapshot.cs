@@ -146,7 +146,6 @@ namespace TriviaSpark.Web.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
-
             modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebUser", b =>
                 {
                     b.Property<string>("Id")

@@ -29,7 +29,7 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
             public string question { get; set; }
             public string type { get; set; }
         }
-        public static async Task LoadTriviaQuestions(this MatchResponse triviaMatch, IHttpGetCallService _service, int questionCount = 1, CancellationToken ct = default)
+        public static async Task LoadTriviaQuestions(this TriviaQuestionSource triviaMatch, IHttpGetCallService _service, int questionCount = 1, CancellationToken ct = default)
         {
             var results = new HttpGetCallResults<OpenTBbResponse>
             {
@@ -46,16 +46,16 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
                 triviaMatch.Questions.Add(Create(trivia));
             }
         }
-        private static Question Create(Trivia trivia)
+        private static TriviaQuestion Create(Trivia trivia)
         {
-            return new Question
+            return new TriviaQuestion
             {
                 Id = trivia.question.GetDeterministicHashCode().ToString(),
                 Category = trivia.category,
                 CorrectAnswer = trivia.correct_answer,
                 Difficulty = trivia.difficulty,
                 IncorrectAnswers = trivia.incorrect_answers.ToList(),
-                QuestionNm = trivia.question,
+                QuestionText = trivia.question,
                 Type = trivia.type
             };
         }

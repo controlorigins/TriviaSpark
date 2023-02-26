@@ -6,13 +6,13 @@ namespace OpenTriviaQA
 {
     public class TriviaQuestion_Extensions
     {
-        public static List<Question> ExtractQuestions(string filePath)
+        public static List<TriviaQuestion> ExtractQuestions(string filePath)
         {
             var lines = File.ReadAllLines(filePath);
 
-            var questions = new List<Question>();
+            var questions = new List<TriviaQuestion>();
             var badanswers = new List<string>();
-            var currentQuestion = new Question();
+            var currentQuestion = new TriviaQuestion();
             var readingAnswers = false;
 
             foreach (var line in lines)
@@ -23,15 +23,15 @@ namespace OpenTriviaQA
                     {
                         currentQuestion.IncorrectAnswers = badanswers.Where(w => w != currentQuestion.CorrectAnswer).ToList();
                         questions.Add(currentQuestion);
-                        currentQuestion = new Question();
+                        currentQuestion = new TriviaQuestion();
                         badanswers = new List<string>();
                         readingAnswers = false;
                     }
                     currentQuestion.Category = Path.GetFileName(filePath);
                     currentQuestion.Difficulty = "Medium";
                     currentQuestion.Type = "Multiple Choice";
-                    currentQuestion.QuestionNm = line.Substring(3).Trim();
-                    currentQuestion.Id = currentQuestion.QuestionNm.GetDeterministicHashCode().ToString();
+                    currentQuestion.QuestionText = line.Substring(3).Trim();
+                    currentQuestion.Id = currentQuestion.QuestionText.GetDeterministicHashCode().ToString();
                 }
                 else if (line.StartsWith("^"))
                 {
@@ -65,7 +65,7 @@ namespace OpenTriviaQA
             return questions;
         }
 
-        public static void WriteQuestionsToJsonFile(List<Question> questions, string filePath)
+        public static void WriteQuestionsToJsonFile(List<TriviaQuestion> questions, string filePath)
         {
             var options = new JsonSerializerOptions
             {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
-using TriviaSpark.Core.Models;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Data;
@@ -12,9 +11,12 @@ public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
         : base(options)
     {
     }
-    public DbSet<Match> TriviaMatches { get; set; }
-    public DbSet<Question> TriviaQuestions { get; set; }
-    public DbSet<MatchAnswer> TriviaMatchAnswers { get; set; }
+    public DbSet<Match> Matches { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
+    public DbSet<MatchQuestionAnswer> MatchAnswers { get; set; }
+    public DbSet<MatchQuestion> MatchQuestions { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -24,14 +26,40 @@ public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
         // Add your customizations after calling base.OnModelCreating(builder);
 
         builder.Entity<Match>()
-            .HasOne(t => t.User)
-            .WithMany(u => u.Matches)
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(o => o.User)
+            .WithMany(m => m.Matches)
+            .HasForeignKey(f => f.UserId);
 
-        builder.Entity<Match>()
-            .HasMany(m => m.Questions)
-            .WithMany(q => q.Matches);
+        builder.Entity<MatchQuestion>()
+             .HasKey(mq => new { mq.QuestionId, mq.MatchId });
+
+        builder.Entity<MatchQuestion>()
+            .HasOne(mq => mq.Question)
+            .WithMany(q => q.MatchQuestions)
+            .HasForeignKey(mq => mq.QuestionId);
+
+        builder.Entity<MatchQuestion>()
+            .HasOne(mq => mq.Match)
+            .WithMany(m => m.MatchQuestions)
+            .HasForeignKey(mq => mq.MatchId);
+
+        builder.Entity<MatchQuestionAnswer>()
+             .HasKey(mq => new { mq.MatchId,mq.QuestionId, mq.AnswerId });
+
+        builder.Entity<MatchQuestionAnswer>()
+            .HasOne(o => o.Match)
+            .WithMany(m => m.MatchQuestionAnswers)
+            .HasForeignKey(f => f.AnswerId);
+
+        builder.Entity<MatchQuestionAnswer>()
+            .HasOne(o => o.Question)
+            .WithMany(m => m.MatchQuestionAnswers)
+            .HasForeignKey(f => f.QuestionId);
+
+        builder.Entity<MatchQuestionAnswer>()
+            .HasOne(o => o.Answer)
+            .WithMany(m => m.MatchQuestionAnswers)
+            .HasForeignKey(f => f.AnswerId);
 
     }
 }

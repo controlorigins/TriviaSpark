@@ -25,11 +25,11 @@ builder.Services.AddHttpClient("TriviaSpark", client =>
 
     client.DefaultRequestHeaders.Add("Accept", "application/json");
     client.DefaultRequestHeaders.Add("User-Agent", "TriviaSpark");
-    client.DefaultRequestHeaders.Add("X-Request-Id", Guid.NewGuid().ToString());
+    client.DefaultRequestHeaders.Add("X-Request-QuestionId", Guid.NewGuid().ToString());
     client.DefaultRequestHeaders.Add("X-Request-Source", "TriviaSpark");
 });
 
-builder.Services.AddSingleton<IHttpGetCallService>(serviceProvider =>
+builder.Services.AddSingleton(serviceProvider =>
 {
     var logger = serviceProvider.GetRequiredService<ILogger<HttpGetCallService>>();
     var telemetryLogger = serviceProvider.GetRequiredService<ILogger<HttpGetCallServiceTelemetry>>();

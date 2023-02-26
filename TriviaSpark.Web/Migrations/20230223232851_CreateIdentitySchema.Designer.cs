@@ -22,7 +22,7 @@ namespace TriviaSpark.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("QuestionId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -37,7 +37,7 @@ namespace TriviaSpark.Web.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuestionId");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -48,7 +48,7 @@ namespace TriviaSpark.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -62,7 +62,7 @@ namespace TriviaSpark.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuestionId");
 
                     b.HasIndex("RoleId");
 
@@ -71,7 +71,7 @@ namespace TriviaSpark.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -85,7 +85,7 @@ namespace TriviaSpark.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuestionId");
 
                     b.HasIndex("UserId");
 
@@ -154,7 +154,7 @@ namespace TriviaSpark.Web.Migrations
 
             modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebUser", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("QuestionId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
@@ -204,7 +204,7 @@ namespace TriviaSpark.Web.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuestionId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");

@@ -1,20 +1,17 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.RegularExpressions;
 
 namespace TriviaSpark.Core.Models
 {
-    public class Question
+    public class TriviaQuestion
     {
-        public ICollection<Match> Matches;
-
         public string Id { get; set; }
         public string Category { get; set; }
         public string CorrectAnswer { get; set; }
         public string Difficulty { get; set; }
-        public List<QuestionAnswers> Answers { get; set; }
-        public string QuestionNm { get; set; }
+        public List<TriviaQuestionAnswers> Answers { get; set; }
+        public string QuestionText { get; set; }
         public string Type { get; set; }
 
         [NotMapped]
@@ -22,20 +19,20 @@ namespace TriviaSpark.Core.Models
         { 
             get
             {
-                if (Answers is null) Answers = new List<QuestionAnswers>();
+                if (Answers is null) Answers = new List<TriviaQuestionAnswers>();
 
-                return Answers.Where(w => w.IsCorrect == false).Select(s => s.Answer).ToList();
+                return Answers.Where(w => w.IsCorrect == false).Select(s => s.AnswerText).ToList();
             }
             set
             {
-                if(Answers is null) Answers = new List<QuestionAnswers>();
+                if(Answers is null) Answers = new List<TriviaQuestionAnswers>();
 
                 Answers.Clear();
                 foreach(var answer in value)
                 {
-                    Answers.Add(new QuestionAnswers()
+                    Answers.Add(new TriviaQuestionAnswers()
                     {
-                        Answer = answer,
+                        AnswerText = answer,
                         IsCorrect = false,
                         QuestionId = Id,
                         Value = 0
@@ -45,12 +42,12 @@ namespace TriviaSpark.Core.Models
         }
     }
 
-    public class QuestionAnswers
+    public class TriviaQuestionAnswers
     { 
         [Key]
         public int Id { get; set; } 
         public string QuestionId { get; set; }
-        public string Answer { get; set; }
+        public string AnswerText { get; set; }
         public bool IsCorrect { get; set; }
         public int Value { get; set; }
     }

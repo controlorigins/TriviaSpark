@@ -27,7 +27,7 @@ public class TriviaModel : PageModel
         _service = getCallService;
         _httpContextAccessor = httpContextAccessor;
         dbContext = triviaSparkWebContext;
-        sessionMatch ??= httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("MatchResponse") ?? CreateMatch();
+        sessionMatch ??= httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("TriviaQuestionSource") ?? CreateMatch();
     }
 
     private static Match CreateMatch()
@@ -35,10 +35,10 @@ public class TriviaModel : PageModel
         return new Match()
         {
             UserId = "66eae7b7-c163-4913-8aaf-421a23f0d5d9",
-            Questions = new List<Questions>(),
-            Answers = new List<QuestionAnswer>(),
+            MatchQuestions = new List<MatchQuestion>(),
+            MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
             MatchDate = DateTime.Now,
-            Id = 1,
+            MatchId = 1,
             MatchName = "Trivia Match"
         };
     }
@@ -46,35 +46,55 @@ public class TriviaModel : PageModel
     private async Task<MatchResponse> GetMoreQuestions(CancellationToken ct)
     {
         MatchResponse response = new();
-        await response.LoadTriviaQuestions(_service, 2, ct);
-        foreach (var question in response.Questions)
+        TriviaQuestionSource source = new();
+        await source.LoadTriviaQuestions(_service, 2, ct);
+        foreach (var question in source.Questions)
         {
-            var existingQuestion = dbContext.TriviaQuestions.Find(question.Id);
+            var existingQuestion = dbContext.Questions.Find(question.Id);
             if (existingQuestion is null)
             {
-                dbContext.TriviaQuestions.Add(question);
+                var dbQuestion = Create(question);
+                dbContext.Questions.Add(dbQuestion);
+                response.Questions.Add(dbQuestion);
+
             }
             await dbContext.SaveChangesAsync(ct);
 
-            var existingMatch = dbContext.TriviaMatches.Find(TriviaMatch.Id);
+            var existingMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
             if (existingMatch is null)
             {
-                dbContext.TriviaMatches.Add(TriviaMatch);
+                dbContext.Matches.Add(TriviaMatch);
                 await dbContext.SaveChangesAsync(ct);
             }
 
-            existingMatch = dbContext.TriviaMatches.Where(w => w.Id == TriviaMatch.Id).Include(i => i.Questions).ThenInclude(i => i.Answers).FirstOrDefault();
-            var matchQuestion = existingMatch.Questions.Where(w => w.Id == question.Id).FirstOrDefault();
+            existingMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
+                .Include(i => i.MatchQuestions).ThenInclude(i => i.Question)
+                .Include(i=>i.MatchQuestionAnswers).FirstOrDefault();
+            var matchQuestion = existingMatch.MatchQuestions.Where(w => w.QuestionId == question.Id).FirstOrDefault();
         }
 
         return response;
+    }
+
+    private Question Create(TriviaQuestion question)
+    {
+        return new Question()
+        {
+            QuestionId = question.Id,
+            Category = question.Category,
+            Type = question.Type,
+            Difficulty = question.Difficulty,
+            QuestionText = question.QuestionText,
+            CorrectAnswer = question.CorrectAnswer,
+            IncorrectAnswers = question.IncorrectAnswers,
+        };
     }
 
     private Match TriviaMatch
     {
         get
         {
-            sessionMatch ??= _httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("MatchResponse") ?? CreateMatch();
+            sessionMatch ??= _httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("TriviaQuestionSource") ?? CreateMatch();
             return sessionMatch;
         }
     }
@@ -82,24 +102,24 @@ public class TriviaModel : PageModel
 
     public async Task OnGet(CancellationToken ct = default)
     {
-        if (TriviaMatch.Questions.Count == 0 || TriviaMatch.IsMatchFinished())
+        if (TriviaMatch.MatchQuestions.Count == 0 || TriviaMatch.IsMatchFinished())
         {
             MatchResponse response = await GetMoreQuestions(ct);
             foreach (var question in response.Questions)
             {
-                var existingQuestion = TriviaMatch.Questions.Where(w => w.Id == question.Id).FirstOrDefault();
+                var existingQuestion = TriviaMatch.MatchQuestions.Where(w => w.QuestionId == question.QuestionId).FirstOrDefault();
                 if (existingQuestion is null)
                 {
                     TriviaMatch.AddQuestion(question);
                 }
             }
-            var curMatch = dbContext.TriviaMatches.Find(TriviaMatch.Id);
+            var curMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
             if (curMatch is null)
             {
-                dbContext?.TriviaMatches.Add(TriviaMatch);
+                dbContext?.Matches.Add(TriviaMatch);
                 await dbContext.SaveChangesAsync(ct);
             }
-            _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson<Match>("MatchResponse", TriviaMatch);
+            _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
         }
         TheTrivia = TriviaMatch.GetRandomTrivia() ?? new Question() { };
 
@@ -109,12 +129,10 @@ public class TriviaModel : PageModel
     {
         try
         {
-            TheTrivia = TriviaMatch.Questions.FirstOrDefault(w => w.Id == TheTrivia.Id);
-            TheAnswer.Id = TheTrivia.Id;
-            TheAnswer = TriviaMatch.AddAnswer(TheAnswer);
-
-
-            _httpContextAccessor.HttpContext.Session.SetObjectAsJson<Match>("MatchResponse", TriviaMatch);
+            TheTrivia = TriviaMatch.MatchQuestions.FirstOrDefault(w => w.QuestionId == TheTrivia.QuestionId).Question;
+            TheAnswer.QuestionId = TheTrivia.QuestionId;
+            TheAnswer = TriviaMatch.AddAnswer(TheAnswer).Answer;
+            _httpContextAccessor.HttpContext.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
 
         }
         catch (Exception ex)

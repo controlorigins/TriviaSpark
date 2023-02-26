@@ -3,7 +3,7 @@ using TriviaSpark.Core.Models;
 
 Console.WriteLine("Start");
 var files = TriviaQuestion_Extensions.GetFilePathsInFolder(@"C:\GitHub\ControlOrigins\TriviaSpark\TriviaSpark.OpenTriviaQA\categories\");
-var questions = new List<Question>();
+var questions = new List<TriviaQuestion>();
 foreach (var file in files)
 {
     Console.WriteLine($"Processing:{Path.GetFileName(file)}");
