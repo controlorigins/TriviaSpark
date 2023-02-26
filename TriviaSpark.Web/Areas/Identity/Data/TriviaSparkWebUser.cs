@@ -14,7 +14,6 @@ public class TriviaSparkWebUser : IdentityUser
 public class MatchResponse
 {
     public List<Question> Questions { get; set; } = new List<Question>();
-    public List<QuestionAnswer> Answers { get; set; } = new List<QuestionAnswer>();
 
 }
 public class QuestionAnswer
@@ -27,27 +26,27 @@ public class QuestionAnswer
         AnswerText = string.Empty;
     }
 
-    public QuestionAnswer(Question? theTrivia, QuestionAnswer answer)
+    public QuestionAnswer(Question? question, QuestionAnswer answer)
     {
         ErrorMessage = string.Empty;
-        if (theTrivia is null)
+        if (question is null)
         {
             IsValid = false;
-            ErrorMessage = "No Trivia specified.";
+            ErrorMessage = "No Question specified.";
             return;
         }
-        if (theTrivia?.QuestionId is null)
+        if (question?.QuestionId is null)
         {
             IsValid = false;
-            ErrorMessage = "No Trivia QuestionId specified.";
+            ErrorMessage = "No QuestionId specified.";
         }
         else
         {
             IsValid = true;
             ErrorMessage = string.Empty;
-            QuestionId = theTrivia.QuestionId;
+            QuestionId = question.QuestionId;
             AnswerText = answer.AnswerText;
-            IsCorrect = (theTrivia.CorrectAnswer == answer.AnswerText);
+            IsCorrect = (question.CorrectAnswer == answer.AnswerText);
         }
     }
     [Key]
@@ -77,20 +76,6 @@ public class Match
     public string UserId { get; set; }
     public TriviaSparkWebUser User { get; set; }
 
-    public Question AddQuestion(Question question)
-    {
-        var newQuestion = new Question()
-        {
-            QuestionId = question.QuestionId,
-            Category = question.Category,
-            Difficulty = question.Difficulty,
-            QuestionText = question.QuestionText,
-            CorrectAnswer = question.CorrectAnswer,
-            IncorrectAnswers = question.IncorrectAnswers
-        };
-        MatchQuestions.Add(Create(newQuestion));
-        return newQuestion;
-    }
 
     private MatchQuestion Create(Question newQuestion)
     {
@@ -110,7 +95,6 @@ public class Question
     public string QuestionText { get; set; }
 
     public string Category { get; set; }
-    public string CorrectAnswer { get; set; }
     public string Difficulty { get; set; }
     public string Type { get; set; }
     public ICollection<MatchQuestion> MatchQuestions { get; set; }
@@ -118,29 +102,24 @@ public class Question
     public ICollection<QuestionAnswer> Answers { get; set; }
 
     [NotMapped]
+    public string CorrectAnswer
+    {
+        get
+        {
+            Answers ??= new List<QuestionAnswer>();
+
+            return Answers.Where(w => w.IsCorrect == true).Select(s => s.AnswerText).FirstOrDefault();
+        }
+    }
+
+    [NotMapped]
     public List<string> IncorrectAnswers
     {
         get
         {
-            if (Answers is null) Answers = new List<QuestionAnswer>();
+            Answers ??= new List<QuestionAnswer>();
 
             return Answers.Where(w => w.IsCorrect == false).Select(s => s.AnswerText).ToList();
-        }
-        set
-        {
-            if (Answers is null) Answers = new List<QuestionAnswer>();
-
-            Answers.Clear();
-            foreach (var answer in value)
-            {
-                Answers.Add(new QuestionAnswer()
-                {
-                    AnswerText = answer,
-                    IsCorrect = false,
-                    QuestionId = QuestionId,
-                    Value = 0
-                });
-            }
         }
     }
 }
@@ -199,8 +178,8 @@ public static class MatchExtensions
             }
 
             // New Question for this Match
-            var matchQuestion = triviaMatch.MatchQuestions.Where(w=> w.QuestionId == question.QuestionId).FirstOrDefault();
-            if(matchQuestion is null) 
+            var matchQuestion = triviaMatch.MatchQuestions.Where(w => w.QuestionId == question.QuestionId).FirstOrDefault();
+            if (matchQuestion is null)
             {
                 triviaMatch.MatchQuestions.Add(new MatchQuestion()
                 {
@@ -212,19 +191,33 @@ public static class MatchExtensions
             }
         }
     }
-    public static MatchQuestionAnswer AddAnswer(this Match match, QuestionAnswer answer)
+    public static MatchQuestionAnswer? AddAnswer(this Match match, QuestionAnswer answer)
     {
-        MatchQuestionAnswer theAnswer = new()
+        var question = match.MatchQuestions.Where(w => w.QuestionId == answer.QuestionId).FirstOrDefault();
+        if (question is null)
         {
-            MatchId = match.MatchId,
-            Match = match,
-            QuestionId = answer.QuestionId,
-            Question = answer.Question,
-            AnswerId = answer.AnswerId,
-            Answer = answer,
-        };
-        match.MatchQuestionAnswers.Add(theAnswer);
-        return theAnswer;
+            return null;
+        }
+        else
+        {
+            var matchAnswer = question.Question.Answers.Where(w=>w.AnswerText==answer.AnswerText).FirstOrDefault();
+
+            if (matchAnswer is null) return null;
+
+            MatchQuestionAnswer theAnswer = new()
+            {
+                MatchId = match.MatchId,
+                Match = match,
+                QuestionId = answer.QuestionId,
+                Question = question.Question,
+                AnswerId = matchAnswer.AnswerId,
+                Answer = matchAnswer,
+            };
+            match.MatchQuestionAnswers.Add(theAnswer);
+            return theAnswer;
+        }
+
+
     }
     public static Question? GetRandomTrivia(this Match match)
     {

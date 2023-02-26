@@ -1,8 +1,7 @@
 ﻿@page
 @model TriviaModel
 @{
-    var answers = Model?.TheTrivia?.IncorrectAnswers?.ToList() ?? new List<string>() { "MISSING" };
-    answers.Add(Model.TheTrivia.CorrectAnswer);
+    var answers = Model?.TheTrivia?.Answers?.ToList() ?? new();
     answers = answers.OrderBy(x => Guid.NewGuid()).ToList();
 }
 
@@ -41,7 +40,7 @@
                                         @foreach (var answer in answers)
                                         {
                                             <div class="options">
-                                                <input type="radio" asp-for="TheAnswer.AnswerText" value="@answer" /> @Html.Raw(answer)
+                                                <input type="radio" asp-for="TheAnswer.AnswerText" value="@answer.AnswerText" /> @Html.Raw(answer.AnswerText)
                                                 <span class="checkmark"></span>
                                             </div>
                                         }

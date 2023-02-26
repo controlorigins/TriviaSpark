@@ -49,7 +49,7 @@ public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
         builder.Entity<MatchQuestionAnswer>()
             .HasOne(o => o.Match)
             .WithMany(m => m.MatchQuestionAnswers)
-            .HasForeignKey(f => f.AnswerId);
+            .HasForeignKey(f => f.MatchId);
 
         builder.Entity<MatchQuestionAnswer>()
             .HasOne(o => o.Question)

@@ -16,7 +16,7 @@ public class TriviaModel : PageModel
     private readonly ILogger<TriviaModel> _logger;
     private readonly IHttpGetCallService _service;
     private readonly TriviaSparkWebContext dbContext;
-    private Match sessionMatch;
+    private Match? sessionMatch;
 
     public TriviaModel(ILogger<TriviaModel> logger,
         IHttpGetCallService getCallService,
@@ -43,41 +43,71 @@ public class TriviaModel : PageModel
         };
     }
 
-    private async Task<MatchResponse> GetMoreQuestions(CancellationToken ct)
+    private async Task<Match> GetMoreQuestions(CancellationToken ct)
     {
+        sessionMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
+        if (sessionMatch is null)
+        {
+            dbContext.Matches.Add(TriviaMatch);
+            await dbContext.SaveChangesAsync(ct);
+        }
+        sessionMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
+            .Include(i => i.User)
+            .Include(i => i.MatchQuestions).ThenInclude(i => i.Question)
+            .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
+
         MatchResponse response = new();
         TriviaQuestionSource source = new();
         await source.LoadTriviaQuestions(_service, 2, ct);
         foreach (var question in source.Questions)
         {
+            var dbQuestion = Create(question);
             var existingQuestion = dbContext.Questions.Find(question.Id);
             if (existingQuestion is null)
             {
-                var dbQuestion = Create(question);
                 dbContext.Questions.Add(dbQuestion);
-                response.Questions.Add(dbQuestion);
-
-            }
-            await dbContext.SaveChangesAsync(ct);
-
-            var existingMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
-            if (existingMatch is null)
-            {
-                dbContext.Matches.Add(TriviaMatch);
                 await dbContext.SaveChangesAsync(ct);
             }
 
-            existingMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
-                .Include(i => i.MatchQuestions).ThenInclude(i => i.Question)
-                .Include(i=>i.MatchQuestionAnswers).FirstOrDefault();
-            var matchQuestion = existingMatch.MatchQuestions.Where(w => w.QuestionId == question.Id).FirstOrDefault();
+            var matchQuestion = sessionMatch.MatchQuestions.Where(w => w.QuestionId == question.Id).FirstOrDefault();
+            if (matchQuestion is null)
+            {
+                matchQuestion = new MatchQuestion()
+                {
+                    MatchId = sessionMatch.MatchId,
+                    QuestionId = question.Id,
+                    Question = dbQuestion,
+                    Match = sessionMatch
+                };
+                sessionMatch.MatchQuestions.Add(matchQuestion);
+                await dbContext.SaveChangesAsync(ct);
+            }
         }
-
-        return response;
+        return sessionMatch;
     }
 
     private Question Create(TriviaQuestion question)
     {
+        List<QuestionAnswer> answers = new()
+        {
+            new QuestionAnswer()
+            {
+                AnswerText = question.CorrectAnswer,
+                IsCorrect = true,
+                IsValid = true,
+                ErrorMessage = string.Empty,
+            }
+        };
+        foreach (var answer in question.IncorrectAnswers) 
+        {
+            answers.Add(new QuestionAnswer()
+            { 
+                AnswerText = answer,
+                IsCorrect = false,
+                IsValid = true,
+                ErrorMessage = string.Empty,
+            });
+        }
         return new Question()
         {
             QuestionId = question.Id,
@@ -85,8 +115,7 @@ public class TriviaModel : PageModel
             Type = question.Type,
             Difficulty = question.Difficulty,
             QuestionText = question.QuestionText,
-            CorrectAnswer = question.CorrectAnswer,
-            IncorrectAnswers = question.IncorrectAnswers,
+            Answers = answers,
         };
     }
 
@@ -102,44 +131,40 @@ public class TriviaModel : PageModel
 
     public async Task OnGet(CancellationToken ct = default)
     {
+        sessionMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
+            .Include(i => i.User)
+            .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i=>i.Answers)
+            .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
+
         if (TriviaMatch.MatchQuestions.Count == 0 || TriviaMatch.IsMatchFinished())
         {
-            MatchResponse response = await GetMoreQuestions(ct);
-            foreach (var question in response.Questions)
-            {
-                var existingQuestion = TriviaMatch.MatchQuestions.Where(w => w.QuestionId == question.QuestionId).FirstOrDefault();
-                if (existingQuestion is null)
-                {
-                    TriviaMatch.AddQuestion(question);
-                }
-            }
-            var curMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
-            if (curMatch is null)
-            {
-                dbContext?.Matches.Add(TriviaMatch);
-                await dbContext.SaveChangesAsync(ct);
-            }
-            _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
+            await GetMoreQuestions(ct);
+
+            // _httpContextAccessor?.HttpContext?.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
         }
         TheTrivia = TriviaMatch.GetRandomTrivia() ?? new Question() { };
 
     }
 
-    public IActionResult OnPostAsync()
+    public async Task<IActionResult> OnPostAsync()
     {
         try
         {
-            TheTrivia = TriviaMatch.MatchQuestions.FirstOrDefault(w => w.QuestionId == TheTrivia.QuestionId).Question;
-            TheAnswer.QuestionId = TheTrivia.QuestionId;
-            TheAnswer = TriviaMatch.AddAnswer(TheAnswer).Answer;
-            _httpContextAccessor.HttpContext.Session.SetObjectAsJson("TriviaQuestionSource", TriviaMatch);
+            sessionMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
+                .Include(i => i.User)
+                .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+                .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
 
+            TheTrivia = sessionMatch.MatchQuestions.FirstOrDefault(w => w.QuestionId == TheTrivia.QuestionId).Question;
+            TheAnswer.QuestionId = TheTrivia.QuestionId;
+            TheAnswer.Question = TheTrivia;
+            TheAnswer = sessionMatch.AddAnswer(TheAnswer).Answer;
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in Trivia Post");
             return Page();
-
         }
         return Page();
     }

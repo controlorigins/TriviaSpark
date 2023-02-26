@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TriviaSpark.Web.Data;
 
@@ -10,9 +11,11 @@ using TriviaSpark.Web.Data;
 namespace TriviaSpark.Web.Migrations
 {
     [DbContext(typeof(TriviaSparkWebContext))]
-    partial class TriviaSparkWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230226200207_FixQuestionAnswer")]
+    partial class FixQuestionAnswer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -423,7 +426,7 @@ namespace TriviaSpark.Web.Migrations
 
                     b.HasOne("TriviaSpark.Web.Areas.Identity.Data.Match", "Match")
                         .WithMany("MatchQuestionAnswers")
-                        .HasForeignKey("MatchId")
+                        .HasForeignKey("AnswerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
