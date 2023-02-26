@@ -1,11 +1,9 @@
 ﻿
-using System.ComponentModel;
-
-namespace TriviaSpark.Web.Models.Trivia
+namespace TriviaSpark.Core.Models
 {
-    public class TriviaAnswer
+    public class QuestionAnswer
     {
-        public TriviaAnswer()
+        public QuestionAnswer()
         {
             Id = string.Empty;
             IsValid = false;
@@ -14,7 +12,7 @@ namespace TriviaSpark.Web.Models.Trivia
             Answer = string.Empty;
         }
 
-        public TriviaAnswer(TriviaQuestion? theTrivia, TriviaAnswer answer)
+        public QuestionAnswer(Question? theTrivia, QuestionAnswer answer)
         {
             ErrorMessage = string.Empty;
             if (theTrivia is null)

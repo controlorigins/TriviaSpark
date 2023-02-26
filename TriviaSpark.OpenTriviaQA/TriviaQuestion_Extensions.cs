@@ -1,17 +1,18 @@
 ﻿using System.Text.Json;
-using TriviaSpark.Web.Models.Trivia;
+using TriviaSpark.Core.Extensions;
+using TriviaSpark.Core.Models;
 
 namespace OpenTriviaQA
 {
     public class TriviaQuestion_Extensions
     {
-        public static List<TriviaQuestion> ExtractQuestions(string filePath)
+        public static List<Question> ExtractQuestions(string filePath)
         {
             var lines = File.ReadAllLines(filePath);
 
-            var questions = new List<TriviaQuestion>();
+            var questions = new List<Question>();
             var badanswers = new List<string>();
-            var currentQuestion = new TriviaQuestion();
+            var currentQuestion = new Question();
             var readingAnswers = false;
 
             foreach (var line in lines)
@@ -20,17 +21,17 @@ namespace OpenTriviaQA
                 {
                     if (readingAnswers)
                     {
-                        currentQuestion.IncorrectAnswers = badanswers.Where(w => w != currentQuestion.CorrectAnswer).ToArray();
+                        currentQuestion.IncorrectAnswers = badanswers.Where(w => w != currentQuestion.CorrectAnswer).ToList();
                         questions.Add(currentQuestion);
-                        currentQuestion = new TriviaQuestion();
+                        currentQuestion = new Question();
                         badanswers = new List<string>();
                         readingAnswers = false;
                     }
                     currentQuestion.Category = Path.GetFileName(filePath);
                     currentQuestion.Difficulty = "Medium";
                     currentQuestion.Type = "Multiple Choice";
-                    currentQuestion.Question = line.Substring(3).Trim();
-                    currentQuestion.Id = currentQuestion.Question.GetDeterministicHashCode().ToString();
+                    currentQuestion.QuestionNm = line.Substring(3).Trim();
+                    currentQuestion.Id = currentQuestion.QuestionNm.GetDeterministicHashCode().ToString();
                 }
                 else if (line.StartsWith("^"))
                 {
@@ -64,7 +65,7 @@ namespace OpenTriviaQA
             return questions;
         }
 
-        public static void WriteQuestionsToJsonFile(List<TriviaQuestion> questions, string filePath)
+        public static void WriteQuestionsToJsonFile(List<Question> questions, string filePath)
         {
             var options = new JsonSerializerOptions
             {
@@ -99,34 +100,7 @@ namespace OpenTriviaQA
                     Console.WriteLine($"Failed to process file '{filePath}': {ex.Message}");
                 }
             }
-
             return filePaths;
         }
-
-        public static string GetQuestionId()
-        {
-            Thread.Sleep(1);//make everything unique while looping
-            long ticks = (long)DateTime.UtcNow
-            .Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0)).TotalMilliseconds;//EPOCH
-            char[] baseChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-            .ToCharArray();
-
-            int i = 32;
-            char[] buffer = new char[i];
-            int targetBase = baseChars.Length;
-
-            do
-            {
-                buffer[--i] = baseChars[ticks % targetBase];
-                ticks = ticks / targetBase;
-            }
-            while (ticks > 0);
-
-            char[] result = new char[32 - i];
-            Array.Copy(buffer, i, result, 0, 32 - i);
-
-            return new string(result);
-        }
-
     }
 }

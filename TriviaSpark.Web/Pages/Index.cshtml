@@ -33,7 +33,7 @@
                         @if (!Model.IsMatchFinished)
                         {
                             <div class="question ml-sm-5 pl-sm-5 pt-2">
-                                <div class="py-2 h5"><b>Q. @Html.Raw(Model.TheTrivia.Question)</b></div>
+                                <div class="py-2 h5"><b>Q. @Html.Raw(Model.TheTrivia.QuestionNm)</b></div>
                                 <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
                                     <div class="form-group">
                                         <label asp-for="TheAnswer.Answer">Answers</label>

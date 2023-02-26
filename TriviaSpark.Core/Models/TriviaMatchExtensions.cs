@@ -1,30 +1,30 @@
 ﻿
-namespace TriviaSpark.Web.Models.Trivia
+namespace TriviaSpark.Core.Models
 {
     public static class TriviaMatchExtensions
     {
-        public static string GetMatchStatus(this TriviaMatch match)
+        public static string GetMatchStatus(this MatchResponse match)
         {
-            return $"{match.TriviaAnswers.Select(s => s.Id).Distinct().Count()} of {match.TriviaQuestions.Count} in {match.TriviaAnswers.Count} tries.";
+            return $"{match.Answers.Select(s => s.Id).Distinct().Count()} of {match.Questions.Count} in {match.Answers.Count} tries.";
         }
-        public static bool IsMatchFinished(this TriviaMatch match)
+        public static bool IsMatchFinished(this MatchResponse match)
         {
-            return match.TriviaAnswers.Select(s => s.Id).Distinct().Count() == match.TriviaQuestions.Count;
+            return match.Answers.Select(s => s.Id).Distinct().Count() == match.Questions.Count;
         }
-        public static void AddQuestions(this TriviaMatch triviaMatch, List<TriviaQuestion> triviaQuestions)
+        public static void AddQuestions(this MatchResponse triviaMatch, List<Question> triviaQuestions)
         {
-            triviaMatch.TriviaQuestions.AddRange(triviaQuestions);
+            triviaMatch.Questions.AddRange(triviaQuestions);
         }
-        public static TriviaAnswer AddAnswer(this TriviaMatch triviaMatch, TriviaAnswer triviaAnswer)
+        public static QuestionAnswer AddAnswer(this MatchResponse triviaMatch, QuestionAnswer triviaAnswer)
         {
-            var theTrivia = triviaMatch.TriviaQuestions.FirstOrDefault(w => w.Id == triviaAnswer?.Id);
-            var theAnswer = new TriviaAnswer(theTrivia, triviaAnswer);
-            triviaMatch.TriviaAnswers.Add(theAnswer);
+            var theTrivia = triviaMatch.Questions.FirstOrDefault(w => w.Id == triviaAnswer?.Id);
+            var theAnswer = new QuestionAnswer(theTrivia, triviaAnswer);
+            triviaMatch.Answers.Add(theAnswer);
             return theAnswer;
         }
-        public static TriviaQuestion? GetRandomTrivia(this TriviaMatch triviaMatch)
+        public static Question? GetRandomTrivia(this MatchResponse triviaMatch)
         {
-            var result = triviaMatch.TriviaQuestions.Where(e => !triviaMatch.TriviaAnswers.Any(e2 => e2.Id == e.Id)).ToList();
+            var result = triviaMatch.Questions.Where(e => !triviaMatch.Answers.Any(e2 => e2.Id == e.Id)).ToList();
             var random = new Random();
             if (result.Count > 0)
             {
