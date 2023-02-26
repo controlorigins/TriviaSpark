@@ -6,13 +6,11 @@ using TriviaSpark.Core.Models;
 using TriviaSpark.OpenTriviaDb.Extensions;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Data;
-using TriviaSpark.Web.Helpers;
 
 namespace TriviaSpark.Web.Pages;
 
 public class TriviaModel : PageModel
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<TriviaModel> _logger;
     private readonly IHttpGetCallService _service;
     private readonly TriviaSparkWebContext dbContext;
@@ -20,14 +18,12 @@ public class TriviaModel : PageModel
 
     public TriviaModel(ILogger<TriviaModel> logger,
         IHttpGetCallService getCallService,
-        IHttpContextAccessor httpContextAccessor,
         TriviaSparkWebContext triviaSparkWebContext)
     {
         _logger = logger;
         _service = getCallService;
-        _httpContextAccessor = httpContextAccessor;
         dbContext = triviaSparkWebContext;
-        sessionMatch ??= httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("TriviaQuestionSource") ?? CreateMatch();
+        sessionMatch ??= CreateMatch();
     }
 
     private static Match CreateMatch()
@@ -45,6 +41,7 @@ public class TriviaModel : PageModel
 
     private async Task<Match> GetMoreQuestions(CancellationToken ct)
     {
+        var TriviaMatch = GetTriviaMatch();
         sessionMatch = dbContext.Matches.Find(TriviaMatch.MatchId);
         if (sessionMatch is null)
         {
@@ -56,7 +53,6 @@ public class TriviaModel : PageModel
             .Include(i => i.MatchQuestions).ThenInclude(i => i.Question)
             .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
 
-        MatchResponse response = new();
         TriviaQuestionSource source = new();
         await source.LoadTriviaQuestions(_service, 2, ct);
         foreach (var question in source.Questions)
@@ -119,23 +115,20 @@ public class TriviaModel : PageModel
         };
     }
 
-    private Match TriviaMatch
+    private Match GetTriviaMatch()
     {
-        get
-        {
-            sessionMatch ??= _httpContextAccessor?.HttpContext?.Session?.GetObjectFromJson<Match>("TriviaQuestionSource") ?? CreateMatch();
-            return sessionMatch;
-        }
+        sessionMatch ??= CreateMatch();
+        sessionMatch = dbContext.Matches.Where(w => w.MatchId == sessionMatch.MatchId)
+            .Include(i => i.User)
+            .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+            .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
+        sessionMatch ??= CreateMatch();
+        return sessionMatch;
     }
-
 
     public async Task OnGet(CancellationToken ct = default)
     {
-        sessionMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
-            .Include(i => i.User)
-            .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i=>i.Answers)
-            .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
-
+        var TriviaMatch = GetTriviaMatch();
         if (TriviaMatch.MatchQuestions.Count == 0 || TriviaMatch.IsMatchFinished())
         {
             await GetMoreQuestions(ct);
@@ -148,13 +141,9 @@ public class TriviaModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        var TriviaMatch = GetTriviaMatch();
         try
         {
-            sessionMatch = dbContext.Matches.Where(w => w.MatchId == TriviaMatch.MatchId)
-                .Include(i => i.User)
-                .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
-                .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
-
             TheTrivia = sessionMatch.MatchQuestions.FirstOrDefault(w => w.QuestionId == TheTrivia.QuestionId).Question;
             TheAnswer.QuestionId = TheTrivia.QuestionId;
             TheAnswer.Question = TheTrivia;
@@ -174,7 +163,7 @@ public class TriviaModel : PageModel
     {
         get
         {
-            return TriviaMatch.IsMatchFinished();
+            return GetTriviaMatch().IsMatchFinished();
         }
     }
 
@@ -185,7 +174,7 @@ public class TriviaModel : PageModel
     {
         get
         {
-            return TriviaMatch.GetMatchStatus();
+            return GetTriviaMatch().GetMatchStatus();
         }
     }
 
