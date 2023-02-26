@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Data;
@@ -44,7 +43,7 @@ public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
             .HasForeignKey(mq => mq.MatchId);
 
         builder.Entity<MatchQuestionAnswer>()
-             .HasKey(mq => new { mq.MatchId,mq.QuestionId, mq.AnswerId });
+             .HasKey(mq => new { mq.MatchId, mq.QuestionId, mq.AnswerId });
 
         builder.Entity<MatchQuestionAnswer>()
             .HasOne(o => o.Match)

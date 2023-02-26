@@ -23,7 +23,7 @@ namespace TriviaSpark.Web.Migrations
                 table: "Questions",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
         }
     }
 }

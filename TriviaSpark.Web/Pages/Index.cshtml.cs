@@ -94,10 +94,10 @@ public class TriviaModel : PageModel
                 ErrorMessage = string.Empty,
             }
         };
-        foreach (var answer in question.IncorrectAnswers) 
+        foreach (var answer in question.IncorrectAnswers)
         {
             answers.Add(new QuestionAnswer()
-            { 
+            {
                 AnswerText = answer,
                 IsCorrect = false,
                 IsValid = true,
