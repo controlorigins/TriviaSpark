@@ -35,8 +35,8 @@
                                 <div class="py-2 h5"><b>Q. @Html.Raw(Model.TheTrivia.QuestionText)</b></div>
                                 <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
                                     <div class="form-group">
-                                        <label asp-for="TheAnswer.AnswerText">Answers</label>
                                         <hr />
+                                        <label asp-for="TheAnswer.AnswerText"></label>
                                         @foreach (var answer in answers)
                                         {
                                             <div class="options">

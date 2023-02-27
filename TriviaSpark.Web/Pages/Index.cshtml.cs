@@ -34,7 +34,7 @@ public class TriviaModel : PageModel
             MatchQuestions = new List<MatchQuestion>(),
             MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
             MatchDate = DateTime.Now,
-            MatchId = 4,
+            MatchId = 3,
             MatchName = "Trivia Match"
         };
     }
@@ -54,7 +54,7 @@ public class TriviaModel : PageModel
             .Include(i => i.MatchQuestionAnswers).FirstOrDefault();
 
         TriviaQuestionSource source = new();
-        await source.LoadTriviaQuestions(_service, 2, ct);
+        await source.LoadTriviaQuestions(_service, 20, ct);
         foreach (var question in source.Questions)
         {
             var dbQuestion = Create(question);
