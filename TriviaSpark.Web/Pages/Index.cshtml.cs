@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using TriviaSpark.Core.Models;
 using TriviaSpark.OpenTriviaDb.Extensions;
 using TriviaSpark.Web.Areas.Identity.Data;
-using TriviaSpark.Web.Data;
 
 namespace TriviaSpark.Web.Pages;
 

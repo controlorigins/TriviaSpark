@@ -1,5 +1,4 @@
-﻿using TriviaSpark.Web.Data;
-
+﻿
 namespace TriviaSpark.Web.Areas.Identity.Data
 {
     public static class MatchExtensions

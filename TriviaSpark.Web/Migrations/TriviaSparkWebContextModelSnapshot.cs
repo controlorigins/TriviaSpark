@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
-using TriviaSpark.Web.Data;
+using TriviaSpark.Web.Areas.Identity.Data;
 
 #nullable disable
 

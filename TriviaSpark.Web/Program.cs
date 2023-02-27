@@ -2,7 +2,6 @@ using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TriviaSpark.Web.Areas.Identity.Data;
-using TriviaSpark.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TriviaSparkWebContextConnection") ?? throw new InvalidOperationException("Connection string 'TriviaSparkWebContextConnection' not found.");

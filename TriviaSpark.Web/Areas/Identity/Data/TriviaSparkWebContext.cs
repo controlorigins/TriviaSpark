@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TriviaSpark.Web.Areas.Identity.Data;
 
-namespace TriviaSpark.Web.Data;
+namespace TriviaSpark.Web.Areas.Identity.Data;
 
 public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
 {
