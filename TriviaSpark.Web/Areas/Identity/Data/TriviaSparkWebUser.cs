@@ -1,0 +1,11 @@
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TriviaSpark.Web.Areas.Identity.Data;
+
+// Add profile data for application users by adding properties to the TriviaSparkWebUser class
+public class TriviaSparkWebUser : IdentityUser
+{
+    // Navigation property to TriviaQuestionSource table
+    public ICollection<Match> Matches { get; set; }
+}
+

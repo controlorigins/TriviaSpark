@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientDecorator", "HttpClientDecorator\HttpClientDecorator.csproj", "{1A5C28F7-72D6-44A0-B27F-BE86E32E8017}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{66ED63A8-5507-4474-819F-2BE0F1075EFB}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.OpenTriviaDb", "TriviaSpark.OpenTriviaDb\TriviaSpark.OpenTriviaDb.csproj", "{5230671A-6AB9-4AA0-85B7-5EE98B602FD7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Core", "TriviaSpark.Core\TriviaSpark.Core.csproj", "{CF982E12-CDFC-4EEA-B3EA-653095E645EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Web", "TriviaSpark.Web\TriviaSpark.Web.csproj", "{90EDBD00-172F-4066-8CEC-1B3ABDC41688}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTriviaQA", "TriviaSpark.OpenTriviaQA\OpenTriviaQA.csproj", "{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Console", "TriviaSpark.Console\TriviaSpark.Console.csproj", "{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A5C28F7-72D6-44A0-B27F-BE86E32E8017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5C28F7-72D6-44A0-B27F-BE86E32E8017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5C28F7-72D6-44A0-B27F-BE86E32E8017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5C28F7-72D6-44A0-B27F-BE86E32E8017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5230671A-6AB9-4AA0-85B7-5EE98B602FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5230671A-6AB9-4AA0-85B7-5EE98B602FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5230671A-6AB9-4AA0-85B7-5EE98B602FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5230671A-6AB9-4AA0-85B7-5EE98B602FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF982E12-CDFC-4EEA-B3EA-653095E645EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF982E12-CDFC-4EEA-B3EA-653095E645EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF982E12-CDFC-4EEA-B3EA-653095E645EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF982E12-CDFC-4EEA-B3EA-653095E645EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {658A231C-575E-417A-8C05-ECDC0C1B654E}
+	EndGlobalSection
+EndGlobal
