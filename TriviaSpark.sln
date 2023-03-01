@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Web", "TriviaSp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTriviaQA", "TriviaSpark.OpenTriviaQA\OpenTriviaQA.csproj", "{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriviaSpark.Console", "TriviaSpark.Console\TriviaSpark.Console.csproj", "{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Console", "TriviaSpark.Console\TriviaSpark.Console.csproj", "{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

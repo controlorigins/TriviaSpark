@@ -1,8 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TriviaSpark.Core.Models
+namespace OpenTriviaQA.Models
 {
     public class TriviaQuestion
     {
@@ -16,7 +14,7 @@ namespace TriviaSpark.Core.Models
 
         [NotMapped]
         public List<string> IncorrectAnswers
-        { 
+        {
             get
             {
                 if (Answers is null) Answers = new List<TriviaQuestionAnswers>();
@@ -25,10 +23,10 @@ namespace TriviaSpark.Core.Models
             }
             set
             {
-                if(Answers is null) Answers = new List<TriviaQuestionAnswers>();
+                if (Answers is null) Answers = new List<TriviaQuestionAnswers>();
 
                 Answers.Clear();
-                foreach(var answer in value)
+                foreach (var answer in value)
                 {
                     Answers.Add(new TriviaQuestionAnswers()
                     {
@@ -41,15 +39,4 @@ namespace TriviaSpark.Core.Models
             }
         }
     }
-
-    public class TriviaQuestionAnswers
-    { 
-        [Key]
-        public int Id { get; set; } 
-        public string QuestionId { get; set; }
-        public string AnswerText { get; set; }
-        public bool IsCorrect { get; set; }
-        public int Value { get; set; }
-    }
-
 }

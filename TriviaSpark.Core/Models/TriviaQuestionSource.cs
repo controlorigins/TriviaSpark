@@ -1,10 +1,7 @@
-﻿
-namespace TriviaSpark.Core.Models
+﻿namespace TriviaSpark.Core.Models
 {
     public class TriviaQuestionSource
     {
-        public List<TriviaQuestion> Questions { get; set; } = new List<TriviaQuestion>();
-        public List<TriviaQuestionAnswer> Answers { get; set; } = new List<TriviaQuestionAnswer>();
-
+        public List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
     }
 }

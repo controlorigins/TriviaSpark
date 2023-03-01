@@ -1,5 +1,5 @@
 ﻿
-namespace TriviaSpark.Core.Models
+namespace OpenTriviaQA.Models
 {
     public class TriviaQuestionAnswer
     {

@@ -10,7 +10,7 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
         internal class OpenTBbResponse
         {
             public int response_code { get; set; }
-            public Trivia[] results { get; set; } 
+            public Trivia[] results { get; set; }
         }
 
         internal enum Difficulty
@@ -46,18 +46,22 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
                 triviaMatch.Questions.Add(Create(trivia));
             }
         }
-        private static TriviaQuestion Create(Trivia trivia)
+        private static QuestionModel Create(Trivia trivia)
         {
-            return new TriviaQuestion
+            QuestionModel questionModel = new QuestionModel
             {
-                Id = trivia.question.GetDeterministicHashCode().ToString(),
+                QuestionId = trivia.question.GetDeterministicHashCode().ToString(),
                 Category = trivia.category,
-                CorrectAnswer = trivia.correct_answer,
                 Difficulty = trivia.difficulty,
-                IncorrectAnswers = trivia.incorrect_answers.ToList(),
                 QuestionText = trivia.question,
                 Type = trivia.type
             };
+            questionModel.AddAnswer(trivia.correct_answer, true);
+            foreach (var answer in trivia.incorrect_answers)
+            {
+                questionModel.AddAnswer(answer, false);
+            }
+            return questionModel;
         }
     }
 }

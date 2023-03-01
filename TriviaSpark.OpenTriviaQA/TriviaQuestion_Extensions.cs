@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
+﻿using OpenTriviaQA.Models;
+using System.Text.Json;
 using TriviaSpark.Core.Extensions;
-using TriviaSpark.Core.Models;
 
 namespace OpenTriviaQA
 {

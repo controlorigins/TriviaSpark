@@ -1,12 +1,12 @@
-﻿using TriviaSpark.Web.Areas.Identity.Data;
+﻿using System.Security.Claims;
+using TriviaSpark.Core.Models;
 
 namespace TriviaSpark.Web.Areas.Identity.Services
 {
     public interface ITriviaMatchService
     {
-        Task<Match> CreateMatchAsync(string userId, string matchName);
-        Task<Match> GetMoreQuestions(CancellationToken ct);
-        Task<Question> GetQuestionAsync(CancellationToken ct = default);
-        Task<MatchQuestionAnswer?> SaveQuestionAnswerAsync(QuestionAnswer TheAnswer);
+        Task<MatchModel?> GetUserMatch(ClaimsPrincipal user);
+        Task<MatchModel> GetMoreQuestions(MatchModel TheMatch, CancellationToken ct);
+        Task<QuestionAnswerModel> AddAnswerAsync(MatchModel triviaMatch, QuestionAnswerModel currentAnswer, CancellationToken ct = default);
     }
 }

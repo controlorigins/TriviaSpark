@@ -1,5 +1,5 @@
 ﻿using OpenTriviaQA;
-using TriviaSpark.Core.Models;
+using OpenTriviaQA.Models;
 
 Console.WriteLine("Start");
 var files = TriviaQuestion_Extensions.GetFilePathsInFolder(@"C:\GitHub\ControlOrigins\TriviaSpark\TriviaSpark.OpenTriviaQA\categories\");

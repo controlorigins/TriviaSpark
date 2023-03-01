@@ -2,6 +2,7 @@ using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TriviaSparkWebContextConnection") ?? throw new InvalidOperationException("Connection string 'TriviaSparkWebContextConnection' not found.");
@@ -37,6 +38,9 @@ builder.Services.AddSingleton(serviceProvider =>
     IHttpGetCallService telemetryService = new HttpGetCallServiceTelemetry(telemetryLogger, baseService);
     return telemetryService;
 });
+
+builder.Services.AddScoped<ITriviaMatchService, TriviaMatchService>();
+
 
 var app = builder.Build();
 
