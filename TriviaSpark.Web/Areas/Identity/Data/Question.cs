@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TriviaSpark.Web.Areas.Identity.Data
 {
-    public class Question
+    public class Question : BaseEntity
     {
         [Key]
         public string QuestionId { get; set; }
         public string QuestionText { get; set; }
-
         public string Category { get; set; }
         public string Difficulty { get; set; }
         public string Type { get; set; }
+        public string Source { get; set; }
         public ICollection<MatchQuestion> MatchQuestions { get; set; }
         public ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
         public ICollection<QuestionAnswer> Answers { get; set; }

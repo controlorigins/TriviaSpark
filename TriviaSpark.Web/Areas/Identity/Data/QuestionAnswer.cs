@@ -2,7 +2,7 @@
 
 namespace TriviaSpark.Web.Areas.Identity.Data
 {
-    public class QuestionAnswer
+    public class QuestionAnswer : BaseEntity
     {
         public QuestionAnswer()
         {
