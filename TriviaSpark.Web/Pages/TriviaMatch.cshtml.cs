@@ -49,7 +49,6 @@ namespace TriviaSpark.Web.Pages
                     currentAnswer = new QuestionAnswerModel()
                     {
                         IsCorrect = false,
-                        Question = currentQuestion,
                         QuestionId = currentQuestion?.QuestionId ?? string.Empty
                     };
                 }

@@ -123,7 +123,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 IsCorrect = answer.IsCorrect,
                 IsValid = answer.IsValid,
                 QuestionId = answer.QuestionId,
-                Question = Create(answer.Question),
                 Value = answer.Value
             };
         }
