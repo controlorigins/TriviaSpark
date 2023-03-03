@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
-using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Web.Areas.Identity.Services
 {

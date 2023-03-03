@@ -1,6 +1,7 @@
-﻿using TriviaSpark.Core.Utility;
+﻿using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Utility;
 
-namespace TriviaSpark.Core.Models
+namespace TriviaSpark.Core.Questions
 {
     /// <summary>
     /// Represents a provider of items.

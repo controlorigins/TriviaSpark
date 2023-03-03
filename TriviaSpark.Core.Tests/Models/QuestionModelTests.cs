@@ -1,4 +1,4 @@
-﻿using TriviaSpark.Core.Models;
+﻿using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Core.Tests.Models
 {

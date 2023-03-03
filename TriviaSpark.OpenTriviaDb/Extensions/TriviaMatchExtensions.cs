@@ -1,7 +1,7 @@
 ﻿using HttpClientDecorator.Interfaces;
 using HttpClientDecorator.Models;
 using TriviaSpark.Core.Extensions;
-using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.OpenTriviaDb.Extensions
 {

@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Questions;
 using TriviaSpark.OpenTriviaDb.Extensions;
 using TriviaSpark.Web.Areas.Identity.Data;
 

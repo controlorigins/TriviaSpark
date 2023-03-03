@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TriviaSpark.Core.Models
+namespace TriviaSpark.Core.Questions
 {
     public class QuestionAnswerModel
     {
@@ -39,8 +39,6 @@ namespace TriviaSpark.Core.Models
         public int AnswerId { get; set; }
         public string QuestionId { get; set; }
         public QuestionModel Question { get; set; }
-        public ICollection<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; }
-
         public string AnswerText { get; set; }
         public bool IsCorrect { get; set; }
         public bool IsValid { get; set; }

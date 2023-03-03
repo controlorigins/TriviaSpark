@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Models
+﻿namespace TriviaSpark.Core.Match
 {
     public class MatchQuestionAnswerModel
     {

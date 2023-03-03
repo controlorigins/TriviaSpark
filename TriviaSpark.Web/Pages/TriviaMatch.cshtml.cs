@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TriviaSpark.Core.Extensions;
-using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Questions;
 using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Pages
@@ -43,7 +43,7 @@ namespace TriviaSpark.Web.Pages
                 {
                     if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
                     {
-                        // triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
+                        triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
                     }
                     currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
                     currentAnswer = new QuestionAnswerModel()
