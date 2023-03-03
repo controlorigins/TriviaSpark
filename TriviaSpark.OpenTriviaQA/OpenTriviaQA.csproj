@@ -14,11 +14,12 @@
 		<RepositoryUrl>https://github.com/controlorigins/TriviaSpark</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="categories\animals" />
+	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="questions.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
+		<Content Include="categories\**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 	<ItemGroup>

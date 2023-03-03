@@ -20,77 +20,65 @@ namespace TriviaSpark.Web.Pages
 
         public async Task OnGet(CancellationToken ct)
         {
-            triviaMatch = await _matchService.GetUserMatch(User, MatchId);
-            MatchId = triviaMatch.MatchId;
-
-            if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
-            {
-                triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
-            }
-            currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
-            currentAnswer.QuestionId = currentQuestion.QuestionId;
+            SetMatch(await _matchService.GetUserMatch(User, MatchId,ct));
         }
         public async Task<IActionResult> OnPostAsync(CancellationToken ct)
         {
             try
             {
-                currentAnswer = await _matchService.AddAnswerAsync(MatchId, currentAnswer);
-
-
-                triviaMatch = await _matchService.GetUserMatch(User, MatchId);
-
-                if (currentAnswer.IsCorrect)
+                if (currentQuestion?.QuestionId is not null)
                 {
-                    if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
-                    {
-                        triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
-                    }
-                    currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
-                    currentAnswer = new QuestionAnswerModel()
-                    {
-                        IsCorrect = false,
-                        QuestionId = currentQuestion?.QuestionId ?? string.Empty
-                    };
+                    SetMatch(await _matchService.AddAnswerAsync(MatchId, currentAnswer, ct));
                 }
                 else
                 {
-                    currentQuestion = triviaMatch.MatchQuestions.Get(currentAnswer.QuestionId);
-                    currentAnswer.QuestionId = currentQuestion.QuestionId;
+                    if (AddQuestions)
+                    {
+                        SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: 10, ct: ct));
+                    }
+                    else
+                    { 
+                    SetMatch(await _matchService.GetUserMatch(User, MatchId,ct));
+                    }
                 }
             }
             catch (Exception ex)
             {
+                theMatchStatus = $"Error in Trivia Post: {ex.Message}";
                 _logger.LogError(ex, "Error in Trivia Post");
             }
             return Page();
         }
 
-        [BindProperty]
-        public bool IsMatchFinished
+        private void SetMatch(MatchModel? match)
         {
-            get
+            if (match is null)
             {
-                return triviaMatch?.IsMatchFinished() ?? false;
+                IsMatchFinished = true;
+                theMatchStatus = "Match Error";
+                return;
             }
+            triviaMatch = match;
+            MatchId = match.MatchId;
+            currentQuestion = match.CurrentQuestion;
+            currentAnswer = match.CurrentAnswer;
+            IsMatchFinished = match?.IsMatchFinished() ?? false;
+            theMatchStatus = match?.GetMatchStatus() ?? "Trivia Match is not started";
         }
 
+        [BindProperty]
+        public bool IsMatchFinished { get; set; }
+        [BindProperty]
+        public string theMatchStatus { get; set; }
         [BindProperty]
         public QuestionAnswerModel currentAnswer { get; set; } = new QuestionAnswerModel();
         [BindProperty]
-        public string theMatchStatus
-        {
-            get
-            {
-                return triviaMatch?.GetMatchStatus() ?? "Trivia Match is not started";
-            }
-        }
-        [BindProperty]
         public int MatchId { get; set; }
-
         [BindProperty]
         public QuestionModel? currentQuestion { get; set; }
-
         [BindProperty]
         public MatchModel triviaMatch { get; set; }
+        [BindProperty]
+        public bool AddQuestions { get; set; }
     }
 }

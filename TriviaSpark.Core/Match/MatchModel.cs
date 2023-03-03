@@ -7,20 +7,22 @@ namespace TriviaSpark.Core.Match
     {
         [Key]
         public int MatchId { get; set; }
-        public string MatchName { get; set; }
+        public string? MatchName { get; set; }
         public DateTime MatchDate { get; set; }
         public QuestionProvider MatchQuestions { get; set; } = new();
         public ICollection<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
-        public string UserId { get; set; }
-        public UserModel User { get; set; }
+        public string? UserId { get; set; }
+        public UserModel? User { get; set; }
 
-        public override bool Equals(object obj)
+        public QuestionModel? CurrentQuestion { get; set; }
+        public QuestionAnswerModel? CurrentAnswer { get; set; }
+
+        public override bool Equals(object? obj)
         {
-            if (obj == null || !(obj is MatchModel))
+            if (obj is null || obj is not MatchModel)
             {
                 return false;
             }
-
             return MatchId == ((MatchModel)obj).MatchId;
         }
 
@@ -29,9 +31,9 @@ namespace TriviaSpark.Core.Match
             return MatchId.GetHashCode();
         }
 
-        public int CompareTo(MatchModel other)
+        public int CompareTo(MatchModel? other)
         {
-            if (other == null) return 1;
+            if (other is null) return 1;
 
             return MatchId.CompareTo(other.MatchId);
         }
