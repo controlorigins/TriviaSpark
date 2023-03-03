@@ -31,7 +31,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             if (match.MatchId == 0)
             {
-                throw new ArgumentNullException(nameof(match.MatchId));
+                throw new ArgumentNullException(nameof(match));
             }
 
             MatchModel results = new();
@@ -39,7 +39,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             {
                 results.MatchId = match.MatchId;
                 results.MatchName = match.MatchName;
-                results.MatchDate = match.MatchDate;
+                results.MatchDate = match.CreatedDate;
                 results.UserId = match.UserId;
                 results.User = new UserModel()
                 {
@@ -177,7 +177,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 UserId = "66eae7b7-c163-4913-8aaf-421a23f0d5d9",
                 MatchQuestions = new List<MatchQuestion>(),
                 MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
-                MatchDate = DateTime.Now,
                 MatchName = "Trivia Match"
             };
         }
@@ -304,7 +303,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             {
                 MatchQuestions = new List<MatchQuestion>(),
                 MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
-                MatchDate = DateTime.Now,
                 MatchName = "TriviaMatch",
                 UserId = currentUserId
             };

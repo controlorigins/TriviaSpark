@@ -6,6 +6,6 @@ namespace TriviaSpark.Web.Areas.Identity.Data;
 public class TriviaSparkWebUser : IdentityUser
 {
     // Navigation property to QuestionProvider table
-    public ICollection<Match> Matches { get; set; }
+    public virtual ICollection<Match> Matches { get; set; }
 }
 
