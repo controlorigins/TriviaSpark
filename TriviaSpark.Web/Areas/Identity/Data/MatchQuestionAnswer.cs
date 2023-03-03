@@ -1,6 +1,6 @@
 ﻿namespace TriviaSpark.Web.Areas.Identity.Data
 {
-    public class MatchQuestionAnswer
+    public class MatchQuestionAnswer : BaseEntity
     {
         public MatchQuestionAnswer(Question theQuestion, QuestionAnswer theAnswer)
         {

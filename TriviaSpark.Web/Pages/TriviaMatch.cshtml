@@ -25,7 +25,8 @@
             </div>
             <div class="card-body">
                 <form method="post">
-                    @Html.HiddenFor(model =>model.currentQuestion.QuestionId)
+                    @Html.HiddenFor(model =>model.MatchId)
+                    @Html.HiddenFor(model =>model.currentAnswer.QuestionId)
                     <div class="container mt-sm-5 my-1">
                         @if (Model.currentQuestion?.QuestionId is null)
                         {
@@ -79,6 +80,52 @@
         </div>
     </div>
 </div>
+<div>
+    <div class="card">
+        <div class="card-header">
+            <ul>
+                <li>@Html.DisplayFor(model => model.triviaMatch.MatchName)</li>
+                <li>@Html.DisplayFor(model => model.triviaMatch.MatchId)</li>
+                <li>@Html.DisplayFor(model => model.triviaMatch.User.UserName)</li>
+                <li>@Html.DisplayFor(model => model.triviaMatch.MatchDate)</li>
+            </ul>
+        </div>
+        <div class="card-body">
+            @Html.DisplayFor(model => model.triviaMatch.MatchQuestions.Count) Total Questions Count<br />
+            @Model.triviaMatch.MatchQuestionAnswers.Select(s=>s.QuestionId).Distinct().Count() Questions With Answers<br />
+            @Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with only Incorrect Answers<br />
+            @Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with correct Ansers<br />
+            @Model.triviaMatch.MatchQuestionAnswers.Count() Total Answers<br />
+
+            <h2>Correct Questions</h2>
+            <dl>
+                @foreach (var q in Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
+                {
+                    <dt>@Html.Raw(q.QuestionText)</dt>
+                    <dt>@Html.Raw(q.CorrectAnswer)</dt>
+                }
+            </dl>
+            <h2>Incorrect Questions</h2>
+            <dl>
+                @foreach (var q in Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
+                {
+                    <dt>@Html.Raw(q.QuestionText)</dt>
+                    <dd></dd>
+                }
+            </dl>
+
+
+
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
+</div>
+
+
+
+
 @section Scripts {
     <script>
         // Disable client-side validation for this form

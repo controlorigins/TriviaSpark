@@ -8,10 +8,8 @@ namespace TriviaSpark.Core.Models
         public int MatchId { get; set; }
         public string MatchName { get; set; }
         public DateTime MatchDate { get; set; }
-        public ICollection<MatchQuestionModel> MatchQuestions { get; set; }
+        public QuestionProvider MatchQuestions { get; set; } = new();
         public ICollection<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; }
-
-        // Foreign key to User table
         public string UserId { get; set; }
         public UserModel User { get; set; }
     }

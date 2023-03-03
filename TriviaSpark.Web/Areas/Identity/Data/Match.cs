@@ -2,7 +2,18 @@
 
 namespace TriviaSpark.Web.Areas.Identity.Data
 {
-    public class Match
+    public abstract class BaseEntity
+    {
+        public BaseEntity()
+        {
+            CreatedDate = DateTime.Now;
+            ModifiedDate = DateTime.Now;
+        }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+    }
+
+    public class Match : BaseEntity
     {
         [Key]
         public int MatchId { get; set; }

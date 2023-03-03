@@ -1,11 +1,13 @@
-﻿
-namespace TriviaSpark.Core.Models
+﻿using TriviaSpark.Core.Models;
+
+namespace TriviaSpark.Core.Extensions
 {
-    public static class MatchExtensions
+    public static class MatchModel_Extensions
     {
         public static string GetMatchStatus(this MatchModel match)
         {
-            return $"{match.MatchQuestionAnswers.Where(w => w.Answer.IsCorrect).Distinct().Count()} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count} tries.";
+            var correctQuestions = match.MatchQuestions.GetCorrectQuestions(match.MatchQuestionAnswers);
+            return $"{correctQuestions.Count()} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count} tries.";
         }
         public static bool IsMatchFinished(this MatchModel match)
         {
@@ -13,45 +15,39 @@ namespace TriviaSpark.Core.Models
 
             if (match.MatchQuestionAnswers.Count < 1) return false;
 
-            return match.MatchQuestionAnswers.Where(w => w.Answer.IsCorrect).Distinct().Count() == match.MatchQuestions.Count;
+            return match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers).Count == 0;
         }
         public static MatchQuestionAnswerModel? AddAnswer(this MatchModel match, QuestionAnswerModel answer)
         {
-            var question = match.MatchQuestions.Where(w => w.QuestionId == answer.QuestionId).FirstOrDefault();
+            var question = match.MatchQuestions.Get(answer.QuestionId);
             if (question is null)
             {
                 return null;
             }
             else
             {
-                var matchAnswer = question.Question.Answers.Where(w => w.AnswerText == answer.AnswerText).FirstOrDefault();
+                var matchAnswer = question.Answers.Where(w => w.AnswerText == answer.AnswerText).FirstOrDefault();
 
                 if (matchAnswer is null) return null;
 
                 MatchQuestionAnswerModel theAnswer = new()
                 {
                     MatchId = match.MatchId,
-                    Match = match,
-                    QuestionId = answer.QuestionId,
-                    Question = question.Question,
+                    QuestionId = question.QuestionId,
                     AnswerId = matchAnswer.AnswerId,
-                    Answer = matchAnswer,
                 };
                 match.MatchQuestionAnswers.Add(theAnswer);
                 return theAnswer;
             }
-
-
         }
         public static QuestionModel? GetNextQuestion(this MatchModel match)
         {
-            var answeredQuestions = match.MatchQuestionAnswers.Where(w => w.Answer.IsCorrect).Select(s => s.QuestionId).Distinct().ToList();
-            var result = match.MatchQuestions.Where(w => !answeredQuestions.Contains(w.QuestionId)).ToList();
+            var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
             var random = new Random();
-            if (result.Count > 0)
+            if (result.Count() > 0)
             {
                 var index = random.Next(result.Count());
-                return result.ElementAt(index).Question;
+                return result.ElementAt(index);
             }
             return null;
         }

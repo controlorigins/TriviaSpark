@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TriviaSpark.Core.Extensions;
 using TriviaSpark.Core.Models;
 using TriviaSpark.Web.Areas.Identity.Services;
 
@@ -11,7 +12,6 @@ namespace TriviaSpark.Web.Pages
     {
         private readonly ILogger<TriviaMatchModel> _logger;
         private readonly ITriviaMatchService _matchService;
-        private MatchModel? triviaMatch;
         public TriviaMatchModel(ITriviaMatchService matchService, ILogger<TriviaMatchModel> logger)
         {
             this._matchService = matchService;
@@ -20,36 +20,50 @@ namespace TriviaSpark.Web.Pages
 
         public async Task OnGet(CancellationToken ct)
         {
-            triviaMatch = await _matchService.GetUserMatch(User);
+            triviaMatch = await _matchService.GetUserMatch(User, MatchId);
+            MatchId = triviaMatch.MatchId;
+
             if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
             {
                 triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
             }
             currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
+            currentAnswer.QuestionId = currentQuestion.QuestionId;
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(CancellationToken ct)
         {
-            triviaMatch = await _matchService.GetUserMatch(User);
             try
             {
-                currentQuestion = triviaMatch.MatchQuestions.FirstOrDefault(w => w.QuestionId == currentQuestion.QuestionId).Question;
-                currentAnswer.QuestionId = currentQuestion.QuestionId;
-                currentAnswer.Question = currentQuestion;
-                currentAnswer = await _matchService.AddAnswerAsync(triviaMatch, currentAnswer);
+                currentAnswer = await _matchService.AddAnswerAsync(MatchId, currentAnswer);
+
+
+                triviaMatch = await _matchService.GetUserMatch(User, MatchId);
+
+                if (currentAnswer.IsCorrect)
+                {
+                    if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
+                    {
+                        // triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
+                    }
+                    currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
+                    currentAnswer = new QuestionAnswerModel()
+                    {
+                        IsCorrect = false,
+                        Question = currentQuestion,
+                        QuestionId = currentQuestion?.QuestionId ?? string.Empty
+                    };
+                }
+                else
+                {
+                    currentQuestion = triviaMatch.MatchQuestions.Get(currentAnswer.QuestionId);
+                    currentAnswer.QuestionId = currentQuestion.QuestionId;
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Trivia Post");
-                return Page();
             }
-            if (currentAnswer.IsCorrect)
-            {
-                return RedirectToPage("TriviaMatch");
-            }
-            else
-            {
-                return Page();
-            }
+            return Page();
         }
 
         [BindProperty]
@@ -71,9 +85,13 @@ namespace TriviaSpark.Web.Pages
                 return triviaMatch?.GetMatchStatus() ?? "Trivia Match is not started";
             }
         }
+        [BindProperty]
+        public int MatchId { get; set; }
 
         [BindProperty]
-        public QuestionModel currentQuestion { get; set; } = new QuestionModel();
+        public QuestionModel? currentQuestion { get; set; }
 
+        [BindProperty]
+        public MatchModel triviaMatch { get; set; }
     }
 }

@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TriviaSpark.Core.Models
 {
-    public class QuestionModel
+    public class QuestionModel : IComparable<QuestionModel>
     {
         [Key]
         public string QuestionId { get; set; }
         public string QuestionText { get; set; }
-
         public string Category { get; set; }
         public string Difficulty { get; set; }
         public string Type { get; set; }
@@ -37,6 +36,9 @@ namespace TriviaSpark.Core.Models
                 return Answers.Where(w => w.IsCorrect == false).Select(s => s.AnswerText).ToList();
             }
         }
+
+        public string Source { get; set; }
+
         public void AddAnswer(string answerText, bool isCorrect)
         {
             Answers ??= new List<QuestionAnswerModel>();
@@ -50,6 +52,15 @@ namespace TriviaSpark.Core.Models
                 IsValid = true,
                 Value = isCorrect ? 1 : 0
             });
+        }
+
+        public int CompareTo(QuestionModel? other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            return string.Compare(QuestionId, other.QuestionId, StringComparison.Ordinal);
         }
     }
 }
