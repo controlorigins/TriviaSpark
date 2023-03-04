@@ -14,11 +14,14 @@
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Folder Include="Services\" />
+	  <Compile Remove="Extensions\TriviaMatchExtensions.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\HttpClientDecorator\HttpClientDecorator.csproj" />
 	  <ProjectReference Include="..\TriviaSpark.Core\TriviaSpark.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Extensions\" />
 	</ItemGroup>
 
 </Project>

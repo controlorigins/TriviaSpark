@@ -15,11 +15,18 @@ namespace TriviaSpark.Core.Match
 
             if (match.MatchQuestionAnswers.Count < 1) return false;
 
-            return match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers).Count == 0;
+            var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+
+            if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
+
+            return result.Count == 0;
         }
         public static QuestionModel? GetNextQuestion(this MatchModel match)
         {
             var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+
+            if(result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
+
             var random = new Random();
             if (result.Count() > 0)
             {

@@ -1,27 +1,21 @@
 ﻿using HttpClientDecorator.Interfaces;
 using HttpClientDecorator.Models;
 using TriviaSpark.Core.Extensions;
+using TriviaSpark.Core.Interfaces;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.OpenTriviaDb.Models;
 
-namespace TriviaSpark.OpenTriviaDb.Extensions
+namespace TriviaSpark.OpenTriviaDb.Services
 {
-    public static class TriviaMatchExtensions
+    public class OpenTriviaDbQuestionSource : IQuestionSourceAdapter
     {
-        public static async Task LoadTriviaQuestions(this QuestionProvider questionProvider, IHttpGetCallService _service, int questionCount = 1, CancellationToken ct = default)
-        {
-            var results = new HttpGetCallResults<OpenTBbResponse>
-            {
-                RequestPath = $"https://opentdb.com/api.php?amount={questionCount}&difficulty=easy&type=multiple"
-            };
-            results = await _service.GetAsync(results, ct);
+        private readonly IHttpGetCallService _httpClientService;
 
-            if (results?.ResponseResults?.results is null)
-            {
-                // Log Error
-            }
-            questionProvider.Add(Create(results?.ResponseResults?.results));
+        public OpenTriviaDbQuestionSource(IHttpGetCallService httpGetCallService)
+        {
+            _httpClientService = httpGetCallService;
         }
+
         /// <summary>
         /// Creates a sequence of QuestionModel objects from the specified sequence of Trivia objects.
         /// </summary>
@@ -60,6 +54,23 @@ namespace TriviaSpark.OpenTriviaDb.Extensions
                 questionModel.AddAnswer(answer, false);
             }
             return questionModel;
+        }
+
+        public async Task<List<QuestionModel>> GetQuestions(int questionCount = 1, CancellationToken ct = default)
+        {
+            var questionList = new List<QuestionModel>();
+            var results = new HttpGetCallResults<OpenTBbResponse>
+            {
+                RequestPath = $"https://opentdb.com/api.php?amount={questionCount}&difficulty=easy&type=multiple"
+            };
+            results = await _httpClientService.GetAsync(results, ct);
+
+            if (results?.ResponseResults?.results is null)
+            {
+                // Log Error
+            }
+            questionList.AddRange(Create(results?.ResponseResults?.results));
+            return questionList;
         }
     }
 }

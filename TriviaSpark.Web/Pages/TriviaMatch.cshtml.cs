@@ -20,7 +20,10 @@ namespace TriviaSpark.Web.Pages
 
         public async Task OnGet(CancellationToken ct)
         {
-            SetMatch(await _matchService.GetUserMatch(User, MatchId,ct));
+            if (triviaMatch is null)
+            {
+                SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
+            }
         }
         public async Task<IActionResult> OnPostAsync(CancellationToken ct)
         {
@@ -34,11 +37,11 @@ namespace TriviaSpark.Web.Pages
                 {
                     if (AddQuestions)
                     {
-                        SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: 10, ct: ct));
+                        SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: 2, ct: ct));
                     }
                     else
-                    { 
-                    SetMatch(await _matchService.GetUserMatch(User, MatchId,ct));
+                    {
+                        SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
                     }
                 }
             }
@@ -47,7 +50,7 @@ namespace TriviaSpark.Web.Pages
                 theMatchStatus = $"Error in Trivia Post: {ex.Message}";
                 _logger.LogError(ex, "Error in Trivia Post");
             }
-            return Page();
+            return RedirectToPage();
         }
 
         private void SetMatch(MatchModel? match)

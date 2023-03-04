@@ -24,7 +24,6 @@
                     }
                     else
                     {
-                        @Html.HiddenFor(model =>model.currentAnswer.QuestionId)
                         <h1>@Html.DisplayFor(model => model.currentQuestion.Category) Trivia</h1>
                     }
                 </div>
@@ -38,6 +37,7 @@
                             }
                             else
                             {
+                                @Html.HiddenFor(model =>model.currentAnswer.QuestionId) <br/>
                                 @Html.HiddenFor(model =>model.currentQuestion.QuestionId)
                                 @if (!Model.IsMatchFinished)
                                 {
@@ -90,10 +90,14 @@
     <div class="card">
         <div class="card-header">
             <ul>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchName)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchId)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.User.UserName)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchDate)</li>
+                <li>Match Name: @Html.DisplayFor(model => model.triviaMatch.MatchName)</li>
+                <li>Match Id: @Html.DisplayFor(model => model.triviaMatch.MatchId)</li>
+                <li>User Name: @Html.DisplayFor(model => model.triviaMatch.User.UserName)</li>
+                <li>Match Date: @Html.DisplayFor(model => model.triviaMatch.MatchDate)</li>
+            </ul>
+            <ul>
+                <li>Question Id: @Model?.currentQuestion?.QuestionId </li>
+                <li>Answer Question Id: @Model?.currentAnswer?.QuestionId </li>
             </ul>
         </div>
         <div class="card-body">
@@ -109,6 +113,14 @@
                 {
                     <dt>@Html.Raw(q.QuestionText)</dt>
                     <dt>@Html.Raw(q.CorrectAnswer)</dt>
+                }
+            </dl>
+            <h2>Unanswerd Questions</h2>
+            <dl>
+                @foreach (var q in Model.triviaMatch.MatchQuestions.GetUnansweredQuestions(Model.triviaMatch.MatchQuestionAnswers))
+                {
+                    <dt>@Html.Raw(q.QuestionText)</dt>
+                    <dd></dd>
                 }
             </dl>
             <h2>Incorrect Questions</h2>

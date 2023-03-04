@@ -3,7 +3,7 @@ using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Core.Match
 {
-    public class MatchModel : IComparable<MatchModel>
+    public class MatchModel : IComparable<MatchModel>, IEquatable<MatchModel>
     {
         [Key]
         public int MatchId { get; set; }
@@ -37,6 +37,14 @@ namespace TriviaSpark.Core.Match
 
             return MatchId.CompareTo(other.MatchId);
         }
+
+        public bool Equals(MatchModel? other)
+        {
+            if (other is null) return false;
+
+            return MatchId==other.MatchId;
+        }
+
         public static bool operator ==(MatchModel a, MatchModel b)
         {
             if (ReferenceEquals(a, b)) return true;

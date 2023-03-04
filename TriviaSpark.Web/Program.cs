@@ -1,6 +1,8 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using TriviaSpark.Core.Interfaces;
+using TriviaSpark.OpenTriviaDb.Services;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
 
@@ -39,6 +41,7 @@ builder.Services.AddSingleton(serviceProvider =>
     return telemetryService;
 });
 
+builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
 builder.Services.AddScoped<ITriviaMatchService, TriviaMatchService>();
 
 

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using TriviaSpark.Core.Interfaces;
 using TriviaSpark.Core.Match;
 using TriviaSpark.Core.Questions;
-using TriviaSpark.OpenTriviaDb.Extensions;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Services
@@ -13,17 +13,17 @@ namespace TriviaSpark.Web.Areas.Identity.Services
     {
         private readonly TriviaSparkWebContext _db;
         private readonly ILogger<TriviaMatchService> _logger;
-        private readonly IHttpGetCallService _service;
+        private readonly IQuestionSourceAdapter _service;
         private readonly UserManager<TriviaSparkWebUser> _userManager;
 
         public TriviaMatchService(ILogger<TriviaMatchService> logger,
-        IHttpGetCallService getCallService,
+        IQuestionSourceAdapter questionSource,
         TriviaSparkWebContext triviaSparkWebContext,
         UserManager<TriviaSparkWebUser> userManager)
         {
             _userManager = userManager;
             _logger = logger;
-            _service = getCallService;
+            _service = questionSource;
             _db = triviaSparkWebContext;
         }
 
@@ -251,8 +251,8 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             try
             {
                 QuestionProvider source = new();
-                await source.LoadTriviaQuestions(_service, NumberOfQuestionsToAdd, ct);
-                foreach (var question in source.Get(1))
+                var newQuestions = await _service.GetQuestions(NumberOfQuestionsToAdd, ct);
+                foreach (var question in newQuestions)
                 {
                     var existingQuestion = await _db.Questions.FindAsync(question.QuestionId);
                     if (existingQuestion is null)
@@ -289,9 +289,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
         public async Task<MatchModel> GetUserMatch(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
         {
-            _db.ChangeTracker.DetectChanges();
-            Console.WriteLine(_db.ChangeTracker.DebugView.LongView);
-
             var currentUserId = await _db.Users.Where(w => w.UserName == user.Identity.Name).Select(s => s.Id).AsNoTracking().FirstOrDefaultAsync();
 
             Match? match;
