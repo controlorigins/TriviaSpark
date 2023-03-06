@@ -1,5 +1,4 @@
-﻿using HttpClientDecorator.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TriviaSpark.Core.Interfaces;
@@ -9,86 +8,21 @@ using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Services
 {
-    public class TriviaMatchService : ITriviaMatchService
+    public class TriviaMatchService : BaseMatchService, IMatchService
     {
         private readonly TriviaSparkWebContext _db;
         private readonly ILogger<TriviaMatchService> _logger;
         private readonly IQuestionSourceAdapter _service;
-        private readonly UserManager<TriviaSparkWebUser> _userManager;
 
         public TriviaMatchService(ILogger<TriviaMatchService> logger,
         IQuestionSourceAdapter questionSource,
-        TriviaSparkWebContext triviaSparkWebContext,
-        UserManager<TriviaSparkWebUser> userManager)
+        TriviaSparkWebContext triviaSparkWebContext): base(new MatchModel())
         {
-            _userManager = userManager;
             _logger = logger;
             _service = questionSource;
             _db = triviaSparkWebContext;
         }
 
-        private MatchModel Create(Match dbMatch, QuestionAnswer? dbAnswer = null)
-        {
-            if (dbMatch.MatchId == 0)
-            {
-                throw new ArgumentNullException(nameof(dbMatch));
-            }
-
-            MatchModel match = new();
-            try
-            {
-                match.MatchId = dbMatch.MatchId;
-                match.MatchName = dbMatch.MatchName;
-                match.MatchDate = dbMatch.CreatedDate;
-                match.UserId = dbMatch.UserId;
-                match.User = new UserModel()
-                {
-                    UserId = dbMatch.User.Id,
-                    UserName = dbMatch.User.UserName,
-                    Email = dbMatch.User.Email,
-                    PhoneNumber = dbMatch.User.PhoneNumber
-                };
-
-                match.MatchQuestions.Add(dbMatch.MatchQuestions
-                    .Select(s => Create(s.Question))
-                    .ToList() ?? new List<QuestionModel>());
-
-                match.MatchQuestionAnswers = dbMatch.MatchQuestionAnswers
-                    .Select(s => new MatchQuestionAnswerModel()
-                    {
-                        MatchId = s.MatchId,
-                        QuestionId = s.QuestionId,
-                        AnswerId = s.AnswerId,
-                    }).ToList();
-
-
-                if (match.MatchQuestions.Count == 0 || match.IsMatchFinished())
-                {
-                    // triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
-                }
-                else
-                {
-                    if (dbAnswer?.IsCorrect ?? false)
-                    {
-                        match.CurrentQuestion = match.GetNextQuestion() ?? new QuestionModel() { };
-                    }
-                    else
-                    {
-                        match.CurrentQuestion = match.GetNextQuestion() ?? new QuestionModel() { };
-                    }
-                    match.CurrentAnswer = new QuestionAnswerModel()
-                    {
-                        QuestionId = match.CurrentQuestion.QuestionId
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("CreateMatchModelFromMatch:Exception", ex);
-            }
-
-            return match;
-        }
         private QuestionModel Create(Question question)
         {
             var result = new QuestionModel();
@@ -162,7 +96,75 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             }
             return results;
         }
-        private static Match CreateMatch()
+        private MatchModel? Create(Match? dbMatch, QuestionAnswer? dbAnswer = null)
+        {
+            if (dbMatch is null)
+            {
+                return default;
+            }
+
+            if (dbMatch.MatchId == 0)
+            {
+                return default;
+            }
+
+            MatchModel match = new();
+            try
+            {
+                match.MatchId = dbMatch.MatchId;
+                match.MatchName = dbMatch.MatchName;
+                match.MatchDate = dbMatch.CreatedDate;
+                match.UserId = dbMatch.UserId;
+                match.MatchMode = dbMatch.MatchMode;
+                match.User = new UserModel()
+                {
+                    UserId = dbMatch.User.Id,
+                    UserName = dbMatch.User.UserName,
+                    Email = dbMatch.User.Email,
+                    PhoneNumber = dbMatch.User.PhoneNumber
+                };
+
+                match.MatchQuestions.Add(dbMatch.MatchQuestions
+                    .Select(s => Create(s.Question))
+                    .ToList() ?? new List<QuestionModel>());
+
+                match.MatchQuestionAnswers = dbMatch.MatchQuestionAnswers
+                    .Select(s => new MatchQuestionAnswerModel()
+                    {
+                        MatchId = s.MatchId,
+                        QuestionId = s.QuestionId,
+                        AnswerId = s.AnswerId,
+                    }).ToList();
+
+
+                if (match.MatchQuestions.Count == 0 || IsMatchFinished(match))
+                {
+                    // triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
+                }
+                else
+                {
+                    if (dbAnswer?.IsCorrect ?? false)
+                    {
+                        match.CurrentQuestion = GetNextQuestion(match) ?? new QuestionModel() { };
+                    }
+                    else
+                    {
+                        match.CurrentQuestion = GetNextQuestion(match) ?? new QuestionModel() { };
+                    }
+                    match.CurrentAnswer = new QuestionAnswerModel()
+                    {
+                        QuestionId = match.CurrentQuestion.QuestionId
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("CreateMatchModelFromMatch:Exception", ex);
+            }
+
+            return match;
+        }
+        private static new Match CreateMatch()
         {
             return new Match()
             {
@@ -183,23 +185,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(ct);
             return match ?? CreateMatch();
-        }
-
-        public async Task<MatchModel?> AddAnswerAsync(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct = default)
-        {
-
-            try
-            {
-                QuestionAnswer? dbAnswer = await SetMatchAnswer(matchId, currentAnswer, ct);
-
-                Match match = await GetMatchAsync(matchId, ct);
-                return Create(match, dbAnswer);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("AddAnswerAsync:Exception", ex);
-            }
-            return null;
         }
 
         private async Task<QuestionAnswer?> SetMatchAnswer(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct)
@@ -246,7 +231,24 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return null;
         }
 
-        public async Task<MatchModel?> GetMoreQuestions(int MatchId, int NumberOfQuestionsToAdd = 1, CancellationToken ct = default)
+        public override async Task<MatchModel?> AddAnswerAsync(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct = default)
+        {
+
+            try
+            {
+                QuestionAnswer? dbAnswer = await SetMatchAnswer(matchId, currentAnswer, ct);
+
+                Match match = await GetMatchAsync(matchId, ct);
+                return Create(match, dbAnswer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("AddAnswerAsync:Exception", ex);
+            }
+            return null;
+        }
+
+        public override async Task<MatchModel?> GetMoreQuestions(int MatchId, int NumberOfQuestionsToAdd = 1, CancellationToken ct = default)
         {
             try
             {
@@ -287,9 +289,30 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return null;
         }
 
-        public async Task<MatchModel> GetUserMatch(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
+
+        public QuestionModel? GetNextQuestion(MatchModel match)
         {
-            var currentUserId = await _db.Users.Where(w => w.UserName == user.Identity.Name).Select(s => s.Id).AsNoTracking().FirstOrDefaultAsync();
+            var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+
+            if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
+
+            var random = new Random();
+            if (result.Count() > 0)
+            {
+                var index = random.Next(result.Count());
+                return result.ElementAt(index);
+            }
+            return null;
+        }
+
+        public override async Task<MatchModel?> GetUserMatch(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
+        {
+            var currentUserName = user?.Identity?.Name ?? string.Empty;
+            var currentUserId = await _db.Users
+                .Where(w => w.UserName == currentUserName)
+                .Select(s => s.Id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
 
             Match? match;
 

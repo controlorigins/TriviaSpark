@@ -11,8 +11,8 @@ namespace TriviaSpark.Web.Pages
     public class TriviaMatchModel : PageModel
     {
         private readonly ILogger<TriviaMatchModel> _logger;
-        private readonly ITriviaMatchService _matchService;
-        public TriviaMatchModel(ITriviaMatchService matchService, ILogger<TriviaMatchModel> logger)
+        private readonly IMatchService _matchService;
+        public TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger)
         {
             this._matchService = matchService;
             _logger = logger;
@@ -64,9 +64,9 @@ namespace TriviaSpark.Web.Pages
             triviaMatch = match;
             MatchId = match.MatchId;
             currentQuestion = match.CurrentQuestion;
-            currentAnswer = match.CurrentAnswer;
-            IsMatchFinished = match?.IsMatchFinished() ?? false;
-            theMatchStatus = match?.GetMatchStatus() ?? "Trivia Match is not started";
+            currentAnswer = match?.CurrentAnswer;
+            IsMatchFinished = _matchService.IsMatchFinished(match);
+            theMatchStatus = _matchService.GetMatchStatus(match) ?? "Trivia Match is not started";
         }
 
         [BindProperty]
@@ -74,7 +74,7 @@ namespace TriviaSpark.Web.Pages
         [BindProperty]
         public string theMatchStatus { get; set; }
         [BindProperty]
-        public QuestionAnswerModel currentAnswer { get; set; } = new QuestionAnswerModel();
+        public QuestionAnswerModel? currentAnswer { get; set; } = new QuestionAnswerModel();
         [BindProperty]
         public int MatchId { get; set; }
         [BindProperty]

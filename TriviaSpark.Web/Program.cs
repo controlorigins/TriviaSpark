@@ -1,7 +1,9 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TriviaSpark.Core.Interfaces;
+using TriviaSpark.Core.Match;
 using TriviaSpark.OpenTriviaDb.Services;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
@@ -42,8 +44,7 @@ builder.Services.AddSingleton(serviceProvider =>
 });
 
 builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
-builder.Services.AddScoped<ITriviaMatchService, TriviaMatchService>();
-
+builder.Services.AddScoped<IMatchService, TriviaMatchService>();
 
 var app = builder.Build();
 

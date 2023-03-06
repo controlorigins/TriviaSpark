@@ -67,7 +67,7 @@
                         }
                         else
                         {
-                            if (@Model.currentAnswer.IsCorrect)
+                            if (@Model?.currentAnswer?.IsCorrect??false)
                             {
                                 <h1>Correct!</h1>
                                 <button trype="submit" class="btn btn-primary">New Question</button>
