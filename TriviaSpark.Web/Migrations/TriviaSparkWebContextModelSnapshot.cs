@@ -244,9 +244,8 @@ namespace TriviaSpark.Web.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
@@ -259,9 +258,8 @@ namespace TriviaSpark.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("QuestionId");
 

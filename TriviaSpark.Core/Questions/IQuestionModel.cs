@@ -1,4 +1,6 @@
-﻿namespace TriviaSpark.Core.Questions
+﻿using TriviaSpark.Core.Match;
+
+namespace TriviaSpark.Core.Questions
 {
     public interface IQuestionModel
     {
@@ -9,12 +11,12 @@
         ICollection<QuestionAnswerModel> Answers { get; set; }
         string Category { get; set; }
         string CorrectAnswer { get; }
-        string Difficulty { get; set; }
+        Difficulty Difficulty { get; set; }
         List<string> IncorrectAnswers { get; }
         string QuestionId { get; set; }
         string QuestionText { get; set; }
         string Source { get; set; }
-        string Type { get; set; }
+        QuestionType Type { get; set; }
     }
 }
 

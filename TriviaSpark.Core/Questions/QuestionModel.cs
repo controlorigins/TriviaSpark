@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TriviaSpark.Core.Match;
 
 namespace TriviaSpark.Core.Questions
 {
@@ -78,7 +79,7 @@ namespace TriviaSpark.Core.Questions
                 return Answers.Where(w => w.IsCorrect == true).Select(s => s.AnswerText).FirstOrDefault();
             }
         }
-        public string Difficulty { get; set; }
+        public Difficulty Difficulty { get; set; }
 
         [NotMapped]
         public List<string> IncorrectAnswers
@@ -95,7 +96,7 @@ namespace TriviaSpark.Core.Questions
         public string QuestionText { get; set; }
 
         public string Source { get; set; }
-        public string Type { get; set; }
+        public QuestionType Type { get; set; }
     }
 }
 

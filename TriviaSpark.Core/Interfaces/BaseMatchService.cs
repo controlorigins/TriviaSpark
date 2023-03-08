@@ -29,10 +29,10 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         }
         public virtual string GetMatchStatus(MatchModel match)
         {
-            match.ScoreCard = match.MatchQuestions.GetScoreCard(match.MatchQuestionAnswers);
+            match.ScoreCard = match.MatchQuestions.CalculateScore(match.MatchQuestionAnswers);
 
             var correctQuestions = match.MatchQuestions.GetCorrectQuestions(match.MatchQuestionAnswers);
-            return $"{correctQuestions.Count} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count} tries.";
+            return $"{correctQuestions.Count} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count()} tries.";
         }
         public virtual Task<MatchModel?> GetMoreQuestions(int MatchId, int NumberOfQuestionsToAdd = 1, CancellationToken ct = default)
         {
@@ -50,7 +50,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             if (match.MatchQuestions.Count == 0) return true;
 
-            if (match.MatchQuestionAnswers.Count < 1) return false;
+            if (match.MatchQuestionAnswers.Count() < 1) return false;
 
             var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
 

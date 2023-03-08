@@ -56,7 +56,7 @@ namespace TriviaSpark.Core.Match
         public int MatchId { get; set; }
         public MatchMode MatchMode { get; set; }
         public string? MatchName { get; set; }
-        public ICollection<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
+        public IEnumerable<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
         public QuestionProvider MatchQuestions { get; set; } = new();
         public UserModel? User { get; set; }
         public string? UserId { get; set; }

@@ -17,8 +17,8 @@ namespace TriviaSpark.Core.Tests.Models
                 QuestionId = "Q001",
                 QuestionText = "What is the capital of France?",
                 Category = "Geography",
-                Difficulty = "Easy",
-                Type = "Multiple Choice",
+                Difficulty = Core.Match.Difficulty.Easy,
+                Type = Core.Match.QuestionType.Multiple,
                 Answers = new List<QuestionAnswerModel>()
             {
                 new QuestionAnswerModel()

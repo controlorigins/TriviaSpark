@@ -1,10 +1,11 @@
-﻿namespace TriviaSpark.OpenTriviaDb.Models
+﻿namespace TriviaSpark.Core.Match
 {
     public enum Difficulty
     {
-        None,
+        Unknown = 0,
         Easy,
         Medium,
         Hard
     }
 }
+

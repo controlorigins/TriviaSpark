@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TriviaSpark.Core.Match;
 
 namespace TriviaSpark.Web.Areas.Identity.Data
 {
@@ -9,8 +10,8 @@ namespace TriviaSpark.Web.Areas.Identity.Data
         public string QuestionId { get; set; }
         public string QuestionText { get; set; }
         public string Category { get; set; }
-        public string Difficulty { get; set; }
-        public string Type { get; set; }
+        public Difficulty Difficulty { get; set; }
+        public QuestionType Type { get; set; }
         public string Source { get; set; }
         public virtual ICollection<MatchQuestion> MatchQuestions { get; set; }
         public virtual ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
