@@ -6,7 +6,7 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
 {
     public class EditModel : AdminPageModel
     {
-        public EditModel(TriviaSparkWebContext context): base(context)
+        public EditModel(TriviaSparkWebContext context) : base(context)
         {
         }
 
@@ -20,7 +20,7 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
                 return NotFound();
             }
 
-            var question =  await _context.Questions.FirstOrDefaultAsync(m => m.QuestionId == id);
+            var question = await _context.Questions.FirstOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
 
         private bool QuestionExists(string id)
         {
-          return (_context.Questions?.Any(e => e.QuestionId == id)).GetValueOrDefault();
+            return (_context.Questions?.Any(e => e.QuestionId == id)).GetValueOrDefault();
         }
     }
 }
