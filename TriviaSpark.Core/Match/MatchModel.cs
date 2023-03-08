@@ -60,6 +60,7 @@ namespace TriviaSpark.Core.Match
         public QuestionProvider MatchQuestions { get; set; } = new();
         public UserModel? User { get; set; }
         public string? UserId { get; set; }
+        public ScoreCardModel? ScoreCard { get; set; }
     }
 }
 

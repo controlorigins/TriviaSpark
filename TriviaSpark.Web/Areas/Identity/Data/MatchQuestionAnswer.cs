@@ -13,7 +13,7 @@
         public virtual Question Question { get; set; }
         public virtual QuestionAnswer Answer { get; set; }
         public string? Comment { get; set; }
-
+        public int ElapsedTime { get; set; }
     }
 }
 

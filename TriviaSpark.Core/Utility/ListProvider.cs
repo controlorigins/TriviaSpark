@@ -83,6 +83,20 @@
             }
             return list is null ? Get(count) : _list.Except(list).Take(count);
         }
+        /// <summary>
+        /// Returns a random member from the managed list.
+        /// </summary>
+        /// <returns>A random member from the managed list, or null if the list is empty.</returns>
+        public T? GetRandom()
+        {
+            if (_list is null || _list.Count == 0)
+            {
+                return null;
+            }
+
+            int randomIndex = new Random().Next(0, _list.Count);
+            return _list[randomIndex];
+        }
 
 
         /// <summary>

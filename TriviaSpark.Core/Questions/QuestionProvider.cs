@@ -3,13 +3,16 @@ using TriviaSpark.Core.Utility;
 
 namespace TriviaSpark.Core.Questions
 {
+
     /// <summary>
     /// Represents a provider of items.
     /// </summary>
     public class QuestionProvider : ListProvider<QuestionModel>
     {
-        private ScoreCard CalculateScore(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
+        public ScoreCardModel CalculateScore(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
+            List<QuestionAnswer> incorrectAnswers = new();
+            List<QuestionAnswer> unasweredQuestions = new();
             // Create a dictionary of correct answer IDs for each question
             var correctAnswersByQuestion = Items
                 .SelectMany(q => q.Answers)
@@ -31,17 +34,17 @@ namespace TriviaSpark.Core.Questions
                 .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
 
             // Calculate the number of questions and number of correct answers
-            int numQuestions = correctAnswersByQuestion.Count;
-            int numCorrect = 0;
+            int numQuestions = Items.Count();
             double runingScore = 0.00;
+            var correctQuestions = GetCorrectQuestions(matchQuestionAnswers);
+            var numTries = matchQuestionAnswers.Count();
 
-            List<QuestionAnswer> incorrectAnswers = new List<QuestionAnswer>();
-            List<QuestionAnswer> unasweredQuestions = new List<QuestionAnswer>();
 
+            int numCorrect = 0;
+            int numInCorrectAnswers = 0;
             foreach (var questionId in correctAnswersByQuestion.Keys)
             {
                 int correctAnserId = correctAnswersByQuestion[questionId].FirstOrDefault();
-
                 if (!attemptedAnswersByQuestion.ContainsKey(questionId))
                 {
                     // Question not attempted
@@ -49,35 +52,27 @@ namespace TriviaSpark.Core.Questions
                 }
                 else if (attemptedAnswersByQuestion[questionId].TryGetValue(correctAnserId, out int correctAttemptId))
                 {
-                    int badCount = attemptedAnswersByQuestion[questionId]
-                        .Except(correctAnswersByQuestion[questionId])
-                        .Select(answerId => new QuestionAnswer { QuestionId = questionId, AnswerId = answerId }).Count();
-
-                    runingScore += (1.00 - (badCount * .2));
+                    var questionAnswers = attemptedAnswersByQuestion[questionId].Count;
+                    runingScore += (1.00 - ((questionAnswers - 1) * .2));
                     // Question attempted and correct 
                     numCorrect++;
+                    numInCorrectAnswers = numInCorrectAnswers + (questionAnswers - 1);
                 }
                 else
                 {
-                    // Question attempted but incorrect
-                    incorrectAnswers
-                        .AddRange(attemptedAnswersByQuestion[questionId]
-                        .Except(correctAnswersByQuestion[questionId])
-                        .Select(answerId => new QuestionAnswer { QuestionId = questionId, AnswerId = answerId }));
+                    numInCorrectAnswers = numInCorrectAnswers + attemptedAnswersByQuestion[questionId].Count;
                 }
             }
 
-            // Calculate the percentage score
-            double percentageScore = Math.Round((double)numCorrect / numQuestions * 100, 2);
-
+            double percentageScore = Math.Round((double)numCorrect / numQuestions, 2);
             // Create the score card object
-            var scoreCard = new ScoreCard
+            var scoreCard = new ScoreCardModel
             {
                 PercentCorrect = percentageScore,
-                AdjustedScore = runingScore,
+                AdjustedScore = (runingScore/numQuestions),
                 NumQuestions = numQuestions,
                 NumCorrect = numCorrect,
-                NumIncorrect = incorrectAnswers.Count,
+                NumIncorrect = numInCorrectAnswers,
             };
             return scoreCard;
         }
@@ -125,12 +120,8 @@ namespace TriviaSpark.Core.Questions
                     AnswerId = a.AnswerId
                 }).ToList();
 
-
             var badAnswers = GetQuestionsWithoutCorrectResponse(correctAnswers, questionIds);
-            var scoreCard = CalculateScore(matchQuestionAnswers);
-
             List<QuestionModel> result = Items.Where(w => badAnswers.Contains(w.QuestionId)).ToList();
-
             return result;
         }
 
@@ -142,19 +133,15 @@ namespace TriviaSpark.Core.Questions
                             .ToList();
         }
 
+        internal ScoreCardModel? GetScoreCard(ICollection<MatchQuestionAnswerModel> matchQuestionAnswers)
+        {
+            return CalculateScore(matchQuestionAnswers.ToArray());
+        }
+
         public class QuestionAnswer
         {
             public int AnswerId { get; set; }
             public string QuestionId { get; set; }
-        }
-
-        public class ScoreCard
-        {
-            public double AdjustedScore { get; internal set; }
-            public int NumCorrect { get; set; }
-            public int NumIncorrect { get; internal set; }
-            public int NumQuestions { get; set; }
-            public double PercentCorrect { get; internal set; }
         }
     }
 }

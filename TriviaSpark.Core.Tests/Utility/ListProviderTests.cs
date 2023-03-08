@@ -232,6 +232,76 @@ namespace TriviaSpark.Core.Tests.Utility
         }
 
 
+        private class Person : IComparable<Person>
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public int CompareTo(Person other)
+            {
+                return this.Name.CompareTo(other.Name);
+            }
+        }
+
+        [TestMethod]
+        public void TestGetRandom()
+        {
+            // Arrange
+            ListProvider<Person> listProvider = new ListProvider<Person>();
+            listProvider.Add(new Person { Name = "Alice", Age = 30 });
+            listProvider.Add(new Person { Name = "Bob", Age = 25 });
+            listProvider.Add(new Person { Name = "Charlie", Age = 40 });
+
+            // Act
+            Person randomPerson = listProvider.GetRandom();
+
+            // Assert
+            Assert.IsNotNull(randomPerson);
+        }
+
+        [TestMethod]
+        public void TestGetRandom_NullList()
+        {
+            // Arrange
+            ListProvider<Person> listProvider = new();
+
+            // Act
+            Person? randomPerson = listProvider.GetRandom();
+
+            // Assert
+            Assert.IsNull(randomPerson);
+        }
+
+        [TestMethod]
+        public void TestAdd()
+        {
+            var listProvider = new ListProvider<Person>();
+            var person1 = new Person { Name = "Alice", Age = 30 };
+            var person2 = new Person { Name = "Bob", Age = 40 };
+            var person3 = new Person { Name = "Charlie", Age = 50 };
+
+            Assert.AreEqual(1, listProvider.Add(person1));
+            Assert.AreEqual(1, listProvider.Add(person2));
+            Assert.AreEqual(1, listProvider.Add(person3));
+            Assert.AreEqual(0, listProvider.Add(person1));
+            Assert.AreEqual(0, listProvider.Add(person2));
+            Assert.AreEqual(0, listProvider.Add(person3));
+        }
+
+        [TestMethod]
+        public void TestAddRange()
+        {
+            var listProvider = new ListProvider<Person>();
+            var people = new[]
+            {
+            new Person { Name = "Alice", Age = 30 },
+            new Person { Name = "Bob", Age = 40 },
+            new Person { Name = "Charlie", Age = 50 }
+        };
+
+            Assert.AreEqual(3, listProvider.Add(people));
+            Assert.AreEqual(0, listProvider.Add(people));
+        }
 
 
         [DataTestMethod]

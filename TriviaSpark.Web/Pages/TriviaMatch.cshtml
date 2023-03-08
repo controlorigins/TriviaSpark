@@ -20,7 +20,7 @@
                     {
                         <h1>Match Finished</h1>
                         @Html.LabelFor(model=> model.AddQuestions)
-                        @Html.CheckBoxFor(model=>model.AddQuestions)
+                        @Html.TextBoxFor(i => i.AddQuestions, new { @type = "number" })
                     }
                     else
                     {
@@ -37,7 +37,7 @@
                             }
                             else
                             {
-                                @Html.HiddenFor(model =>model.currentAnswer.QuestionId) <br/>
+                                @Html.HiddenFor(model =>model.currentAnswer.QuestionId) <br />
                                 @Html.HiddenFor(model =>model.currentQuestion.QuestionId)
                                 @if (!Model.IsMatchFinished)
                                 {
@@ -56,6 +56,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @Html.TextBoxFor(model =>model.currentAnswer.ElapsedTime, new { style = "display: none;" })
+
                                 }
                             }
                         }
@@ -67,7 +69,7 @@
                         }
                         else
                         {
-                            if (@Model?.currentAnswer?.IsCorrect??false)
+                            if (@Model?.currentAnswer?.IsCorrect ?? false)
                             {
                                 <h1>Correct!</h1>
                                 <button trype="submit" class="btn btn-primary">New Question</button>
@@ -87,59 +89,25 @@
     </div>
 </div>
 <div>
-    <div class="card">
-        <div class="card-header">
-            <ul>
-                <li>Match Name: @Html.DisplayFor(model => model.triviaMatch.MatchName)</li>
-                <li>Match Id: @Html.DisplayFor(model => model.triviaMatch.MatchId)</li>
-                <li>User Name: @Html.DisplayFor(model => model.triviaMatch.User.UserName)</li>
-                <li>Match Date: @Html.DisplayFor(model => model.triviaMatch.MatchDate)</li>
-            </ul>
-            <ul>
-                <li>Question Id: @Model?.currentQuestion?.QuestionId </li>
-                <li>Answer Question Id: @Model?.currentAnswer?.QuestionId </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            @Html.DisplayFor(model => model.triviaMatch.MatchQuestions.Count) Total Questions Count<br />
-            @Model.triviaMatch.MatchQuestionAnswers.Select(s=>s.QuestionId).Distinct().Count() Questions With Answers<br />
-            @Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with only Incorrect Answers<br />
-            @Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with correct Ansers<br />
-            @Model.triviaMatch.MatchQuestionAnswers.Count() Total Answers<br />
+    <p>Time taken to answer: <span id="timer"></span></p>
+    <script>
+        var startTime = new Date().getTime();
 
-            <h2>Correct Questions</h2>
-            <dl>
-                @foreach (var q in Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
-                {
-                    <dt>@Html.Raw(q.QuestionText)</dt>
-                    <dt>@Html.Raw(q.CorrectAnswer)</dt>
-                }
-            </dl>
-            <h2>Unanswerd Questions</h2>
-            <dl>
-                @foreach (var q in Model.triviaMatch.MatchQuestions.GetUnansweredQuestions(Model.triviaMatch.MatchQuestionAnswers))
-                {
-                    <dt>@Html.Raw(q.QuestionText)</dt>
-                    <dd></dd>
-                }
-            </dl>
-            <h2>Incorrect Questions</h2>
-            <dl>
-                @foreach (var q in Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
-                {
-                    <dt>@Html.Raw(q.QuestionText)</dt>
-                    <dd></dd>
-                }
-            </dl>
-        </div>
-        <div class="card-footer">
-        </div>
-    </div>
+        setInterval(function () {
+            var now = new Date().getTime();
+            var timeElapsed = (now - startTime) / 1000;
+            document.getElementById("timer").innerHTML = timeElapsed + " seconds";
+            document.getElementById("currentAnswer_ElapsedTime").value = timeElapsed;
+        }, 1000);
+    </script>
 
+
+
+    @if (Model?.triviaMatch?.ScoreCard is not null)
+    {
+        @await Html.PartialAsync("_ScoreCard", Model.triviaMatch.ScoreCard)
+    }
 </div>
-
-
-
 
 @section Scripts {
     <script>

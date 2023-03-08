@@ -1,0 +1,22 @@
+﻿@model TriviaSpark.Core.Match.ScoreCardModel
+
+@if (Model != null)
+{
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Scorecard</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3 align-content-center">
+                    @await Html.PartialAsync("PercentageCircle", Model.PercentCorrect)
+                    <strong>Percent Correct</strong>
+                </div>
+                <div class="col-3 align-content-center">
+                    @await Html.PartialAsync("PercentageCircle", Model.AdjustedScore)
+                    <strong>Weighted Score</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+}

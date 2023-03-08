@@ -29,6 +29,8 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         }
         public virtual string GetMatchStatus(MatchModel match)
         {
+            match.ScoreCard = match.MatchQuestions.GetScoreCard(match.MatchQuestionAnswers);
+
             var correctQuestions = match.MatchQuestions.GetCorrectQuestions(match.MatchQuestionAnswers);
             return $"{correctQuestions.Count} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count} tries.";
         }
@@ -56,5 +58,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
             return result.Count == 0;
         }
+
     }
 }
