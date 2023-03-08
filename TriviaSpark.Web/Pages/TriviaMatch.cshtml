@@ -12,59 +12,67 @@
 }
 <div class="jumbotron">
     <div class="container">
-        <div class="card border-info">
-            <div class="card-header">
-                @if (Model.IsMatchFinished)
-                {
-                    <h1>Match Finished</h1>
-                }
-                else
-                {
-                    <h1>@Html.DisplayFor(model => model.currentQuestion.Category) Trivia</h1>
-                }
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    @Html.HiddenFor(model =>model.MatchId)
-                    @Html.HiddenFor(model =>model.currentAnswer.QuestionId)
+        <form method="post">
+            @Html.HiddenFor(model =>model.MatchId)
+            <div class="card border-info">
+                <div class="card-header">
+                    @if (Model.IsMatchFinished)
+                    {
+                        <h1>Match Finished</h1>
+                        @Html.LabelFor(model=> model.AddQuestions)
+                        @Html.TextBoxFor(i => i.AddQuestions, new { @type = "number" })
+                    }
+                    else
+                    {
+                        <h1>@Html.DisplayFor(model => model.currentQuestion.Category) Trivia</h1>
+                    }
+                </div>
+                <div class="card-body">
                     <div class="container mt-sm-5 my-1">
-                        @if (Model.currentQuestion?.QuestionId is null)
+                        @if (!Model.IsMatchFinished)
                         {
-
-                        }
-                        else
-                        {
-                            @if (!Model.IsMatchFinished)
+                            @if (Model.currentQuestion is null)
                             {
-                                <div class="question ml-sm-5 pl-sm-5 pt-2">
-                                    <div class="py-2 h5"><b>Q. @Html.Raw(Model.currentQuestion.QuestionText)</b></div>
-                                    <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
-                                        <div class="form-group">
-                                            <hr />
-                                            @foreach (var answer in answers)
-                                            {
-                                                <div class="options">
-                                                    <input type="radio" asp-for="currentAnswer.AnswerText" value="@answer.AnswerText" /> @Html.Raw(answer.AnswerText)
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            }
+
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(model =>model.currentAnswer.QuestionId) <br />
+                                @Html.HiddenFor(model =>model.currentQuestion.QuestionId)
+                                @if (!Model.IsMatchFinished)
+                                {
+                                    <div class="question ml-sm-5 pl-sm-5 pt-2">
+                                        <div class="py-2 h5"><b>Q. @Html.Raw(Model.currentQuestion.QuestionText)</b></div>
+                                        <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
+                                            <div class="form-group">
+                                                <hr />
+                                                @foreach (var answer in answers)
+                                                {
+                                                    <div class="options">
+                                                        <input type="radio" asp-for="currentAnswer.AnswerText" value="@answer.AnswerText" /> @Html.Raw(answer.AnswerText)
+                                                        <span class="checkmark"></span>
+                                                    </div>
+                                                }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    @Html.TextBoxFor(model =>model.currentAnswer.ElapsedTime, new { style = "display: none;" })
+
+                                }
                             }
                         }
                     </div>
                     <div class="ml-sm-5 pl-sm-5 pt-2">
                         @if (@Model.IsMatchFinished)
                         {
-                            <a href="/" class="btn btn-primary">Add More Questions</a>
+                            <button type="submit" class="btn btn-primary">Add More Questions</button>
                         }
                         else
                         {
-                            if (@Model.currentAnswer.IsCorrect)
+                            if (@Model?.currentAnswer?.IsCorrect ?? false)
                             {
                                 <h1>Correct!</h1>
-                                <a href="/" class="btn btn-primary">New Question</a>
+                                <button trype="submit" class="btn btn-primary">New Question</button>
                             }
                             else
                             {
@@ -72,59 +80,34 @@
                             }
                         }
                     </div>
-                </form>
+                </div>
+                <div class="card-footer">
+                    @Html.DisplayFor(model => model.theMatchStatus)
+                </div>
             </div>
-            <div class="card-footer">
-                @Html.DisplayFor(model => model.theMatchStatus)
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 <div>
-    <div class="card">
-        <div class="card-header">
-            <ul>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchName)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchId)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.User.UserName)</li>
-                <li>@Html.DisplayFor(model => model.triviaMatch.MatchDate)</li>
-            </ul>
-        </div>
-        <div class="card-body">
-            @Html.DisplayFor(model => model.triviaMatch.MatchQuestions.Count) Total Questions Count<br />
-            @Model.triviaMatch.MatchQuestionAnswers.Select(s=>s.QuestionId).Distinct().Count() Questions With Answers<br />
-            @Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with only Incorrect Answers<br />
-            @Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers).Count() Questions with correct Ansers<br />
-            @Model.triviaMatch.MatchQuestionAnswers.Count() Total Answers<br />
+    <p>Time taken to answer: <span id="timer"></span></p>
+    <script>
+        var startTime = new Date().getTime();
 
-            <h2>Correct Questions</h2>
-            <dl>
-                @foreach (var q in Model.triviaMatch.MatchQuestions.GetCorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
-                {
-                    <dt>@Html.Raw(q.QuestionText)</dt>
-                    <dt>@Html.Raw(q.CorrectAnswer)</dt>
-                }
-            </dl>
-            <h2>Incorrect Questions</h2>
-            <dl>
-                @foreach (var q in Model.triviaMatch.MatchQuestions.GetIncorrectQuestions(Model.triviaMatch.MatchQuestionAnswers))
-                {
-                    <dt>@Html.Raw(q.QuestionText)</dt>
-                    <dd></dd>
-                }
-            </dl>
+        setInterval(function () {
+            var now = new Date().getTime();
+            var timeElapsed = (now - startTime) / 1000;
+            document.getElementById("timer").innerHTML = timeElapsed + " seconds";
+            document.getElementById("currentAnswer_ElapsedTime").value = timeElapsed;
+        }, 1000);
+    </script>
 
 
 
-        </div>
-        <div class="card-footer">
-        </div>
-    </div>
-
+    @if (Model?.triviaMatch?.ScoreCard is not null)
+    {
+        @await Html.PartialAsync("_ScoreCard", Model.triviaMatch.ScoreCard)
+    }
 </div>
-
-
-
 
 @section Scripts {
     <script>

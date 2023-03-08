@@ -14,6 +14,9 @@
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Questions\IQuestionProvider.cs" />
+	</ItemGroup>
+	<ItemGroup>
 	  <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
 	</ItemGroup>
 </Project>

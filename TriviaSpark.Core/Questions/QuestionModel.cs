@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TriviaSpark.Core.Questions
 {
-    public class QuestionModel : IComparable<QuestionModel>, IQuestionModel
+    public class QuestionModel : IComparable<QuestionModel>, IQuestionModel, IEquatable<QuestionModel>
     {
 
         public static bool operator !=(QuestionModel a, QuestionModel b)
@@ -56,6 +56,13 @@ namespace TriviaSpark.Core.Questions
         public override int GetHashCode()
         {
             return QuestionId.GetHashCode();
+        }
+
+        public bool Equals(QuestionModel? other)
+        {
+            if (other is null) return false;
+
+            return QuestionId == other.QuestionId;
         }
 
         public ICollection<QuestionAnswerModel> Answers { get; set; }

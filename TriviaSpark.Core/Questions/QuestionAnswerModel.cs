@@ -20,6 +20,7 @@ namespace TriviaSpark.Core.Questions
         public bool IsValid { get; set; }
         public int Value { get; set; }
         public string ErrorMessage { get; set; }
+        public string ElapsedTime { get; set; }
     }
 }
 

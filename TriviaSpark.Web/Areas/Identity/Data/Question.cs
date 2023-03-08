@@ -12,9 +12,9 @@ namespace TriviaSpark.Web.Areas.Identity.Data
         public string Difficulty { get; set; }
         public string Type { get; set; }
         public string Source { get; set; }
-        public ICollection<MatchQuestion> MatchQuestions { get; set; }
-        public ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
-        public ICollection<QuestionAnswer> Answers { get; set; }
+        public virtual ICollection<MatchQuestion> MatchQuestions { get; set; }
+        public virtual ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
+        public virtual ICollection<QuestionAnswer> Answers { get; set; }
 
         [NotMapped]
         public string CorrectAnswer

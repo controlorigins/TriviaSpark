@@ -2,33 +2,12 @@
 using HttpClientDecorator.Models;
 using TriviaSpark.Core.Extensions;
 using TriviaSpark.Core.Questions;
+using TriviaSpark.OpenTriviaDb.Models;
 
 namespace TriviaSpark.OpenTriviaDb.Extensions
 {
     public static class TriviaMatchExtensions
     {
-        internal class OpenTBbResponse
-        {
-            public int response_code { get; set; }
-            public Trivia[] results { get; set; }
-        }
-
-        internal enum Difficulty
-        {
-            None,
-            Easy,
-            Medium,
-            Hard
-        }
-        internal class Trivia
-        {
-            public string category { get; set; }
-            public string correct_answer { get; set; }
-            public string difficulty { get; set; }
-            public string[] incorrect_answers { get; set; }
-            public string question { get; set; }
-            public string type { get; set; }
-        }
         public static async Task LoadTriviaQuestions(this QuestionProvider questionProvider, IHttpGetCallService _service, int questionCount = 1, CancellationToken ct = default)
         {
             var results = new HttpGetCallResults<OpenTBbResponse>

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using TriviaSpark.Core.Match;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.Web.Areas.Identity.Services;
@@ -11,8 +12,8 @@ namespace TriviaSpark.Web.Pages
     public class TriviaMatchModel : PageModel
     {
         private readonly ILogger<TriviaMatchModel> _logger;
-        private readonly ITriviaMatchService _matchService;
-        public TriviaMatchModel(ITriviaMatchService matchService, ILogger<TriviaMatchModel> logger)
+        private readonly IMatchService _matchService;
+        public TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger)
         {
             this._matchService = matchService;
             _logger = logger;
@@ -20,77 +21,70 @@ namespace TriviaSpark.Web.Pages
 
         public async Task OnGet(CancellationToken ct)
         {
-            triviaMatch = await _matchService.GetUserMatch(User, MatchId);
-            MatchId = triviaMatch.MatchId;
-
-            if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
+            if (triviaMatch is null)
             {
-                triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
+                SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
             }
-            currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
-            currentAnswer.QuestionId = currentQuestion.QuestionId;
         }
         public async Task<IActionResult> OnPostAsync(CancellationToken ct)
         {
             try
             {
-                currentAnswer = await _matchService.AddAnswerAsync(MatchId, currentAnswer);
-
-
-                triviaMatch = await _matchService.GetUserMatch(User, MatchId);
-
-                if (currentAnswer.IsCorrect)
+                if (currentQuestion?.QuestionId is not null)
                 {
-                    if (triviaMatch.MatchQuestions.Count == 0 || triviaMatch.IsMatchFinished())
-                    {
-                        triviaMatch = await _matchService.GetMoreQuestions(triviaMatch, ct);
-                    }
-                    currentQuestion = triviaMatch.GetNextQuestion() ?? new QuestionModel() { };
-                    currentAnswer = new QuestionAnswerModel()
-                    {
-                        IsCorrect = false,
-                        QuestionId = currentQuestion?.QuestionId ?? string.Empty
-                    };
+                    SetMatch(await _matchService.AddAnswerAsync(MatchId, currentAnswer, ct));
                 }
                 else
                 {
-                    currentQuestion = triviaMatch.MatchQuestions.Get(currentAnswer.QuestionId);
-                    currentAnswer.QuestionId = currentQuestion.QuestionId;
+                    if (AddQuestions>0)
+                    {
+                        SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: AddQuestions, ct: ct));
+                    }
+                    else
+                    {
+                        SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
+                    }
                 }
             }
             catch (Exception ex)
             {
+                theMatchStatus = $"Error in Trivia Post: {ex.Message}";
                 _logger.LogError(ex, "Error in Trivia Post");
             }
-            return Page();
+            return RedirectToPage();
+        }
+
+        private void SetMatch(MatchModel? match)
+        {
+            if (match is null)
+            {
+                IsMatchFinished = true;
+                theMatchStatus = "Match Error";
+                return;
+            }
+            triviaMatch = match;
+            MatchId = match.MatchId;
+            currentQuestion = match.CurrentQuestion;
+            currentAnswer = match?.CurrentAnswer;
+            IsMatchFinished = _matchService.IsMatchFinished(match);
+            theMatchStatus = _matchService.GetMatchStatus(match) ?? "Trivia Match is not started";
         }
 
         [BindProperty]
-        public bool IsMatchFinished
-        {
-            get
-            {
-                return triviaMatch?.IsMatchFinished() ?? false;
-            }
-        }
-
+        public bool IsMatchFinished { get; set; }
         [BindProperty]
-        public QuestionAnswerModel currentAnswer { get; set; } = new QuestionAnswerModel();
+        public string theMatchStatus { get; set; }
         [BindProperty]
-        public string theMatchStatus
-        {
-            get
-            {
-                return triviaMatch?.GetMatchStatus() ?? "Trivia Match is not started";
-            }
-        }
+        public QuestionAnswerModel? currentAnswer { get; set; } = new QuestionAnswerModel();
         [BindProperty]
         public int MatchId { get; set; }
-
         [BindProperty]
         public QuestionModel? currentQuestion { get; set; }
-
         [BindProperty]
         public MatchModel triviaMatch { get; set; }
+        [BindProperty]
+        [Range(0, 30, ErrorMessage = "Please use values between 0 to 30")] 
+        public int AddQuestions { get; set; }
+     
     }
 }
