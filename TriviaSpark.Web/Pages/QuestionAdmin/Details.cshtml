@@ -1,0 +1,58 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<h1>Question Details</h1>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Question.QuestionText)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.Question.QuestionText)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Question.Category)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Question.Category)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Question.Difficulty)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Question.Difficulty)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Question.Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Question.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Question.Source)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Question.Source)
+        </dd>
+    </dl>
+
+    <h2>Answers</h2>
+    <dl>
+        @foreach (var answer in Model.Question.Answers)
+        {
+            <dt>
+                @Html.DisplayFor(model => answer.IsCorrect) @Html.Raw(answer.AnswerText)
+            </dt>
+        }
+    </dl>
+
+
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Question?.QuestionId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -237,7 +237,7 @@ namespace TriviaSpark.Web.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswer", b =>
+            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswerModel", b =>
                 {
                     b.Property<int>("AnswerId")
                         .ValueGeneratedOnAdd()
@@ -418,7 +418,7 @@ namespace TriviaSpark.Web.Migrations
 
             modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.MatchQuestionAnswer", b =>
                 {
-                    b.HasOne("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswer", "Answer")
+                    b.HasOne("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswerModel", "Answer")
                         .WithMany("MatchQuestionAnswers")
                         .HasForeignKey("AnswerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -443,7 +443,7 @@ namespace TriviaSpark.Web.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswer", b =>
+            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswerModel", b =>
                 {
                     b.HasOne("TriviaSpark.Web.Areas.Identity.Data.Question", "Question")
                         .WithMany("Answers")
@@ -470,7 +470,7 @@ namespace TriviaSpark.Web.Migrations
                     b.Navigation("MatchQuestions");
                 });
 
-            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswer", b =>
+            modelBuilder.Entity("TriviaSpark.Web.Areas.Identity.Data.QuestionAnswerModel", b =>
                 {
                     b.Navigation("MatchQuestionAnswers");
                 });
