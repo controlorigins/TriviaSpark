@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Pages.MatchAdmin
@@ -18,7 +15,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
             _context = context;
         }
 
-        public IList<Match> Match { get;set; } = default!;
+        public IList<Match> Match { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

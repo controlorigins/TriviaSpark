@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Pages.MatchAdmin
@@ -19,7 +17,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
         }
 
         [BindProperty]
-      public Match Match { get; set; } = default!;
+        public Match Match { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,7 +32,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Match = match;
             }

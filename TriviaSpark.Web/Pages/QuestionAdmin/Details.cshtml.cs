@@ -6,11 +6,11 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
 {
     public class DetailsModel : AdminPageModel
     {
-        public DetailsModel(TriviaSparkWebContext context): base(context)
+        public DetailsModel(TriviaSparkWebContext context) : base(context)
         {
         }
 
-      public Question Question { get; set; } = default!; 
+        public Question Question { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -19,12 +19,12 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
                 return NotFound();
             }
 
-            var question = await _context.Questions.Include(a=>a.Answers).FirstOrDefaultAsync(m => m.QuestionId == id);
+            var question = await _context.Questions.Include(a => a.Answers).FirstOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Question = question;
             }

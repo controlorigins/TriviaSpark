@@ -7,12 +7,12 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
     public class DeleteModel : AdminPageModel
     {
 
-        public DeleteModel(TriviaSparkWebContext context):base(context)
+        public DeleteModel(TriviaSparkWebContext context) : base(context)
         {
         }
 
         [BindProperty]
-      public Question Question { get; set; } = default!;
+        public Question Question { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -27,7 +27,7 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Question = question;
             }

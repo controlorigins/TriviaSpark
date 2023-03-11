@@ -1,6 +1,4 @@
-﻿using TriviaSpark.Core.Match;
-using TriviaSpark.Core.Questions;
-using TriviaSpark.Web.Areas.Identity.Services;
+﻿using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Core.Interfaces
 {

@@ -26,7 +26,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
                 return NotFound();
             }
 
-            var match =  await _context.Matches.FirstOrDefaultAsync(m => m.MatchId == id);
+            var match = await _context.Matches.FirstOrDefaultAsync(m => m.MatchId == id);
             if (match == null)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
 
         private bool MatchExists(int id)
         {
-          return (_context.Matches?.Any(e => e.MatchId == id)).GetValueOrDefault();
+            return (_context.Matches?.Any(e => e.MatchId == id)).GetValueOrDefault();
         }
     }
 }

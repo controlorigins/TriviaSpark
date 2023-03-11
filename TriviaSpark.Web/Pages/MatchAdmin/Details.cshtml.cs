@@ -14,7 +14,7 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
             _context = context;
         }
 
-      public Match Match { get; set; } = default!; 
+        public Match Match { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -23,12 +23,12 @@ namespace TriviaSpark.Web.Pages.MatchAdmin
                 return NotFound();
             }
 
-            var match = await _context.Matches.Include(i=>i.User).FirstOrDefaultAsync(m => m.MatchId == id);
+            var match = await _context.Matches.Include(i => i.User).FirstOrDefaultAsync(m => m.MatchId == id);
             if (match == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Match = match;
             }

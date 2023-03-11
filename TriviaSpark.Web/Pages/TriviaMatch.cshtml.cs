@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using TriviaSpark.Core.Match;
 using TriviaSpark.Core.Questions;
@@ -36,7 +37,7 @@ namespace TriviaSpark.Web.Pages
                 }
                 else
                 {
-                    if (AddQuestions>0)
+                    if (AddQuestions > 0)
                     {
                         SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: AddQuestions, ct: ct));
                     }
@@ -82,9 +83,11 @@ namespace TriviaSpark.Web.Pages
         public QuestionModel? currentQuestion { get; set; }
         [BindProperty]
         public MatchModel triviaMatch { get; set; }
+
         [BindProperty]
-        [Range(0, 30, ErrorMessage = "Please use values between 0 to 30")] 
+        [DisplayName("Add Questions")]
+        [Range(0, 30, ErrorMessage = "Please use values between 0 to 30")]
         public int AddQuestions { get; set; }
-     
+
     }
 }

@@ -16,12 +16,12 @@ namespace TriviaSpark.Web.Pages.QuestionAdmin
 
         [BindProperty]
         public Question Question { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Questions == null || Question == null)
+            if (!ModelState.IsValid || _context.Questions == null || Question == null)
             {
                 return Page();
             }
