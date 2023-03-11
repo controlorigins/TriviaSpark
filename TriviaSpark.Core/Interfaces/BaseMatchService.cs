@@ -32,7 +32,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             match.ScoreCard = match.MatchQuestions.CalculateScore(match.MatchQuestionAnswers);
 
             var correctQuestions = match.MatchQuestions.GetCorrectQuestions(match.MatchQuestionAnswers);
-            return $"{correctQuestions.Count} of {match.MatchQuestions.Count} in {match.MatchQuestionAnswers.Count()} tries.";
+            return $"{correctQuestions.Count} correct out of {match.MatchQuestions.Count} total in {match.MatchQuestionAnswers.Count()} attempts.";
         }
         public virtual Task<MatchModel?> GetMoreQuestions(int MatchId, int NumberOfQuestionsToAdd = 1, CancellationToken ct = default)
         {

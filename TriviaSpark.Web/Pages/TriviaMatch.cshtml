@@ -19,8 +19,19 @@
                     @if (Model.IsMatchFinished)
                     {
                         <h1>Match Finished</h1>
-                        @Html.LabelFor(model=> model.AddQuestions)
-                        @Html.TextBoxFor(i => i.AddQuestions, new { @type = "number" })
+                        <div class="container">
+                            <div class="row">
+                                <div class="form-group col-5">
+                                    <label asp-for="AddQuestions" class="control-label"></label>
+                                    <input asp-for="AddQuestions" class="form-control" />
+                                    <span asp-validation-for="AddQuestions" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-5">
+                                    <button type="submit" class="btn btn-primary">Add More Questions</button>
+                                </div>
+                            </div>
+                        </div>
+
                     }
                     else
                     {
@@ -57,7 +68,6 @@
                                         </div>
                                     </div>
                                     @Html.TextBoxFor(model =>model.currentAnswer.ElapsedTime, new { style = "display: none;" })
-
                                 }
                             }
                         }
@@ -65,7 +75,6 @@
                     <div class="ml-sm-5 pl-sm-5 pt-2">
                         @if (@Model.IsMatchFinished)
                         {
-                            <button type="submit" class="btn btn-primary">Add More Questions</button>
                         }
                         else
                         {
@@ -89,19 +98,14 @@
     </div>
 </div>
 <div>
-    <p>Time taken to answer: <span id="timer"></span></p>
     <script>
         var startTime = new Date().getTime();
-
         setInterval(function () {
             var now = new Date().getTime();
             var timeElapsed = (now - startTime) / 1000;
-            document.getElementById("timer").innerHTML = timeElapsed + " seconds";
             document.getElementById("currentAnswer_ElapsedTime").value = timeElapsed;
         }, 1000);
     </script>
-
-
 
     @if (Model?.triviaMatch?.ScoreCard is not null)
     {
