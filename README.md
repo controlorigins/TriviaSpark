@@ -1,4 +1,11 @@
 # TriviaSpark:  A Trivia Game For Everyone
+**This application was developed with the assistance of Chat GPT**
+
+## About
+Triva Spark is an expirment in developing an application with Chat GPT.  
+For more information check out the page that details the ongoing history of this application. 
+
+[Trivia Spark:Igniting Creativity with CHAT GPT](https://markhazleton.controlorigins.com/trivia-spark-development.html)
 
 ### Objective:
 To develop a web and mobile application, Trivia Spark, that leverages a public Trivia API to create a multiplayer game experience.
