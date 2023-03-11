@@ -1,9 +1,7 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using TriviaSpark.Core.Interfaces;
-using TriviaSpark.Core.Match;
 using TriviaSpark.OpenTriviaDb.Services;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;

@@ -25,10 +25,10 @@ public class TriviaSparkWebContext : IdentityDbContext<TriviaSparkWebUser>
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         ProcessBaseEntityFields();
-        var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess,cancellationToken);
+        var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         return result;
     }
-  
+
     private void ProcessBaseEntityFields()
     {
         try

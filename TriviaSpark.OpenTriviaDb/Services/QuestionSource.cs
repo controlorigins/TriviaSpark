@@ -44,9 +44,9 @@ namespace TriviaSpark.OpenTriviaDb.Services
             {
                 QuestionId = trivia.question.GetDeterministicHashCode().ToString(),
                 Category = trivia.category,
-                Difficulty = trivia.difficulty.ParseEnum<Core.Match.Difficulty>(),  
+                Difficulty = trivia.difficulty.ParseEnum<Core.Match.Difficulty>(),
                 QuestionText = trivia.question,
-                Type = trivia.type.ParseEnum<Core.Match.QuestionType>(), 
+                Type = trivia.type.ParseEnum<Core.Match.QuestionType>(),
                 Source = "OpenTriviaDb"
             };
             questionModel.AddAnswer(trivia.correct_answer, true);

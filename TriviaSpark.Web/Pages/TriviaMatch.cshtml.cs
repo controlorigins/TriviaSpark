@@ -37,7 +37,7 @@ namespace TriviaSpark.Web.Pages
                 }
                 else
                 {
-                    if (AddQuestions>0)
+                    if (AddQuestions > 0)
                     {
                         SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: AddQuestions, ct: ct));
                     }
@@ -86,8 +86,8 @@ namespace TriviaSpark.Web.Pages
 
         [BindProperty]
         [DisplayName("Add Questions")]
-        [Range(0, 30, ErrorMessage = "Please use values between 0 to 30")] 
+        [Range(0, 30, ErrorMessage = "Please use values between 0 to 30")]
         public int AddQuestions { get; set; }
-     
+
     }
 }

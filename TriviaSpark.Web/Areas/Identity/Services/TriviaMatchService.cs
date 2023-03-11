@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TriviaSpark.Core.Interfaces;
 using TriviaSpark.Core.Match;
@@ -16,7 +15,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
         public TriviaMatchService(ILogger<TriviaMatchService> logger,
         IQuestionSourceAdapter questionSource,
-        TriviaSparkWebContext triviaSparkWebContext): base(new MatchModel())
+        TriviaSparkWebContext triviaSparkWebContext) : base(new MatchModel())
         {
             _logger = logger;
             _service = questionSource;

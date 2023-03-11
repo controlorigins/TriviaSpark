@@ -1,6 +1,4 @@
-﻿using TriviaSpark.Core.Match;
-
-namespace TriviaSpark.OpenTriviaDb.Models
+﻿namespace TriviaSpark.OpenTriviaDb.Models
 {
     public class Trivia
     {
