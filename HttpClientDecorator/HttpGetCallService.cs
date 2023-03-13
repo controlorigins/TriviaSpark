@@ -29,11 +29,13 @@ public class HttpGetCallService : IHttpGetCallService
 
         if (getCallResults == null)
         {
+            _logger.LogCritical("The parameter 'getCallResults' cannot be null.");
             throw new ArgumentNullException(nameof(getCallResults), "The parameter 'getCallResults' cannot be null.");
         }
 
         if (string.IsNullOrWhiteSpace(getCallResults.RequestPath))
         {
+            _logger.LogCritical("The URL path specified in 'getCallResults' cannot be null or empty.");
             throw new ArgumentException("The URL path specified in 'getCallResults' cannot be null or empty.", nameof(getCallResults));
         }
 

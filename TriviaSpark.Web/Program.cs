@@ -70,6 +70,16 @@ try
     app.UseCookiePolicy();
     app.UseSession();
     app.MapRazorPages();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllerRoute(
+          name: "areas",
+          pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+        );
+    });
+
+
     app.Run();
 
 }

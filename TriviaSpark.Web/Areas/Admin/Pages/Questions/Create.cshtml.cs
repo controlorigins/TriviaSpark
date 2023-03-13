@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TriviaSpark.Web.Areas.Identity.Data;
 
-namespace TriviaSpark.Web.Pages.QuestionAdmin
+namespace TriviaSpark.Web.Areas.Admin.Pages.Questions
 {
     public class CreateModel : AdminPageModel
     {

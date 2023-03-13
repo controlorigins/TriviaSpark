@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using TriviaSpark.Web.Areas.Identity.Data;
 
-namespace TriviaSpark.Web.Pages.MatchAdmin
+namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class IndexModel : PageModel
     {

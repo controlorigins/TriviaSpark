@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TriviaSpark.Core.Interfaces;
 using TriviaSpark.Core.Match;
@@ -181,6 +182,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 .Include(i => i.User)
                 .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                 .Include(i => i.MatchQuestionAnswers)
+                .AsSingleQuery()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(ct);
             return match ?? CreateMatch();
@@ -194,6 +196,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                     .Where(w => w.MatchId == matchId && w.QuestionId == currentAnswer.QuestionId)
                     .Include(i => i.Question).ThenInclude(i => i.Answers)
                     .Select(s => s.Question)
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(ct) ?? throw new Exception("Question Not Found");
 
@@ -207,6 +210,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                     .Where(w => w.MatchId == matchId)
                     .Where(w => w.QuestionId == dbQuestion.QuestionId)
                     .Where(w => w.AnswerId == dbAnswer.AnswerId)
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(ct);
 
@@ -224,13 +228,16 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                         ElapsedTime = (int)timeTook
                     });
                     await _db.SaveChangesAsync(ct);
-                    _db.ChangeTracker.Clear();
                 }
                 return dbAnswer;
             }
             catch (Exception ex)
             {
                 _logger.LogCritical("SetMatchAnswer Exception", ex);
+            }
+            finally
+            {
+
             }
             return null;
         }
@@ -246,6 +253,11 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             catch (Exception ex)
             {
                 _logger.LogError("AddAnswerAsync:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
             }
             return null;
         }
@@ -279,12 +291,16 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                     }
                 }
                 await _db.SaveChangesAsync(ct);
-                _db.ChangeTracker.Clear();
                 return Create(await GetMatchAsync(MatchId, ct));
             }
             catch (Exception ex)
             {
                 _logger.LogCritical("GetMoreQuestions:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
             }
             return null;
         }
@@ -292,69 +308,94 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
         public QuestionModel? GetNextQuestion(MatchModel match)
         {
-            var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
-            if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
-            var random = new Random();
-            if (result.Count() > 0)
+            try
             {
-                var index = random.Next(result.Count());
-                return result.ElementAt(index);
+                var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+                if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
+                var random = new Random();
+                if (result.Count() > 0)
+                {
+                    var index = random.Next(result.Count());
+                    return result.ElementAt(index);
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogCritical("GetNextQuestion:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
+            }
+
             return null;
         }
 
         public override async Task<MatchModel?> GetUserMatch(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
         {
-            var currentUserName = user?.Identity?.Name ?? string.Empty;
-            var currentUserId = await _db.Users
-                .Where(w => w.UserName == currentUserName)
-                .Select(s => s.Id)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            Match? match;
-            if ((MatchId is null || MatchId == 0) && currentUserId is not null)
+            try
             {
-                match = await _db.Matches
-                    .Where(w => w.UserId == currentUserId)
-                    .Include(i => i.User)
-                    .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
-                    .Include(i => i.MatchQuestionAnswers)
+                var currentUserName = user?.Identity?.Name ?? string.Empty;
+                var currentUserId = await _db.Users
+                    .Where(w => w.UserName == currentUserName)
+                    .Select(s => s.Id)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(ct);
-            }
-            else
-            {
+                    .FirstOrDefaultAsync();
+
+                Match? match;
+                if ((MatchId is null || MatchId == 0) && currentUserId is not null)
+                {
+                    match = await _db.Matches
+                        .Where(w => w.UserId == currentUserId)
+                        .Include(i => i.User)
+                        .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+                        .Include(i => i.MatchQuestionAnswers)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(ct);
+                }
+                else
+                {
+                    match = await _db.Matches
+                        .Where(w => w.MatchId == MatchId)
+                        .Include(i => i.User)
+                        .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+                        .Include(i => i.MatchQuestionAnswers)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(ct);
+                }
+                if (match is not null) return Create(match);
+                match = new Match()
+                {
+                    MatchQuestions = new List<MatchQuestion>(),
+                    MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
+                    MatchName = "match",
+                    UserId = currentUserId
+                };
+                _db.Matches.Add(match);
+                await _db.SaveChangesAsync(ct);
+                MatchId = match.MatchId;
+
                 match = await _db.Matches
                     .Where(w => w.MatchId == MatchId)
                     .Include(i => i.User)
                     .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                     .Include(i => i.MatchQuestionAnswers)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(ct);
+                    .FirstOrDefaultAsync();
+
+                return Create(match);
             }
-            if (match is not null) return Create(match);
-            match = new Match()
+            catch (Exception ex)
             {
-                MatchQuestions = new List<MatchQuestion>(),
-                MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
-                MatchName = "match",
-                UserId = currentUserId
-            };
-            _db.Matches.Add(match);
-            await _db.SaveChangesAsync(ct);
-            MatchId = match.MatchId;
-
-            match = await _db.Matches
-                .Where(w => w.MatchId == MatchId)
-                .Include(i => i.User)
-                .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
-                .Include(i => i.MatchQuestionAnswers)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-            _db.ChangeTracker.Clear();
-            return Create(match);
+                _logger.LogCritical("GetNextQuestion:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
+            }
+            return null;
         }
     }
 }
