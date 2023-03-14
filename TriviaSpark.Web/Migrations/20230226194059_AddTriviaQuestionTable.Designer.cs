@@ -232,7 +232,7 @@ namespace TriviaSpark.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("QuestionType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

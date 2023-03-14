@@ -3,6 +3,7 @@ using HttpClientDecorator.Models;
 using Microsoft.Extensions.Logging;
 using TriviaSpark.Core.Extensions;
 using TriviaSpark.Core.Interfaces;
+using TriviaSpark.Core.Match;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.OpenTriviaDb.Models;
 
@@ -61,12 +62,13 @@ namespace TriviaSpark.OpenTriviaDb.Services
             return questionModel;
         }
 
-        public async Task<List<QuestionModel>> GetQuestions(int questionCount = 1, CancellationToken ct = default)
+        public async Task<List<QuestionModel>> GetQuestions(int questionCount = 1, Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
         {
             var questionList = new List<QuestionModel>();
+            ;
             var results = new HttpGetCallResults<OpenTBbResponse>
             {
-                RequestPath = $"https://opentdb.com/api.php?amount={questionCount}&difficulty=easy&type=multiple"
+                RequestPath = $"https://opentdb.com/api.php?amount={questionCount}&difficulty={difficulty.ToString().ToLower()}&type=multiple"
             };
             results = await _httpClientService.GetAsync(results, ct);
 

@@ -10,6 +10,9 @@ namespace TriviaSpark.Web.Areas.Identity.Data
         public string UserId { get; set; }
         public string MatchName { get; set; }
         public MatchMode MatchMode { get; set; }
+        public Difficulty Difficulty { get; set; }
+        public QuestionType QuestionType { get; set; }
+
         public virtual ICollection<MatchQuestion> MatchQuestions { get; set; }
         public virtual ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
 

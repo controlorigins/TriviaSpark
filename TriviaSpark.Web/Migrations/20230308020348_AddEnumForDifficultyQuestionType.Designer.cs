@@ -261,7 +261,7 @@ namespace TriviaSpark.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("QuestionType")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("QuestionId");

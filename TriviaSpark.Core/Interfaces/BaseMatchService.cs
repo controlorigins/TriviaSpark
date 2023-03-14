@@ -34,7 +34,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             var correctQuestions = match.MatchQuestions.GetCorrectQuestions(match.MatchQuestionAnswers);
             return $"{correctQuestions.Count} correct out of {match.MatchQuestions.Count} total in {match.MatchQuestionAnswers.Count()} attempts.";
         }
-        public virtual Task<MatchModel?> GetMoreQuestions(int MatchId, int NumberOfQuestionsToAdd = 1, CancellationToken ct = default)
+        public virtual Task<MatchModel?> GetMoreQuestionsAsync(int MatchId, int NumberOfQuestionsToAdd = 1,Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
         {
             return Task.FromResult<MatchModel?>(CreateMatch());
         }
@@ -42,7 +42,11 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             return null;
         }
-        public virtual Task<MatchModel?> GetUserMatch(ClaimsPrincipal user, int? matchID, CancellationToken ct = default)
+        public virtual Task<List<MatchModel>> GetUserMatchesAsync(ClaimsPrincipal user, int? matchID, CancellationToken ct = default)
+        {
+            return Task.FromResult(new List<MatchModel>());
+        }
+        public virtual Task<MatchModel?> GetUserMatchAsync(ClaimsPrincipal user, int? matchID, CancellationToken ct = default)
         {
             return Task.FromResult<MatchModel?>(CreateMatch());
         }
@@ -59,5 +63,9 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return result.Count == 0;
         }
 
+        public virtual Task<MatchModel> CreateMatchAsync(MatchModel newMatch, ClaimsPrincipal user, CancellationToken ct = default)
+        {
+            return Task.FromResult<MatchModel>(CreateMatch());
+        }
     }
 }
