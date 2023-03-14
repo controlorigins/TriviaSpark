@@ -32,15 +32,4 @@
 	  <ProjectReference Include="..\TriviaSpark.Core\TriviaSpark.Core.csproj" />
 	  <ProjectReference Include="..\TriviaSpark.OpenTriviaDb\TriviaSpark.OpenTriviaDb.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <None Update="TriviaSpark.Web.db">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Areas\Admin\Controllers\" />
-	  <Folder Include="Areas\Admin\Data\" />
-	  <Folder Include="Areas\Admin\Models\" />
-	  <Folder Include="Areas\Admin\Views\" />
-	</ItemGroup>
 </Project>

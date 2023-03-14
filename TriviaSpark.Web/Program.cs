@@ -14,8 +14,10 @@ logger.Debug("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    var connectionString = builder.Configuration.GetConnectionString("TriviaSparkWebContextConnection") ?? throw new InvalidOperationException("Connection string 'TriviaSparkWebContextConnection' not found.");
-    builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(connectionString));
+
+
+    var ConnectionString = "Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + "TriviaSpark.Web.db";
+    builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
     builder.Services.AddDefaultIdentity<TriviaSparkWebUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TriviaSparkWebContext>();
 
     // Add services to the container.
@@ -54,6 +56,11 @@ try
     builder.Host.UseNLog();
 
     var app = builder.Build();
+
+    string baseDir = app.Environment.WebRootPath;
+    AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Path.Combine(baseDir, "App_Data"));
+
+
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
