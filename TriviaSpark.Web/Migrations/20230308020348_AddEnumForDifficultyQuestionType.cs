@@ -11,7 +11,7 @@ namespace TriviaSpark.Web.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "Type",
+                name: "QuestionType",
                 table: "Questions",
                 type: "INTEGER",
                 nullable: false,
@@ -31,7 +31,7 @@ namespace TriviaSpark.Web.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Type",
+                name: "QuestionType",
                 table: "Questions",
                 type: "TEXT",
                 nullable: false,

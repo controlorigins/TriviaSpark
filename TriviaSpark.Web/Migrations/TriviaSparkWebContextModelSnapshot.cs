@@ -14,7 +14,7 @@ namespace TriviaSpark.Web.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -157,6 +157,9 @@ namespace TriviaSpark.Web.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MatchMode")
                         .HasColumnType("INTEGER");
 
@@ -166,6 +169,9 @@ namespace TriviaSpark.Web.Migrations
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("QuestionType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .IsRequired()

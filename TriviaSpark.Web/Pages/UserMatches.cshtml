@@ -1,0 +1,84 @@
+﻿@page
+@using TriviaSpark.Core.Match;
+@model TriviaSpark.Web.Pages.UserMatchesModel
+@{
+}
+<h1>Current Matches</h1>
+
+@if (Model.Matches.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Match Start</th>
+                <th>Mode</th>
+                <th>Question Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var match in Model.Matches)
+            {
+                <tr>
+                    <td><a asp-page="./TriviaMatch" asp-route-id="@match.MatchId">@match.MatchDate</a></td>
+                    <td>@match.MatchMode</td>
+                    <td>@match.NumberOfQuestions</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No matches found.</p>
+}
+
+
+<div class="card">
+    <div class="card-header">
+        Create a New Match
+    </div>
+    <div class="card-body">
+        <div class="container overflow-hidden">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row d-flex flex-wrap gx-5">
+                    <div class="col-sm-12 col-md-3 my-3 ">
+                        <label asp-for="NewMatch.MatchMode" class="form-label"></label>
+                        <select asp-for="NewMatch.MatchMode" asp-items="Html.GetEnumSelectList<MatchMode>()" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-12 col-md-3 my-3 ">
+                        <label asp-for="NewMatch.Difficulty" class="form-label"></label>
+                        <select asp-for="NewMatch.Difficulty" asp-items="Html.GetEnumSelectList<Difficulty>()" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-12 col-md-3 my-3 ">
+                        <label asp-for="NewMatch.NumberOfQuestions" class="form-label"></label>
+                        <input asp-for="NewMatch.NumberOfQuestions" type="number" class="form-control" />
+                    </div>
+                    <div class="col-sm-12 col-md-3 my-3 ">
+                        <button type="submit" class="btn btn-primary">Create Match</button>
+                    </div>
+                </div>
+            </form>
+            <p>Choose a game play mode that fits your play style!</p>
+            <dl>
+                <dt>One and Done</dt>
+                <dd>You get one chance to answer each question. Choose wisely!</dd>
+                <dt>Sequential</dt>
+                <dd>Questions are presented in the order they appear in the list. Are you ready for a challenge?</dd>
+                <dt>Random</dt>
+                <dd>Questions are presented in random order. Keep your wits about you!</dd>
+                <dt>Adaptive</dt>
+                <dd>The difficulty of questions changes based on your performance. Are you up for a constantly-changing challenge?</dd>
+            </dl>
+        </div>
+
+    </div>
+    <div class="card-footer">
+    </div>
+</div>
+
+
+
+
+
+

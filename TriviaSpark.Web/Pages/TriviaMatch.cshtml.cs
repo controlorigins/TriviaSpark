@@ -10,6 +10,7 @@ using TriviaSpark.Web.Areas.Identity.Services;
 namespace TriviaSpark.Web.Pages
 {
     [Authorize]
+    [Route("/TriviaMatch/{id}")]
     public class TriviaMatchModel : PageModel
     {
         private readonly ILogger<TriviaMatchModel> _logger;
@@ -20,11 +21,13 @@ namespace TriviaSpark.Web.Pages
             _logger = logger;
         }
 
-        public async Task OnGet(CancellationToken ct)
+        public async Task OnGet(int? id = 0, CancellationToken ct = default)
         {
             if (triviaMatch is null)
             {
-                SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
+                if (id is not null) MatchId = id.Value;
+
+                SetMatch(await _matchService.GetUserMatchAsync(User, MatchId, ct));
             }
         }
         public async Task<IActionResult> OnPostAsync(CancellationToken ct)
@@ -39,11 +42,11 @@ namespace TriviaSpark.Web.Pages
                 {
                     if (AddQuestions > 0)
                     {
-                        SetMatch(await _matchService.GetMoreQuestions(MatchId, NumberOfQuestionsToAdd: AddQuestions, ct: ct));
+                        SetMatch(await _matchService.GetMoreQuestionsAsync(MatchId, NumberOfQuestionsToAdd: AddQuestions,Difficulty.Easy, ct: ct));
                     }
                     else
                     {
-                        SetMatch(await _matchService.GetUserMatch(User, MatchId, ct));
+                        SetMatch(await _matchService.GetUserMatchAsync(User, MatchId, ct));
                     }
                 }
             }

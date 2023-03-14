@@ -9,11 +9,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-3 align-content-center">
-                    @await Html.PartialAsync("PercentageCircle", Model.PercentCorrect)
+                    @await Html.PartialAsync("_PercentageCircle", Model.PercentCorrect)
                     <strong>Percent Correct</strong>
                 </div>
                 <div class="col-3 align-content-center">
-                    @await Html.PartialAsync("PercentageCircle", Model.AdjustedScore)
+                    @await Html.PartialAsync("_PercentageCircle", Model.AdjustedScore)
                     <strong>Weighted Score</strong>
                 </div>
             </div>
