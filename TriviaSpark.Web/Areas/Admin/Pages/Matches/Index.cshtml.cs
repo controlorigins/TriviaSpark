@@ -1,29 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class IndexModel : PageModel
     {
-        private readonly TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebContext _context;
+        private readonly IMatchService _matchService;
 
-        public IndexModel(TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebContext context)
+        public IndexModel(IMatchService matchService)
         {
-            _context = context;
+            _matchService = matchService;
         }
 
-        public IList<Match> Match { get; set; } = default!;
-
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(CancellationToken ct)
         {
-            if (_context.Matches != null)
-            {
-                Match = await _context.Matches
-                .Include(m => m.User).ToListAsync();
-            }
+            Match = await _matchService.GetMatchesAsync(ct);
         }
+
+        public IList<MatchModel> Match { get; set; } = default!;
     }
 }

@@ -1,59 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches;
 
 public class DeleteModel : PageModel
 {
-    private readonly TriviaSparkWebContext _context;
+    private readonly IMatchService _matchService;
 
-    public DeleteModel(TriviaSparkWebContext context)
+    public DeleteModel(IMatchService matchService)
     {
-        _context = context;
+        _matchService = matchService;
     }
 
-    [BindProperty]
-    public Match Match { get; set; } = default!;
-
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync(int? id, CancellationToken ct)
     {
-        if (id == null || _context.Matches == null)
+        if (id == null)
         {
             return NotFound();
         }
-
-        var match = await _context.Matches.FirstOrDefaultAsync(m => m.MatchId == id);
-
-        if (match == null)
+        var match = await _matchService.GetUserMatchAsync(User, id, ct);
+        if (match is null)
         {
             return NotFound();
         }
-        else
-        {
-            Match = match;
-        }
+        Match = match;
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int? id)
+    public async Task<IActionResult> OnPostAsync(int? id, CancellationToken ct)
     {
-        if (id == null || _context.Matches == null)
+        if (id == null)
         {
             return NotFound();
         }
-        var match = await _context.Matches.FindAsync(id);
-
-        if (match != null)
-        {
-            Match = match;
-            _context.MatchAnswers.RemoveRange(_context.MatchAnswers.Where(ma => ma.MatchId == Match.MatchId));
-            _context.MatchQuestions.RemoveRange(_context.MatchQuestions.Where(mq => mq.MatchId == Match.MatchId));
-            _context.Matches.Remove(Match);
-            await _context.SaveChangesAsync();
-        }
-
         return RedirectToPage("./Index");
     }
+
+    [BindProperty]
+    public MatchModel Match { get; set; } = default!;
 }

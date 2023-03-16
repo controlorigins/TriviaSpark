@@ -1,6 +1,6 @@
 ﻿@page
 @using TriviaSpark.Core.Match;
-@model             EditModel
+@model EditModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -31,14 +31,14 @@
                 <span asp-validation-for="Match.MatchMode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Match.CreatedDate" class="control-label"></label>
-                <input asp-for="Match.CreatedDate" class="form-control" />
-                <span asp-validation-for="Match.CreatedDate" class="text-danger"></span>
+                <label asp-for="Match.Difficulty" class="control-label"></label>
+                <select asp-for="Match.Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulty>()"></select>
+                <span asp-validation-for="Match.Difficulty" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Match.ModifiedDate" class="control-label"></label>
-                <input asp-for="Match.ModifiedDate" class="form-control" />
-                <span asp-validation-for="Match.ModifiedDate" class="text-danger"></span>
+                <label asp-for="Match.QuestionType" class="control-label"></label>
+                <select asp-for="Match.QuestionType" class="form-control" asp-items="Html.GetEnumSelectList<QuestionType>()"></select>
+                <span asp-validation-for="Match.QuestionType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -52,5 +52,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

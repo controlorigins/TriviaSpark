@@ -12,6 +12,7 @@
             <tr>
                 <th>Match Start</th>
                 <th>Mode</th>
+                <th>Dificulty</th>
                 <th>Question Count</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                 <tr>
                     <td><a asp-page="./TriviaMatch" asp-route-id="@match.MatchId">@match.MatchDate</a></td>
                     <td>@match.MatchMode</td>
+                    <td>@match.Difficulty</td>
                     <td>@match.NumberOfQuestions</td>
                 </tr>
             }

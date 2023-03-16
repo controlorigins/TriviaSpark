@@ -1,36 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class DetailsModel : PageModel
     {
-        private readonly TriviaSparkWebContext _context;
+        private readonly IMatchService _matchService;
 
-        public DetailsModel(TriviaSparkWebContext context)
+        public DetailsModel(IMatchService matchService)
         {
-            _context = context;
+            _matchService = matchService;
         }
 
-        public Match Match { get; set; } = default!;
+        public MatchModel Match { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Matches == null)
+            if (id is null )
             {
                 return NotFound();
             }
 
-            var match = await _context.Matches.Include(i => i.User).FirstOrDefaultAsync(m => m.MatchId == id);
-            if (match == null)
+            var mat = await _matchService.GetMatchAsync(id.Value);
+            if (mat is null)
             {
                 return NotFound();
             }
             else
             {
-                Match = match;
+                Match = mat;
             }
             return Page();
         }

@@ -1,90 +1,65 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class EditModel : PageModel
     {
-        private readonly TriviaSparkWebContext _context;
+        private readonly IMatchService _matchService;
 
-        public EditModel(TriviaSparkWebContext context)
+        public EditModel(IMatchService matchService)
         {
-            _context = context;
+            _matchService = matchService;
         }
 
-
-        [BindProperty]
-        public Match Match { get; set; } = default!;
-
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null || _context.Matches == null)
-            {
-                return NotFound();
-            }
-
-            var match = await _context.Matches.FirstOrDefaultAsync(m => m.MatchId == id);
-            if (match == null)
-            {
-                return NotFound();
-            }
-            Match = match;
-            Users = Create(await _context.Users.ToListAsync());
-            return Page();
-        }
-
-        private static SelectListItem Create(TriviaSparkWebUser user)
+        private static SelectListItem Create(UserModel user)
         {
             return new SelectListItem()
             {
                 Text = user.UserName,
-                Value = user.Id
+                Value = user.UserId
             };
         }
 
-        private IEnumerable<SelectListItem> Create(List<TriviaSparkWebUser> users)
+        private IEnumerable<SelectListItem> Create(List<UserModel> users)
         {
             return users.Select(Create);
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnGetAsync(int? id, CancellationToken ct = default)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var match = await _matchService.GetUserMatchAsync(User, id, ct);
+            if (match is null)
+            {
+                return NotFound();
+            }
+            Match = match;
+            Users = Create(await _matchService.GetUsersAsync(ct));
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(CancellationToken ct = default)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
-            _context.Attach(Match).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MatchExists(Match.MatchId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var result = await _matchService.UpdateMatchAsync(Match, ct);
 
             return RedirectToPage("./Index");
         }
+
+        [BindProperty]
+        public MatchModel Match { get; set; } = default!;
         [BindProperty]
         public IEnumerable<SelectListItem> Users { get; set; }
 
-        private bool MatchExists(int id)
-        {
-            return (_context.Matches?.Any(e => e.MatchId == id)).GetValueOrDefault();
-        }
     }
 }
