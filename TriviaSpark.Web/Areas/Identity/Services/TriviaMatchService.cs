@@ -194,6 +194,18 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return match ?? CreateMatch();
         }
 
+        public override async Task<List<MatchModel>> GetMatchesAsync(CancellationToken ct)
+        {
+            var match = await _db.Matches
+                .Include(i => i.User)
+                .AsSingleQuery()
+                .AsNoTracking()
+                .ToListAsync(ct);
+            return match.Select(s => Create(s)).ToList() ?? new List<MatchModel?>();
+        }
+
+
+
         private async Task<QuestionAnswer?> SetMatchAnswer(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct)
         {
             try
@@ -268,7 +280,31 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return null;
         }
 
-        public override async Task<MatchModel?> GetMoreQuestionsAsync(int MatchId, int NumberOfQuestionsToAdd = 1,Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
+        public override async Task<List<UserModel>> GetUsersAsync(CancellationToken ct)
+        {
+            try
+            {
+                return await _db.Users.Select(s => new UserModel()
+                {
+                    UserId = s.Id,
+                    UserName = s.UserName,
+                    Email = s.Email,
+                    PhoneNumber = s.PhoneNumber
+                }).ToListAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("AddAnswerAsync:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
+            }
+            return new List<UserModel>();
+        }
+
+        public override async Task<MatchModel?> GetMoreQuestionsAsync(int MatchId, int NumberOfQuestionsToAdd = 1, Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
         {
             try
             {
@@ -309,6 +345,36 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 SqliteConnection.ClearAllPools();
             }
             return null;
+        }
+        public override async Task<MatchModel> UpdateMatchAsync(MatchModel match, CancellationToken ct)
+        {
+            try
+            {
+                var dbMatch = await _db.Matches.FindAsync(new object?[] { match.MatchId }, cancellationToken: ct)
+                    ?? throw new Exception("Match Not Found");
+
+                dbMatch.MatchName = match?.MatchName ?? dbMatch.MatchName;
+                dbMatch.MatchMode = match?.MatchMode ?? dbMatch.MatchMode;
+                dbMatch.UserId = match?.UserId ?? dbMatch.UserId;
+                dbMatch.Difficulty = match?.Difficulty ?? dbMatch.Difficulty;
+                dbMatch.QuestionType = match?.QuestionType ?? dbMatch.QuestionType;
+
+                await _db.SaveChangesAsync(ct);
+                return Create(await GetMatchAsync(match.MatchId, ct));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical("UpdateMatchAsync:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
+            }
+            return match;
+
+
         }
 
 
@@ -403,7 +469,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 MatchQuestions = new List<MatchQuestion>(),
                 MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
                 MatchName = "UserMatch",
-                UserId = currentUserId??"",
+                UserId = currentUserId ?? "",
                 MatchMode = newMatch.MatchMode,
                 Difficulty = newMatch.Difficulty,
                 QuestionType = newMatch.QuestionType,
@@ -472,5 +538,37 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             }
             return null;
         }
+
+        public override async Task<MatchModel?> GetMatchAsync(int? MatchId = null, CancellationToken ct = default)
+        {
+            try
+            {
+                Match? match;
+                if (MatchId is null || MatchId == 0) throw new ArgumentNullException(nameof(MatchId));
+
+                match = await _db.Matches
+                    .Where(w => w.MatchId == MatchId)
+                    .Include(i => i.User)
+                    .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+                    .Include(i => i.MatchQuestionAnswers)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(ct);
+
+                if (match is not null) return Create(match);
+
+                throw new Exception("Match Not Found");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical("GetUserMatchAsync:Exception", ex);
+            }
+            finally
+            {
+                _db.ChangeTracker.Clear();
+                SqliteConnection.ClearAllPools();
+            }
+            return null;
+        }
+
     }
 }

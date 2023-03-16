@@ -50,6 +50,10 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             return Task.FromResult<MatchModel?>(CreateMatch());
         }
+        public virtual Task<MatchModel?> GetMatchAsync(int? matchID, CancellationToken ct = default)
+        {
+            return Task.FromResult<MatchModel?>(CreateMatch());
+        }
         public virtual bool IsMatchFinished(MatchModel match)
         {
             if (match.MatchQuestions.Count == 0) return true;
@@ -66,6 +70,21 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         public virtual Task<MatchModel> CreateMatchAsync(MatchModel newMatch, ClaimsPrincipal user, CancellationToken ct = default)
         {
             return Task.FromResult<MatchModel>(CreateMatch());
+        }
+
+        public virtual Task<List<UserModel>> GetUsersAsync(CancellationToken ct)
+        {
+            return Task.FromResult<List<UserModel>>(new List<UserModel>());
+        }
+
+        public virtual Task<MatchModel> UpdateMatchAsync(MatchModel match, CancellationToken ct)
+        {
+            return Task.FromResult<MatchModel>(match);
+        }
+
+        public virtual Task<List<MatchModel>> GetMatchesAsync(CancellationToken ct)
+        {
+            return Task.FromResult(new List<MatchModel>());
         }
     }
 }

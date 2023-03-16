@@ -1,5 +1,5 @@
 ﻿@page
-@model             DeleteModel
+@model DeleteModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -28,22 +28,10 @@
             @Html.DisplayNameFor(model => model.Match.User)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Match.User.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Match.CreatedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Match.CreatedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Match.ModifiedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Match.ModifiedDate)
+            @Html.DisplayFor(model => model.Match.User.UserName)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Match.MatchId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

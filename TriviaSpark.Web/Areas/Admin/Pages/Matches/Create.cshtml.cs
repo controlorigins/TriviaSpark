@@ -1,41 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TriviaSpark.Web.Areas.Identity.Data;
+using TriviaSpark.Core.Match;
+using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class CreateModel : PageModel
     {
-        private readonly TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebContext _context;
+        private readonly IMatchService _matchService;
 
-        public CreateModel(TriviaSpark.Web.Areas.Identity.Data.TriviaSparkWebContext context)
+        public CreateModel(IMatchService matchService)
         {
-            _context = context;
+            _matchService = matchService;
         }
 
-        public IActionResult OnGet()
+        private static SelectListItem Create(UserModel user)
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            return new SelectListItem()
+            {
+                Text = user.UserName,
+                Value = user.UserId
+            };
+        }
+        private IEnumerable<SelectListItem> Create(List<UserModel> users)
+        {
+            return users.Select(Create);
+        }
+
+        public async Task<IActionResult> OnGet(CancellationToken ct)
+        {
+            Users = Create(await _matchService.GetUsersAsync(ct));
             return Page();
         }
 
-        [BindProperty]
-        public Match Match { get; set; } = default!;
 
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(CancellationToken ct)
         {
-            if (!ModelState.IsValid || _context.Matches == null || Match == null)
+            if (!ModelState.IsValid || Match == null)
             {
                 return Page();
             }
-
-            _context.Matches.Add(Match);
-            await _context.SaveChangesAsync();
+            var result = await _matchService.CreateMatchAsync(Match, User, ct);
 
             return RedirectToPage("./Index");
         }
+
+        [BindProperty]
+        public MatchModel Match { get; set; } = default!;
+
+        [BindProperty]
+        public IEnumerable<SelectListItem> Users { get; set; }
     }
 }
