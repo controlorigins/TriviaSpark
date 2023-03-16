@@ -1,6 +1,9 @@
 # TriviaSpark:  A Trivia Game For Everyone
 **This application was developed with the assistance of Chat GPT**
 
+[![.NET](https://github.com/controlorigins/TriviaSpark/actions/workflows/dotnet.yml/badge.svg)](https://github.com/controlorigins/TriviaSpark/actions/workflows/dotnet.yml)
+
+
 ## About
 Triva Spark is an expirment in developing an application with Chat GPT.  
 For more information check out the page that details the ongoing history of this application. 
