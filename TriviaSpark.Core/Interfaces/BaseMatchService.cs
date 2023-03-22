@@ -86,5 +86,9 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             return Task.FromResult(new List<MatchModel>());
         }
+        public virtual Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct)
+        {
+            return Task.FromResult(0);
+        }
     }
 }

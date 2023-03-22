@@ -202,7 +202,30 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 .ToListAsync(ct);
             return match.Select(s => Create(s)).ToList() ?? new List<MatchModel?>();
         }
+        public override async Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct)
+        {
+            var match = await _db.Matches.FindAsync(new object?[] { id }, cancellationToken: ct);
 
+            if(match is null)
+            {
+                return 0;
+            }
+            var currentUserName = user?.Identity?.Name ?? string.Empty;
+            var currentUserId = await _db.Users
+                .Where(w => w.UserName == currentUserName)
+                .Select(s => s.Id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: ct);
+
+            if (match.UserId == currentUserId)
+            {
+                _db.Matches.Remove(match);
+                await _db.SaveChangesAsync(ct);
+                return 1;
+            }
+
+            return 0;
+        }
 
 
         private async Task<QuestionAnswer?> SetMatchAnswer(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct)
@@ -219,9 +242,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
                 var dbAnswer = dbQuestion.Answers
                     .Where(w => w.AnswerText == currentAnswer.AnswerText)
-                    .FirstOrDefault();
-
-                if (dbAnswer is null) throw new Exception("Answer Not Found");
+                    .FirstOrDefault() ?? throw new Exception("Answer Not Found");
 
                 var dbMatchAnswer = await _db.MatchAnswers
                     .Where(w => w.MatchId == matchId)
@@ -235,7 +256,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 {
                     if (double.TryParse(currentAnswer.ElapsedTime, out double timeTook))
                     {
-                        timeTook = timeTook * 1000;
+                        timeTook *= 1000;
                     }
                     _db.MatchAnswers.Add(new MatchQuestionAnswer()
                     {
@@ -384,9 +405,9 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
                 if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
                 var random = new Random();
-                if (result.Count() > 0)
+                if (result.Count > 0)
                 {
-                    var index = random.Next(result.Count());
+                    var index = random.Next(result.Count);
                     return result.ElementAt(index);
                 }
             }

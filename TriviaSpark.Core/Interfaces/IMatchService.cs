@@ -18,5 +18,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         Task<List<UserModel>> GetUsersAsync(CancellationToken ct);
         Task<MatchModel> UpdateMatchAsync(MatchModel match, CancellationToken ct);
         Task<List<MatchModel>> GetMatchesAsync(CancellationToken ct);
+        Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct);
     }
 }
