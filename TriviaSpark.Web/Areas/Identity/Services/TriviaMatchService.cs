@@ -141,7 +141,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
                 if (match.MatchQuestions.Count == 0 || IsMatchFinished(match))
                 {
-                    // triviaMatch = await _matchService.GetMoreQuestionsAsync(triviaMatch, ct);
+                    
                 }
                 else
                 {
@@ -164,7 +164,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             {
                 _logger.LogError("CreateMatchModelFromMatch:Exception", ex);
             }
-
             return match;
         }
         private static new Match CreateMatch()

@@ -46,11 +46,11 @@ else
                 <div class="row d-flex flex-wrap gx-5">
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.MatchMode" class="form-label"></label>
-                        <select asp-for="NewMatch.MatchMode" asp-items="Html.GetEnumSelectList<MatchMode>()" class="form-control"></select>
+                        @Html.DropDownListFor(m => m.NewMatch.MatchMode, Html.GetEnumSelectList<MatchMode>().Where(e => e.Value != "0"), new { @class = "form-control" })
                     </div>
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.Difficulty" class="form-label"></label>
-                        <select asp-for="NewMatch.Difficulty" asp-items="Html.GetEnumSelectList<Difficulty>()" class="form-control"></select>
+                        @Html.DropDownListFor(m => m.NewMatch.Difficulty, Html.GetEnumSelectList<Difficulty>().Where(e => e.Value != "0"), new { @class = "form-control" })
                     </div>
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.NumberOfQuestions" class="form-label"></label>
@@ -73,14 +73,9 @@ else
                 <dd>The difficulty of questions changes based on your performance. Are you up for a constantly-changing challenge?</dd>
             </dl>
         </div>
-
     </div>
     <div class="card-footer">
+
     </div>
 </div>
-
-
-
-
-
 
