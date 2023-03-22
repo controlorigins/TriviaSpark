@@ -77,11 +77,11 @@ namespace TriviaSpark.Core.Questions
                     runningScore += (1.00 - ((questionAnswers - 1) * .2));
                     // Question attempted and correct 
                     numCorrect++;
-                    numInCorrectAnswers = numInCorrectAnswers + (questionAnswers - 1);
+                    numInCorrectAnswers += (questionAnswers - 1);
                 }
                 else
                 {
-                    numInCorrectAnswers = numInCorrectAnswers + attemptedAnswersByQuestion[questionId].Count;
+                    numInCorrectAnswers += attemptedAnswersByQuestion[questionId].Count;
                 }
             }
 

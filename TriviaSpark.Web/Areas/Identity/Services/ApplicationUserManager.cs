@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using TriviaSpark.Web.Areas.Identity.Data;
 
-namespace TriviaSpark.Web.Areas.Identity.Data;
+namespace TriviaSpark.Web.Areas.Identity.Services;
 
 public class ApplicationUserManager : UserManager<TriviaSparkWebUser>
 {

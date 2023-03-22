@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TriviaSpark.Web.Areas.Identity.Data;
 
@@ -10,9 +11,11 @@ using TriviaSpark.Web.Areas.Identity.Data;
 namespace TriviaSpark.Web.Migrations
 {
     [DbContext(typeof(TriviaSparkWebContext))]
-    partial class TriviaSparkWebContextModelSnapshot : ModelSnapshot
+    [Migration("20230322132218_AddUserProperties")]
+    partial class AddUserProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");

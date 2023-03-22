@@ -50,7 +50,7 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("/Index");
             }
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -69,7 +69,7 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    values: new { area = "Identity", userId, code, returnUrl },
                     protocol: Request.Scheme);
             }
 
