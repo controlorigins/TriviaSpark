@@ -48,30 +48,31 @@ namespace TriviaSpark.Core.Match
         {
             return MatchId.GetHashCode();
         }
-        public QuestionAnswerModel? CurrentAnswer { get; set; }
-        
-        [DisplayName("Number of Questions")]
-        [Range(0, 50, ErrorMessage = "Please use values between 0 to 50")] 
-        public int NumberOfQuestions { get; set; }
 
-        [DisplayName("Question Type")]
-        public QuestionType QuestionType { get; set; } = TriviaSpark.Core.Match.QuestionType.Multiple;
+        public QuestionAnswerModel? CurrentAnswer { get; set; }
+
+        public QuestionModel? CurrentQuestion { get; set; }
 
         [DisplayName("Difficulty")]
         public Difficulty Difficulty { get; set; } = Difficulty.Easy;
-
-        public QuestionModel? CurrentQuestion { get; set; }
         public DateTime MatchDate { get; set; }
         [Key]
         public int MatchId { get; set; }
         [DisplayName("Mode of Game Play")]
         public MatchMode MatchMode { get; set; }
         public string? MatchName { get; set; }
-        public IEnumerable<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
+        public List<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
         public QuestionProvider MatchQuestions { get; set; } = new();
+
+        [DisplayName("Number of Questions")]
+        [Range(0, 50, ErrorMessage = "Please use values between 0 to 50")]
+        public int NumberOfQuestions { get; set; }
+
+        [DisplayName("Question Type")]
+        public QuestionType QuestionType { get; set; } = QuestionType.Multiple;
+        public ScoreCardModel? ScoreCard { get; set; }
         public UserModel? User { get; set; }
         public string? UserId { get; set; }
-        public ScoreCardModel? ScoreCard { get; set; }
     }
 }
 

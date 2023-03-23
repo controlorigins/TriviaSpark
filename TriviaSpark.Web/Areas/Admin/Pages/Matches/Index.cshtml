@@ -25,6 +25,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Match[0].User)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Match[0].ScoreCard.QuestionCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Match[0].ScoreCard.CorrectAnswers)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -43,6 +49,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScoreCard.QuestionCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScoreCard.CorrectAnswers)
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.MatchId">Edit</a> |

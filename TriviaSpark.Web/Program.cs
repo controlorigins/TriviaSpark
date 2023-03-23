@@ -59,7 +59,7 @@ try
     var app = builder.Build();
 
     string baseDir = app.Environment.WebRootPath;
-    AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Path.Combine(baseDir, "App_Data"));
+    AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(baseDir, "App_Data"));
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
@@ -95,6 +95,6 @@ catch (Exception exception)
 finally
 {
     // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-    NLog.LogManager.Shutdown();
+    LogManager.Shutdown();
 }
 

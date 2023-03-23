@@ -62,7 +62,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
             var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
 
-            if (result.Count == 0) result = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
+            if (result.Count == 0) result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
 
             return result.Count == 0;
         }

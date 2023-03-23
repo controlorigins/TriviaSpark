@@ -247,7 +247,7 @@ namespace TriviaSpark.Core.Tests.Utility
         public void TestGetRandom()
         {
             // Arrange
-            ListProvider<Person> listProvider = new ListProvider<Person>();
+            ListProvider<Person> listProvider = new();
             listProvider.Add(new Person { Name = "Alice", Age = 30 });
             listProvider.Add(new Person { Name = "Bob", Age = 25 });
             listProvider.Add(new Person { Name = "Charlie", Age = 40 });

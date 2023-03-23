@@ -6,29 +6,33 @@
     public class ScoreCardModel
     {
         /// <summary>
-        /// Gets or sets the adjusted score for the scorecard.
+        /// The adjusted score for the scorecard.
         /// </summary>
         public double AdjustedScore { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of correct answers for the scorecard.
+        /// The number of correct answers for the scorecard.
         /// </summary>
-        public int NumCorrect { get; set; }
+        public int CorrectAnswers { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of incorrect answers for the scorecard.
+        /// The number of incorrect answers for the scorecard.
         /// </summary>
-        public int NumIncorrect { get; set; }
+        public int IncorrectAnswers { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of questions for the scorecard.
+        /// The total number of questions for the scorecard.
         /// </summary>
-        public int NumQuestions { get; set; }
+        public int QuestionCount { get; set; }
 
         /// <summary>
-        /// Gets the percentage of correct answers for the scorecard.
+        /// The percentage of correct answers for the scorecard.
         /// </summary>
         public double PercentCorrect { get; set; }
+        /// <summary>
+        /// The Nubmer of Questions Attempted
+        /// </summary>
+        public int QuestionsAttempted { get; set; }
     }
 }
 
