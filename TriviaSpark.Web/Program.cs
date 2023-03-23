@@ -8,17 +8,18 @@ using TriviaSpark.OpenTriviaDb.Services;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
-
     var ConnectionString = "Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + "TriviaSpark.Web.db";
     builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
-    builder.Services.AddDefaultIdentity<TriviaSparkWebUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TriviaSparkWebContext>();
+    builder.Services
+        .AddDefaultIdentity<TriviaSparkWebUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddEntityFrameworkStores<TriviaSparkWebContext>()
+        .AddUserManager<ApplicationUserManager>();
 
     // Add services to the container.
     builder.Services.AddRazorPages();
@@ -58,9 +59,7 @@ try
     var app = builder.Build();
 
     string baseDir = app.Environment.WebRootPath;
-    AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Path.Combine(baseDir, "App_Data"));
-
-
+    AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(baseDir, "App_Data"));
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
@@ -77,7 +76,6 @@ try
     app.UseCookiePolicy();
     app.UseSession();
     app.MapRazorPages();
-
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllerRoute(
@@ -85,8 +83,6 @@ try
           pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
         );
     });
-
-
     app.Run();
 
 }
@@ -99,6 +95,6 @@ catch (Exception exception)
 finally
 {
     // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-    NLog.LogManager.Shutdown();
+    LogManager.Shutdown();
 }
 

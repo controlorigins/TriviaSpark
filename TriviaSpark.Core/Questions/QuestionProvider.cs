@@ -9,58 +9,27 @@ namespace TriviaSpark.Core.Questions
     /// </summary>
     public class QuestionProvider : ListProvider<QuestionModel>
     {
-        private List<string> GetQuestionsWithoutCorrectResponse(List<QuestionAnswerSet> correct, List<QuestionAnswerSet> answered)
+        private List<string> GetQuestionsWithoutCorrectResponse(List<QuestionAnswerSet> questions, List<QuestionAnswerSet> answered)
         {
-            // Create a hash set of correct answer IDs for each question
-            var correctAnswersByQuestion = correct.GroupBy(c => c.QuestionId)
-                                                  .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
-
-            // Filter the question IDs that have been attempted but not correctly answered
-            var questionsWithoutCorrectResponse = answered.GroupBy(a => a.QuestionId)
-                                                           .Where(g => correctAnswersByQuestion.ContainsKey(g.Key))
-                                                           .Where(g => !g.Any(a => correctAnswersByQuestion[g.Key].Contains(a.AnswerId)))
-                                                           .Select(g => g.Key)
-                                                           .ToList();
-
-            return questionsWithoutCorrectResponse;
-        }
-
-        internal ScoreCardModel? GetScoreCard(ICollection<MatchQuestionAnswerModel> matchQuestionAnswers)
-        {
-            return CalculateScore(matchQuestionAnswers.ToArray());
+            var unansweredQuestions = new List<string>();
+            foreach (var question in questions)
+            {
+                var hasAnswer = answered.Any(a => a.QuestionId == question.QuestionId);
+                if (!hasAnswer)
+                {
+                    unansweredQuestions.Add(question.QuestionId);
+                }
+            }
+            return unansweredQuestions;
         }
 
         public ScoreCardModel CalculateScore(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
-            List<QuestionAnswerSet> incorrectAnswers = new();
             List<QuestionAnswerSet> unasweredQuestions = new();
-            // Create a dictionary of correct answer IDs for each question
-            Dictionary<string, HashSet<int>> correctAnswersByQuestion = Items
-                .SelectMany(q => q.Answers)
-                .Where(a => a.IsCorrect)
-                .Select(a => new QuestionAnswerSet()
-                {
-                    QuestionId = a.QuestionId,
-                    AnswerId = a.AnswerId
-                }).GroupBy(c => c.QuestionId)
-                .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
-
-            // Create a dictionary of attempted answer IDs for each question
-            Dictionary<string, HashSet<int>> attemptedAnswersByQuestion = matchQuestionAnswers
-                .Select(a => new QuestionAnswerSet()
-                {
-                    QuestionId = a.QuestionId,
-                    AnswerId = a.AnswerId
-                }).GroupBy(a => a.QuestionId)
-                .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
-
-            // Calculate the number of questions and number of correct answers
-            int numQuestions = Items.Count();
+            var correctAnswersByQuestion = CorrectAnswersByQuestion();
+            var attemptedAnswersByQuestion = AttemptedAnswersByQuestion(matchQuestionAnswers);
+            // Calculate the number of questions and number of questions answers
             double runningScore = 0.00;
-            var correctQuestions = GetCorrectQuestions(matchQuestionAnswers);
-            var numTries = matchQuestionAnswers.Count();
-
-
             int numCorrect = 0;
             int numInCorrectAnswers = 0;
             foreach (var questionId in correctAnswersByQuestion.Keys)
@@ -75,27 +44,53 @@ namespace TriviaSpark.Core.Questions
                 {
                     var questionAnswers = attemptedAnswersByQuestion[questionId].Count;
                     runningScore += (1.00 - ((questionAnswers - 1) * .2));
-                    // Question attempted and correct 
+                    // Question attempted and questions 
                     numCorrect++;
-                    numInCorrectAnswers = numInCorrectAnswers + (questionAnswers - 1);
+                    numInCorrectAnswers += (questionAnswers - 1);
                 }
                 else
                 {
-                    numInCorrectAnswers = numInCorrectAnswers + attemptedAnswersByQuestion[questionId].Count;
+                    numInCorrectAnswers += attemptedAnswersByQuestion[questionId].Count;
                 }
             }
-
-            double percentageScore = Math.Round((double)numCorrect / numQuestions, 2);
             // Create the score card object
-            var scoreCard = new ScoreCardModel
+            return new ScoreCardModel
             {
-                PercentCorrect = percentageScore,
-                AdjustedScore = (runningScore / numQuestions),
-                NumQuestions = numQuestions,
-                NumCorrect = numCorrect,
-                NumIncorrect = numInCorrectAnswers,
+                PercentCorrect = Math.Round((double)numCorrect / Items.Count(), 2),
+                AdjustedScore = (runningScore / Items.Count()),
+                QuestionCount = Items.Count(),
+                QuestionsAttempted = attemptedAnswersByQuestion.Count,
+                CorrectAnswers = numCorrect,
+                IncorrectAnswers = numInCorrectAnswers,
             };
-            return scoreCard;
+
+        }
+
+        private static Dictionary<string, HashSet<int>> AttemptedAnswersByQuestion(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
+        {
+
+            // Create a dictionary of attempted answer IDs for each question
+            return matchQuestionAnswers
+                .Select(a => new QuestionAnswerSet()
+                {
+                    QuestionId = a.QuestionId,
+                    AnswerId = a.AnswerId
+                }).GroupBy(a => a.QuestionId)
+                .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
+        }
+
+        public Dictionary<string, HashSet<int>> CorrectAnswersByQuestion()
+        {
+            // Create a dictionary of questions answer IDs for each question
+            return Items
+                .SelectMany(q => q.Answers)
+                .Where(a => a.IsCorrect)
+                .Select(a => new QuestionAnswerSet()
+                {
+                    QuestionId = a.QuestionId,
+                    AnswerId = a.AnswerId
+                }).GroupBy(c => c.QuestionId)
+                .ToDictionary(g => g.Key, g => new HashSet<int>(g.Select(a => a.AnswerId)));
         }
 
         public List<QuestionModel> GetCorrectQuestions(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
@@ -108,8 +103,11 @@ namespace TriviaSpark.Core.Questions
             return Items.Where(q => q.Answers.Any(a => answerIds.Contains(a.AnswerId) && a.IsCorrect) == true)
                             .ToList();
         }
+
         public List<QuestionModel> GetIncorrectQuestions(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
+            if (matchQuestionAnswers.Count() == 0) return new List<QuestionModel>();
+
             var correctAnswers = Items
                 .SelectMany(q => q.Answers)
                 .Where(a => a.IsCorrect)
@@ -119,24 +117,26 @@ namespace TriviaSpark.Core.Questions
                     AnswerId = a.AnswerId
                 }).ToList();
 
-            List<QuestionAnswerSet> questionIds = matchQuestionAnswers
-                .Select(a => new QuestionAnswerSet()
+            var unansweredQuestions = new List<string>();
+            foreach (var question in correctAnswers)
+            {
+                var hasAnswer = matchQuestionAnswers.Any(a => a.QuestionId == question.QuestionId && a.AnswerId == question.AnswerId);
+                if (!hasAnswer)
                 {
-                    QuestionId = a.QuestionId,
-                    AnswerId = a.AnswerId
-                }).ToList();
+                    unansweredQuestions.Add(question.QuestionId);
+                }
+            }
 
-            var badAnswers = GetQuestionsWithoutCorrectResponse(correctAnswers, questionIds);
-            List<QuestionModel> result = Items.Where(w => badAnswers.Contains(w.QuestionId)).ToList();
+            List<QuestionModel> result = Items.Where(w => unansweredQuestions.Contains(w.QuestionId)).ToList();
             return result;
         }
-
+        public List<QuestionModel> GetAttemptedQuestions(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
+        {
+            return Items.Where(q => matchQuestionAnswers.Select(s => s.QuestionId).Distinct().Contains(q.QuestionId)).ToList();
+        }
         public List<QuestionModel> GetUnansweredQuestions(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
-            var answeredQuestionIds = matchQuestionAnswers.Select(s => s.QuestionId).Distinct().ToList();
-
-            return Items.Where(q => q.Answers.All(a => !answeredQuestionIds.Contains(a.QuestionId)))
-                            .ToList();
+            return Items.Where(q => !matchQuestionAnswers.Select(s => s.QuestionId).Distinct().Contains(q.QuestionId)).ToList();
         }
 
         internal class QuestionAnswerSet

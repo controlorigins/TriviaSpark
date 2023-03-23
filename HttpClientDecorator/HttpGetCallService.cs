@@ -49,7 +49,7 @@ public class HttpGetCallService : IHttpGetCallService
                 request.Headers.ConnectionClose = false;
                 using HttpResponseMessage response = await _httpClient.SendAsync(request, ct);
                 response.EnsureSuccessStatusCode();
-                string callResult = await response.Content.ReadAsStringAsync();
+                string callResult = await response.Content.ReadAsStringAsync(ct);
                 try
                 {
                     getCallResults.ResponseResults = JsonSerializer.Deserialize<T>(callResult);

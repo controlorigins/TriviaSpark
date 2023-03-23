@@ -35,6 +35,9 @@ public class DeleteModel : PageModel
         {
             return NotFound();
         }
+        var result = await _matchService.DeleteUserMatchAsync(User, id, ct);
+
+
         return RedirectToPage("./Index");
     }
 
