@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TriviaSpark.Core.Match;
+﻿using TriviaSpark.Core.Match;
 
 namespace TriviaSpark.Core.Tests.Match
 {

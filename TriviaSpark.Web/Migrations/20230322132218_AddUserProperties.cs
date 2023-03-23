@@ -15,14 +15,14 @@ namespace TriviaSpark.Web.Migrations
                 table: "AspNetUsers",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<string>(
                 name: "LastName",
                 table: "AspNetUsers",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<byte[]>(
                 name: "ProfilePicture",

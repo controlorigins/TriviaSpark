@@ -116,15 +116,15 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-            var firstName = user.FirstName??string.Empty;
-            var lastName = user.LastName??string.Empty;
+            var firstName = user.FirstName ?? string.Empty;
+            var lastName = user.LastName ?? string.Empty;
             if (!string.IsNullOrEmpty(Input.FirstName) && Input.FirstName != firstName)
             {
 
                 user.FirstName = Input.FirstName;
                 await _userManager.UpdateAsync(user);
             }
-            if (!string.IsNullOrEmpty(Input.LastName) && Input.LastName!= lastName)
+            if (!string.IsNullOrEmpty(Input.LastName) && Input.LastName != lastName)
             {
                 user.LastName = Input.LastName;
                 await _userManager.UpdateAsync(user);

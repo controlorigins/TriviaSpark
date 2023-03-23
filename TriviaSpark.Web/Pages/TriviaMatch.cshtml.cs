@@ -42,7 +42,7 @@ namespace TriviaSpark.Web.Pages
                 {
                     if (AddQuestions > 0)
                     {
-                        SetMatch(await _matchService.GetMoreQuestionsAsync(MatchId, NumberOfQuestionsToAdd: AddQuestions,Difficulty.Easy, ct: ct));
+                        SetMatch(await _matchService.GetMoreQuestionsAsync(MatchId, NumberOfQuestionsToAdd: AddQuestions, Difficulty.Easy, ct: ct));
                     }
                     else
                     {

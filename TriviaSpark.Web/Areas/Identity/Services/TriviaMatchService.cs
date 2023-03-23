@@ -410,7 +410,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
                 var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
                 var unansweredQuestion = match.MatchQuestions.GetUnansweredQuestions(match.MatchQuestionAnswers);
-                        var random = new Random();
+                var random = new Random();
 
                 switch (match.MatchMode)
                 {
@@ -513,7 +513,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 MatchQuestions = new List<MatchQuestion>(),
                 MatchQuestionAnswers = new List<MatchQuestionAnswer>(),
                 MatchName = "UserMatch",
-                UserId = currentUserId ?? "",
+                UserId = currentUserId ?? string.Empty,
                 MatchMode = newMatch.MatchMode,
                 Difficulty = newMatch.Difficulty,
                 QuestionType = newMatch.QuestionType,

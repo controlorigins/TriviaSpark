@@ -120,13 +120,13 @@ namespace TriviaSpark.Core.Questions
             var unansweredQuestions = new List<string>();
             foreach (var question in correctAnswers)
             {
-                var hasAnswer = matchQuestionAnswers.Any(a => a.QuestionId == question.QuestionId && a.AnswerId==question.AnswerId );
+                var hasAnswer = matchQuestionAnswers.Any(a => a.QuestionId == question.QuestionId && a.AnswerId == question.AnswerId);
                 if (!hasAnswer)
                 {
                     unansweredQuestions.Add(question.QuestionId);
                 }
             }
-            
+
             List<QuestionModel> result = Items.Where(w => unansweredQuestions.Contains(w.QuestionId)).ToList();
             return result;
         }

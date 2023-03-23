@@ -18,7 +18,7 @@ namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id is null )
+            if (id is null)
             {
                 return NotFound();
             }
