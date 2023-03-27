@@ -14,6 +14,7 @@
                 <th>Mode</th>
                 <th>Dificulty</th>
                 <th>Question Count</th>
+                <th>Questions Attempted</th>
                 <th>Correct</th>
                 <th>Percent Correct</th>
                 <th>Adjusted Score</th>
@@ -27,6 +28,7 @@
                     <td>@match.MatchMode</td>
                     <td>@match.Difficulty</td>
                     <td>@match.NumberOfQuestions</td>
+                    <td>@match.ScoreCard?.QuestionsAttempted</td>
                     <td>@match.ScoreCard?.CorrectAnswers</td>
                     <td>@match.ScoreCard?.PercentCorrect.ToString("P0")</td>
                     <td>@match.ScoreCard?.AdjustedScore.ToString("P0")</td>

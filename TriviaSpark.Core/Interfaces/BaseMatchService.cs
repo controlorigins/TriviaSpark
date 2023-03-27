@@ -58,13 +58,18 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             if (match.MatchQuestions.Count == 0) return true;
 
-            if (match.MatchQuestionAnswers.Count() < 1) return false;
+            if (match.MatchQuestionAnswers.Count < 1) return false;
 
-            var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
-
-            if (result.Count == 0) result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
-
-            return result.Count == 0;
+            switch (match.MatchMode)
+            {
+                case MatchMode.OneAndDone:
+                    return match.MatchQuestions.GetAttemptedQuestions(match.MatchQuestionAnswers).Count == match.MatchQuestions.Count;
+                    break;
+                default:
+                    var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+                    if (result.Count == 0) result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
+                    return result.Count == 0;
+            }
         }
 
         public virtual Task<MatchModel> CreateMatchAsync(MatchModel newMatch, ClaimsPrincipal user, CancellationToken ct = default)
