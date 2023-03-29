@@ -1,5 +1,7 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
@@ -14,15 +16,17 @@ logger.Debug("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
     var ConnectionString = "Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + "TriviaSpark.Web.db";
     builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
     builder.Services
-        .AddDefaultIdentity<TriviaSparkWebUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddIdentity<TriviaSparkWebUser, IdentityRole>()
         .AddEntityFrameworkStores<TriviaSparkWebContext>()
         .AddUserManager<ApplicationUserManager>();
 
     // Add services to the container.
     builder.Services.AddRazorPages();
+    builder.Services.AddControllersWithViews();
     builder.Services.AddDistributedMemoryCache();
     builder.Services.AddSession();
     builder.Services.AddHttpContextAccessor();
@@ -52,14 +56,16 @@ try
     builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
     builder.Services.AddScoped<IMatchService, TriviaMatchService>();
 
+    builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSparkWebContext>();
+
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
     var app = builder.Build();
 
-    string baseDir = app.Environment.WebRootPath;
-    AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(baseDir, "App_Data"));
+    string appBaseDir = app.Environment.WebRootPath;
+    AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(appBaseDir, "App_Data"));
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
@@ -82,6 +88,8 @@ try
           name: "areas",
           pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
         );
+        endpoints.MapRazorPages();
+        endpoints.MapHealthChecks("/health");
     });
     app.Run();
 
