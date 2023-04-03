@@ -24,7 +24,6 @@
         /// The total number of questions for the scorecard.
         /// </summary>
         public int QuestionCount { get; set; }
-
         /// <summary>
         /// The percentage of correct answers for the scorecard.
         /// </summary>
@@ -33,6 +32,13 @@
         /// The Nubmer of Questions Attempted
         /// </summary>
         public int QuestionsAttempted { get; set; }
+        public double PercentComplete
+        {
+            get
+            {
+                return Math.Round((double)QuestionsAttempted / (double)QuestionCount, 2);
+            }
+        }
     }
 }
 

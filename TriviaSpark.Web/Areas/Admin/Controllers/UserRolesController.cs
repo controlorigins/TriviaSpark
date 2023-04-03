@@ -36,6 +36,23 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
             }
             return View(userRolesViewModel);
         }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            ViewBag.userId = id;
+            var user = await _userManager.GetUserModelById(id);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                return View("NotFound");
+            }
+            await ValidateRoles(id);
+
+            ViewBag.UserName = user.UserName;
+            return View(user);
+        }
+
+
         public async Task<IActionResult> Manage(string userId)
         {
             ViewBag.userId = userId;

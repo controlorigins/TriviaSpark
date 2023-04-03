@@ -1,6 +1,5 @@
 using HttpClientDecorator;
 using HttpClientDecorator.Interfaces;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -82,6 +81,7 @@ try
     app.UseCookiePolicy();
     app.UseSession();
     app.MapRazorPages();
+
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapControllerRoute(
