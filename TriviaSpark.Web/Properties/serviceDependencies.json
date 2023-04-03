@@ -4,6 +4,10 @@
       "ignored": "true",
       "type": "mssql",
       "connectionId": "ConnectionStrings:TriviaSparkWebContextConnection"
+    },
+    "sqlite1": {
+      "type": "sqlite",
+      "connectionId": "ConnectionStrings"
     }
   }
 }

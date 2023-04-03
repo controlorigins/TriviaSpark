@@ -15,7 +15,7 @@
             @Html.DisplayNameFor(model => model.Match.MatchDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Match.MatchDate.ToShortDateString())
+            @Html.DisplayFor(model => model.Match.MatchDate)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Match.MatchName)
@@ -47,53 +47,74 @@
 <div>
     <h4>ScoreCard</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Match.ScoreCard.CorrectAnswers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Match.ScoreCard.CorrectAnswers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Match.ScoreCard.PercentCorrect)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Match.ScoreCard.PercentCorrect.ToString("P0")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Match.ScoreCard.AdjustedScore)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Match.ScoreCard.AdjustedScore.ToString("P0")
-        </dd>
+    <div class="row">
+        <dl class="col-5">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.NumberOfQuestions)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Match.NumberOfQuestions)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.ScoreCard.QuestionsAttempted)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Match.ScoreCard.QuestionsAttempted)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.ScoreCard.PercentComplete)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Match.ScoreCard.PercentComplete.ToString("P0")
+            </dd>
+        </dl>
+        <dl class="col-5">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.ScoreCard.CorrectAnswers)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Match.ScoreCard.CorrectAnswers)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.ScoreCard.PercentCorrect)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Match.ScoreCard.PercentCorrect.ToString("P0")
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Match.ScoreCard.AdjustedScore)
+            </dt>
+            <dd class="col-sm-10">
+                @Model.Match.ScoreCard.AdjustedScore.ToString("P0")
+            </dd>
+        </dl>
+    </div>
+
+    <dl>
+        @foreach (var q in Model.Match.MatchQuestions.Items)
+        {
+            <dt>@Html.Raw(q.QuestionText)</dt>
+            <dd>
+                @foreach (var a in q.Answers)
+                {
+                    <ul>
+                        @if (Model.Match.MatchQuestionAnswers.Where(w => w.QuestionId == a.QuestionId && w.AnswerId == a.AnswerId).Any())
+                        {
+                            <li>
+                                <strong>Answer</strong>
+                                @if (a.IsCorrect)
+                                {
+                                    <span style="color:green">@Html.Raw(a.AnswerText)</span>
+                                }
+                                else
+                                {
+                                    <span style="color:red">@Html.Raw(a.AnswerText)</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+
+            </dd>
+        }
     </dl>
-</div>
-
-<dl>
-    @foreach (var q in Model.Match.MatchQuestions.Items)
-    {
-        <dt>@Html.Raw(q.QuestionText)</dt>
-        <dd>
-            @foreach (var a in q.Answers)
-            {
-                <ul>
-                    @if (Model.Match.MatchQuestionAnswers.Where(w => w.QuestionId == a.QuestionId && w.AnswerId == a.AnswerId).Any())
-                    {
-                        <li>
-                            <strong>Answer</strong>
-                            @if (a.IsCorrect)
-                            {
-                                <span style="color:green">@Html.Raw(a.AnswerText)</span>
-                            }
-                            else
-                            {
-                                <span style="color:red">@Html.Raw(a.AnswerText)</span>
-                            }
-                        </li>
-                    }
-                </ul>
-            }
-
-        </dd>
-    }
-</dl>

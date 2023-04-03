@@ -13,3 +13,10 @@ public class TriviaSparkWebUser : IdentityUser
     public virtual ICollection<Match> Matches { get; set; }
 }
 
+public enum Roles
+{
+    SuperAdmin,
+    Admin,
+    Moderator,
+    Basic
+}

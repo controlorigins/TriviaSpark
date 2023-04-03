@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Core", "TriviaS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Web", "TriviaSpark.Web\TriviaSpark.Web.csproj", "{90EDBD00-172F-4066-8CEC-1B3ABDC41688}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTriviaQA", "TriviaSpark.OpenTriviaQA\OpenTriviaQA.csproj", "{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Console", "TriviaSpark.Console\TriviaSpark.Console.csproj", "{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Core.Tests", "TriviaSpark.Core.Tests\TriviaSpark.Core.Tests.csproj", "{CCDF9E3F-5378-467E-95A3-C18FE566AB99}"
@@ -46,10 +44,6 @@ Global
 		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90EDBD00-172F-4066-8CEC-1B3ABDC41688}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0EB7BE7-72A8-4FBF-8B0B-57441E0A4D26}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
