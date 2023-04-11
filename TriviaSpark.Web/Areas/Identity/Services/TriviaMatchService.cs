@@ -425,7 +425,12 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                     case MatchMode.Sequential:
                     case MatchMode.Adaptive:
                     default:
-                        if (result.Count > 0)
+                        if (unansweredQuestion.Count > 0)
+                        {
+                            var index = random.Next(unansweredQuestion.Count);
+                            return unansweredQuestion.ElementAt(index);
+                        }
+                        else if (result.Count > 0)
                         {
                             var index = random.Next(result.Count);
                             return result.ElementAt(index);
