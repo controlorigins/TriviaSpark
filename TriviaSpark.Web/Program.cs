@@ -21,7 +21,9 @@ try
     builder.Services
         .AddIdentity<TriviaSparkWebUser, IdentityRole>()
         .AddEntityFrameworkStores<TriviaSparkWebContext>()
-        .AddUserManager<ApplicationUserManager>();
+        .AddUserManager<ApplicationUserManager>()
+        .AddDefaultTokenProviders()
+        .AddDefaultUI();
 
     // Add services to the container.
     builder.Services.AddRazorPages();
