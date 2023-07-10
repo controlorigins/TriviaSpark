@@ -16,9 +16,6 @@
                 <th>Question Count</th>
                 <th>Questions Attempted</th>
                 <th>Percent Complete</th>
-                <th>Correct</th>
-                <th>Percent Correct</th>
-                <th>Adjusted Score</th>
             </tr>
         </thead>
         <tbody>
@@ -31,9 +28,6 @@
                     <td>@match.NumberOfQuestions</td>
                     <td>@match.ScoreCard?.QuestionsAttempted</td>
                     <td>@match.ScoreCard?.PercentComplete.ToString("P0")</td>
-                    <td>@match.ScoreCard?.CorrectAnswers</td>
-                    <td>@match.ScoreCard?.PercentCorrect.ToString("P0")</td>
-                    <td>@match.ScoreCard?.AdjustedScore.ToString("P0")</td>
                 </tr>
             }
         </tbody>

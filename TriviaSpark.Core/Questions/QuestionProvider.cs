@@ -81,6 +81,13 @@ namespace TriviaSpark.Core.Questions
 
         public Dictionary<string, HashSet<int>> CorrectAnswersByQuestion()
         {
+            var results = new Dictionary<string, HashSet<int>>();
+
+            if(!Items.Any(Items => Items.Answers is not null ))
+            {
+                return results;
+            }
+
             // Create a dictionary of questions answer IDs for each question
             return Items
                 .SelectMany(q => q.Answers)
@@ -108,6 +115,10 @@ namespace TriviaSpark.Core.Questions
         {
             if (matchQuestionAnswers.Count() == 0) return new List<QuestionModel>();
 
+            if (!Items.Any(Items => Items.Answers is not null))
+            {
+                return new List<QuestionModel>();
+            }
             var correctAnswers = Items
                 .SelectMany(q => q.Answers)
                 .Where(a => a.IsCorrect)

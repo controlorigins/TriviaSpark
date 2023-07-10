@@ -25,6 +25,11 @@ namespace TriviaSpark.Web.Areas.Identity.Services
 
         private QuestionModel Create(Question question)
         {
+            if (question is null)
+            {
+                return new();
+            }
+
             var result = new QuestionModel();
             try
             {
@@ -127,7 +132,8 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 };
 
                 match.MatchQuestions.Add(dbMatch.MatchQuestions
-                    .Select(s => Create(s.Question))
+                    .Where(s => s is not null)
+                    .Select(s => Create(s))
                     .ToList() ?? new List<QuestionModel>());
 
                 match.MatchQuestionAnswers = dbMatch.MatchQuestionAnswers
@@ -169,6 +175,42 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             }
             return match;
         }
+
+        private static QuestionModel Create(MatchQuestion matchQuestion)
+        {
+            if (matchQuestion is null)
+            {
+                return new QuestionModel();
+            }
+            if (matchQuestion.Question is null)
+            {
+                return new QuestionModel()
+                {
+                    QuestionId = matchQuestion.QuestionId,
+            
+                };
+            }
+
+            return new QuestionModel()
+            {
+                QuestionId = matchQuestion.QuestionId,
+                Category = matchQuestion.Question.Category,
+                Type = matchQuestion.Question.Type,
+                Difficulty = matchQuestion.Question.Difficulty,
+                QuestionText = matchQuestion.Question.QuestionText,
+                Answers = matchQuestion.Question.Answers.Select(s => new QuestionAnswerModel()
+                {
+                    AnswerId = s.AnswerId,
+                    QuestionId = s.QuestionId,
+                    AnswerText = s.AnswerText,
+                    IsCorrect = s.IsCorrect,
+                    IsValid = s.IsValid,
+                    ErrorMessage = s.ErrorMessage
+                }).ToList(),
+                Source = matchQuestion.Question.Source,
+            };
+        }
+
         private static new Match CreateMatch()
         {
             return new Match()
@@ -464,10 +506,13 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync(cancellationToken: ct);
 
+
+                // .ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+
                 var userMatches = await _db.Matches
                     .Where(w => w.UserId == currentUserId)
                     .Include(i => i.User)
-                    .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
+                    .Include(i => i.MatchQuestions)
                     .Include(i => i.MatchQuestionAnswers)
                     .AsSingleQuery()
                     .AsNoTracking()
@@ -477,7 +522,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 {
                     if (match is null) continue;
 
-                    userMatchList.Add(Create(match));
+                    userMatchList.Add(Create(match) ?? new());
                 }
 
             }
