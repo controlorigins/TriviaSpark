@@ -4,15 +4,11 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Pages.Account
@@ -24,21 +20,19 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account
         private readonly IUserStore<TriviaSparkWebUser> _userStore;
         private readonly IUserEmailStore<TriviaSparkWebUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<TriviaSparkWebUser> userManager,
             IUserStore<TriviaSparkWebUser> userStore,
             SignInManager<TriviaSparkWebUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -112,6 +106,11 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+                user.LastName = string.Empty;
+                user.FirstName = string.Empty;
+                user.ProfilePicture = [];
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -127,8 +126,8 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId, code, returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

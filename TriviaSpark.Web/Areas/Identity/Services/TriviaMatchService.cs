@@ -247,11 +247,11 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 .AsSingleQuery()
                 .AsNoTracking()
                 .ToListAsync(ct);
-            return match.Select(s => Create(s)).ToList() ?? new List<MatchModel?>();
+            return match.Select(s => Create(s)).ToList() ?? [];
         }
         public override async Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct)
         {
-            var match = await _db.Matches.FindAsync(new object?[] { id }, cancellationToken: ct);
+            var match = await _db.Matches.FindAsync([id], cancellationToken: ct);
 
             if (match is null)
             {
@@ -379,7 +379,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 var newQuestions = await _service.GetQuestions(NumberOfQuestionsToAdd, difficulty, ct);
                 foreach (var question in newQuestions)
                 {
-                    var existingQuestion = await _db.Questions.FindAsync(new object?[] { question.QuestionId }, cancellationToken: ct);
+                    var existingQuestion = await _db.Questions.FindAsync([question.QuestionId], cancellationToken: ct);
                     if (existingQuestion is null)
                     {
                         Question dbQuestion = Create(question);
@@ -417,7 +417,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
         {
             try
             {
-                var dbMatch = await _db.Matches.FindAsync(new object?[] { match.MatchId }, cancellationToken: ct)
+                var dbMatch = await _db.Matches.FindAsync([match.MatchId], cancellationToken: ct)
                     ?? throw new Exception("Match Not Found");
 
                 dbMatch.MatchName = match?.MatchName ?? dbMatch.MatchName;
