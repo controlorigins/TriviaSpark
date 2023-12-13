@@ -4,14 +4,9 @@ using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
-    public class IndexModel : PageModel
+    public class IndexModel(IMatchService matchService) : PageModel
     {
-        private readonly IMatchService _matchService;
-
-        public IndexModel(IMatchService matchService)
-        {
-            _matchService = matchService;
-        }
+        private readonly IMatchService _matchService = matchService;
 
         public async Task OnGetAsync(CancellationToken ct)
         {

@@ -19,16 +19,15 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<TriviaSparkWebUser> _userManager;
         private readonly SignInManager<TriviaSparkWebUser> _signInManager;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
 
         public EmailModel(
             UserManager<TriviaSparkWebUser> userManager,
-            SignInManager<TriviaSparkWebUser> signInManager,
-            IEmailSender emailSender)
+            SignInManager<TriviaSparkWebUser> signInManager
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -123,10 +122,10 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage
                     pageHandler: null,
                     values: new { area = "Identity", userId, email = Input.NewEmail, code },
                     protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                //await _emailSender.SendEmailAsync(
+                //    Input.NewEmail,
+                //    "Confirm your email",
+                //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
@@ -159,10 +158,10 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { area = "Identity", userId, code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            //await _emailSender.SendEmailAsync(
+            //    email,
+            //    "Confirm your email",
+            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
