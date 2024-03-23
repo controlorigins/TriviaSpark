@@ -23,41 +23,6 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             _db = triviaSparkWebContext;
         }
 
-        private QuestionModel Create(Question question)
-        {
-            if (question is null)
-            {
-                return new();
-            }
-
-            var result = new QuestionModel();
-            try
-            {
-                result.QuestionId = question.QuestionId;
-                result.Category = question.Category;
-                result.Type = question.Type;
-                result.Difficulty = question.Difficulty;
-                result.QuestionText = question.QuestionText;
-                if (question.QuestionText != null)
-                {
-                    result.Answers = question.Answers.Select(s => new QuestionAnswerModel()
-                    {
-                        AnswerId = s.AnswerId,
-                        QuestionId = s.QuestionId,
-                        AnswerText = s.AnswerText,
-                        IsCorrect = s.IsCorrect,
-                        IsValid = s.IsValid,
-                        ErrorMessage = s.ErrorMessage
-                    }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("CreateQuestionModelFromQuestion:Exception", ex);
-            }
-            return result;
-        }
-
         private Question Create(QuestionModel question)
         {
             Question results = new();
@@ -187,7 +152,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
                 return new QuestionModel()
                 {
                     QuestionId = matchQuestion.QuestionId,
-            
+
                 };
             }
 
@@ -318,7 +283,7 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("SetMatchAnswer Exception", ex);
+                _logger.LogCritical(ex, "SetMatchAnswer Exception");
             }
             finally
             {
@@ -327,8 +292,10 @@ namespace TriviaSpark.Web.Areas.Identity.Services
             return null;
         }
 
-        public override async Task<MatchModel?> AddAnswerAsync(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct = default)
+        public override async Task<MatchModel?> AddAnswerAsync(int matchId, QuestionAnswerModel? currentAnswer, CancellationToken ct = default)
         {
+            if (currentAnswer is null) return null;
+
             try
             {
                 QuestionAnswer? dbAnswer = await SetMatchAnswer(matchId, currentAnswer, ct);

@@ -11,15 +11,10 @@ namespace TriviaSpark.Web.Pages
 {
     [Authorize]
     [Route("/TriviaMatch/{id}")]
-    public class TriviaMatchModel : PageModel
+    public class TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger) : PageModel
     {
-        private readonly ILogger<TriviaMatchModel> _logger;
-        private readonly IMatchService _matchService;
-        public TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger)
-        {
-            this._matchService = matchService;
-            _logger = logger;
-        }
+        private readonly ILogger<TriviaMatchModel> _logger = logger;
+        private readonly IMatchService _matchService = matchService;
 
         public async Task OnGet(int? id = 0, CancellationToken ct = default)
         {
