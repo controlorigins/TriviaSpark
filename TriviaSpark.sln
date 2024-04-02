@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Core.Tests", "T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{16CB41D4-27A5-4862-ABE2-59AC91F912CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeopardyData.Console", "JeopardyData.Console\JeopardyData.Console.csproj", "{1D83EC36-83B6-4395-ADE9-676D221CCC00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,12 +54,18 @@ Global
 		{CCDF9E3F-5378-467E-95A3-C18FE566AB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCDF9E3F-5378-467E-95A3-C18FE566AB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCDF9E3F-5378-467E-95A3-C18FE566AB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D83EC36-83B6-4395-ADE9-676D221CCC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D83EC36-83B6-4395-ADE9-676D221CCC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D83EC36-83B6-4395-ADE9-676D221CCC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D83EC36-83B6-4395-ADE9-676D221CCC00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{EBDF3F2F-4056-46F0-AE4A-DE3144B983A2} = {16CB41D4-27A5-4862-ABE2-59AC91F912CA}
 		{CCDF9E3F-5378-467E-95A3-C18FE566AB99} = {16CB41D4-27A5-4862-ABE2-59AC91F912CA}
+		{1D83EC36-83B6-4395-ADE9-676D221CCC00} = {16CB41D4-27A5-4862-ABE2-59AC91F912CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {658A231C-575E-417A-8C05-ECDC0C1B654E}
