@@ -67,7 +67,7 @@ public class MatchModelTests
         var matchModel = new Core.Models.MatchModel
         {
             // Act
-            MatchQuestionAnswers = new List<Core.Models.MatchQuestionAnswerModel>()
+            MatchQuestionAnswers = []
         };
 
         // Assert

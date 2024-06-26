@@ -15,16 +15,8 @@ public static class SessionHelper
     /// <param name="value">The object to be stored in the session.</param>
     public static void SetObjectAsJson<T>(this ISession session, string key, T value) where T : class
     {
-        if (session == null)
-        {
-            throw new ArgumentNullException(nameof(session));
-        }
-
-        if (key == null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
-
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(key);
         string json = JsonSerializer.Serialize(value);
         session.SetString(key, json);
     }
@@ -38,22 +30,14 @@ public static class SessionHelper
     /// <returns>The object retrieved from the session, or null if the object was not found or could not be deserialized.</returns>
     public static T? GetObjectFromJson<T>(this ISession session, string key) where T : class
     {
-        if (session is null)
-        {
-            throw new ArgumentNullException(nameof(session));
-        }
-
-        if (key is null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(key);
 
         string? json = session.GetString(key);
         if (json is null)
         {
             return default;
         }
-
         return JsonSerializer.Deserialize<T>(json);
     }
 }

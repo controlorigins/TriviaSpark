@@ -86,7 +86,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
             match.MatchQuestions.Add(dbMatch.MatchQuestions
                 .Where(s => s is not null)
                 .Select(s => Create(s))
-                .ToList() ?? new List<QuestionModel>());
+                .ToList() ?? []);
 
             match.MatchQuestionAnswers = dbMatch.MatchQuestionAnswers
                 .Select(s => new MatchQuestionAnswerModel()
@@ -450,7 +450,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
     }
     public override async Task<List<MatchModel>> GetUserMatchesAsync(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
     {
-        List<MatchModel> userMatchList = new();
+        List<MatchModel> userMatchList = [];
         try
         {
             var currentUserName = user?.Identity?.Name ?? string.Empty;

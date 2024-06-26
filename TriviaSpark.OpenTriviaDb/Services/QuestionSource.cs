@@ -36,7 +36,7 @@ public class OpenTriviaDbQuestionSource(
         return trivia.Select(t => Create(t));
     }
 
-    private QuestionModel Create(Trivia trivia)
+    private static QuestionModel Create(Trivia trivia)
     {
         QuestionModel questionModel = new()
         {
@@ -55,7 +55,10 @@ public class OpenTriviaDbQuestionSource(
         return questionModel;
     }
 
-    public async Task<List<QuestionModel>> GetQuestions(int questionCount = 1, Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
+    public async Task<List<QuestionModel>> GetQuestions(
+        int questionCount = 1, 
+        Difficulty difficulty = Difficulty.Easy, 
+        CancellationToken ct = default)
     {
         var questionList = new List<QuestionModel>();
         ;

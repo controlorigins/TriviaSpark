@@ -12,7 +12,7 @@ public class UserMatchesModel(
     IMatchService MatchService) : PageModel
 {
     [BindProperty]
-    public List<MatchModel> Matches { get; set; } = new List<MatchModel>();
+    public List<MatchModel> Matches { get; set; } = [];
 
     [BindProperty]
     public MatchModel NewMatch { get; set; } = new MatchModel();
