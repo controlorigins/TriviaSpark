@@ -2,31 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using TriviaSpark.Core.Models;
 
 namespace TriviaSpark.Core.Services;
 
-public class TriviaMatchService : Services.BaseMatchService, Services.IMatchService
+public class TriviaMatchService(ILogger<TriviaMatchService> logger,
+IQuestionSourceAdapter questionSource,
+Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new MatchModel()), IMatchService
 {
-    private readonly Entities.TriviaSparkWebContext _db;
-    private readonly ILogger<Services.TriviaMatchService> _logger;
-    private readonly Services.IQuestionSourceAdapter _service;
-
-    public TriviaMatchService(ILogger<Services.TriviaMatchService> logger,
-    Services.IQuestionSourceAdapter questionSource,
-    Entities.TriviaSparkWebContext triviaSparkWebContext) : base(new Models.MatchModel())
-    {
-        _logger = logger;
-        _service = questionSource;
-        _db = triviaSparkWebContext;
-    }
-
-    private Entities.Question Create(Models.QuestionModel question)
+    private Entities.Question Create(QuestionModel question)
     {
         Entities.Question results = new();
         try
         {
-            List<Entities.QuestionAnswer> answers = new()
-            {
+            List<Entities.QuestionAnswer> answers =
+            [
                 new Entities.QuestionAnswer()
                 {
                     AnswerText = question.CorrectAnswer,
@@ -34,7 +24,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                     IsValid = true,
                     ErrorMessage = string.Empty,
                 }
-            };
+            ];
             foreach (var answer in question.IncorrectAnswers)
             {
                 answers.Add(new Entities.QuestionAnswer()
@@ -58,12 +48,12 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogError("CreateQuestionFromTriviaQuestion:Exception", ex);
+            logger.LogError("CreateQuestionFromTriviaQuestion:Exception", ex);
 
         }
         return results;
     }
-    private Models.MatchModel? Create(Entities.Match? dbMatch, Entities.QuestionAnswer? dbAnswer = null)
+    private MatchModel? Create(Entities.Match? dbMatch, Entities.QuestionAnswer? dbAnswer = null)
     {
         if (dbMatch is null)
         {
@@ -75,7 +65,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             return default;
         }
 
-        Models.MatchModel match = new();
+        MatchModel match = new();
         try
         {
             match.MatchId = dbMatch.MatchId;
@@ -85,7 +75,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             match.MatchMode = dbMatch.MatchMode;
             match.Difficulty = dbMatch.Difficulty;
             match.QuestionType = dbMatch.QuestionType;
-            match.User = new Models.UserModel()
+            match.User = new UserModel()
             {
                 UserId = dbMatch.User.Id,
                 UserName = dbMatch.User.UserName,
@@ -96,10 +86,10 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             match.MatchQuestions.Add(dbMatch.MatchQuestions
                 .Where(s => s is not null)
                 .Select(s => Create(s))
-                .ToList() ?? new List<Models.QuestionModel>());
+                .ToList() ?? new List<QuestionModel>());
 
             match.MatchQuestionAnswers = dbMatch.MatchQuestionAnswers
-                .Select(s => new Models.MatchQuestionAnswerModel()
+                .Select(s => new MatchQuestionAnswerModel()
                 {
                     MatchId = s.MatchId,
                     QuestionId = s.QuestionId,
@@ -115,13 +105,13 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             {
                 if (dbAnswer?.IsCorrect ?? false)
                 {
-                    match.CurrentQuestion = GetNextQuestion(match) ?? new Models.QuestionModel() { };
+                    match.CurrentQuestion = GetNextQuestion(match) ?? new QuestionModel() { };
                 }
                 else
                 {
-                    match.CurrentQuestion = GetNextQuestion(match) ?? new Models.QuestionModel() { };
+                    match.CurrentQuestion = GetNextQuestion(match) ?? new QuestionModel() { };
                 }
-                match.CurrentAnswer = new Models.QuestionAnswerModel()
+                match.CurrentAnswer = new QuestionAnswerModel()
                 {
                     QuestionId = match.CurrentQuestion.QuestionId
                 };
@@ -133,34 +123,34 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogError("CreateMatchModelFromMatch:Exception", ex);
+            logger.LogError("CreateMatchModelFromMatch:Exception", ex);
         }
         return match;
     }
 
-    private static Models.QuestionModel Create(Entities.MatchQuestion matchQuestion)
+    private static QuestionModel Create(Entities.MatchQuestion matchQuestion)
     {
         if (matchQuestion is null)
         {
-            return new Models.QuestionModel();
+            return new QuestionModel();
         }
         if (matchQuestion.Question is null)
         {
-            return new Models.QuestionModel()
+            return new QuestionModel()
             {
                 QuestionId = matchQuestion.QuestionId,
 
             };
         }
 
-        return new Models.QuestionModel()
+        return new QuestionModel()
         {
             QuestionId = matchQuestion.QuestionId,
             Category = matchQuestion.Question.Category,
             Type = matchQuestion.Question.Type,
             Difficulty = matchQuestion.Question.Difficulty,
             QuestionText = matchQuestion.Question.QuestionText,
-            Answers = matchQuestion.Question.Answers.Select(s => new Models.QuestionAnswerModel()
+            Answers = matchQuestion.Question.Answers.Select(s => new QuestionAnswerModel()
             {
                 AnswerId = s.AnswerId,
                 QuestionId = s.QuestionId,
@@ -181,15 +171,15 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             MatchQuestions = new List<Entities.MatchQuestion>(),
             MatchQuestionAnswers = new List<Entities.MatchQuestionAnswer>(),
             MatchName = "Trivia Match",
-            Difficulty = Models.Difficulty.Easy,
-            QuestionType = Models.QuestionType.Multiple,
-            MatchMode = Models.MatchMode.OneAndDone
+            Difficulty = Difficulty.Easy,
+            QuestionType = QuestionType.Multiple,
+            MatchMode = MatchMode.OneAndDone
         };
     }
 
     private async Task<Entities.Match> GetMatchAsync(int MatchId, CancellationToken ct = default)
     {
-        var match = await _db.Matches
+        var match = await triviaSparkWebContext.Matches
             .Where(w => w.MatchId == MatchId)
             .Include(i => i.User)
             .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -200,9 +190,9 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         return match ?? CreateMatch();
     }
 
-    public override async Task<List<Models.MatchModel>> GetMatchesAsync(CancellationToken ct)
+    public override async Task<List<MatchModel>> GetMatchesAsync(CancellationToken ct)
     {
-        var match = await _db.Matches
+        var match = await triviaSparkWebContext.Matches
             .Include(i => i.User)
             .Include(i => i.MatchQuestionAnswers)
             .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -213,14 +203,14 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
     }
     public override async Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct)
     {
-        var match = await _db.Matches.FindAsync([id], cancellationToken: ct);
+        var match = await triviaSparkWebContext.Matches.FindAsync([id], cancellationToken: ct);
 
         if (match is null)
         {
             return 0;
         }
         var currentUserName = user?.Identity?.Name ?? string.Empty;
-        var currentUserId = await _db.Users
+        var currentUserId = await triviaSparkWebContext.Users
             .Where(w => w.UserName == currentUserName)
             .Select(s => s.Id)
             .AsNoTracking()
@@ -228,8 +218,8 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
 
         if (match.UserId == currentUserId)
         {
-            _db.Matches.Remove(match);
-            await _db.SaveChangesAsync(ct);
+            triviaSparkWebContext.Matches.Remove(match);
+            await triviaSparkWebContext.SaveChangesAsync(ct);
             return 1;
         }
 
@@ -237,11 +227,11 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
     }
 
 
-    private async Task<Entities.QuestionAnswer?> SetMatchAnswer(int matchId, Models.QuestionAnswerModel currentAnswer, CancellationToken ct)
+    private async Task<Entities.QuestionAnswer?> SetMatchAnswer(int matchId, QuestionAnswerModel currentAnswer, CancellationToken ct)
     {
         try
         {
-            var dbQuestion = await _db.MatchQuestions
+            var dbQuestion = await triviaSparkWebContext.MatchQuestions
                 .Where(w => w.MatchId == matchId && w.QuestionId == currentAnswer.QuestionId)
                 .Include(i => i.Question).ThenInclude(i => i.Answers)
                 .Select(s => s.Question)
@@ -253,7 +243,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                 .Where(w => w.AnswerText == currentAnswer.AnswerText)
                 .FirstOrDefault() ?? throw new Exception("Answer Not Found");
 
-            var dbMatchAnswer = await _db.MatchAnswers
+            var dbMatchAnswer = await triviaSparkWebContext.MatchAnswers
                 .Where(w => w.MatchId == matchId)
                 .Where(w => w.QuestionId == dbQuestion.QuestionId)
                 .Where(w => w.AnswerId == dbAnswer.AnswerId)
@@ -267,20 +257,20 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                 {
                     timeTook *= 1000;
                 }
-                _db.MatchAnswers.Add(new Entities.MatchQuestionAnswer()
+                triviaSparkWebContext.MatchAnswers.Add(new Entities.MatchQuestionAnswer()
                 {
                     AnswerId = dbAnswer.AnswerId,
                     MatchId = matchId,
                     QuestionId = dbQuestion.QuestionId,
                     ElapsedTime = (int)timeTook
                 });
-                await _db.SaveChangesAsync(ct);
+                await triviaSparkWebContext.SaveChangesAsync(ct);
             }
             return dbAnswer;
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, "SetMatchAnswer Exception");
+            logger.LogCritical(ex, "SetMatchAnswer Exception");
         }
         finally
         {
@@ -289,7 +279,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         return null;
     }
 
-    public override async Task<Models.MatchModel?> AddAnswerAsync(int matchId, Models.QuestionAnswerModel? currentAnswer, CancellationToken ct = default)
+    public override async Task<MatchModel?> AddAnswerAsync(int matchId, QuestionAnswerModel? currentAnswer, CancellationToken ct = default)
     {
         if (currentAnswer is null) return null;
 
@@ -301,21 +291,21 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogError("AddAnswerAsync:Exception", ex);
+            logger.LogError("AddAnswerAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return null;
     }
 
-    public override async Task<List<Models.UserModel>> GetUsersAsync(CancellationToken ct)
+    public override async Task<List<UserModel>> GetUsersAsync(CancellationToken ct)
     {
         try
         {
-            return await _db.Users.Select(s => new Models.UserModel()
+            return await triviaSparkWebContext.Users.Select(s => new UserModel()
             {
                 UserId = s.Id,
                 UserName = s.UserName,
@@ -325,32 +315,32 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogError("AddAnswerAsync:Exception", ex);
+            logger.LogError("AddAnswerAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
-        return new List<Models.UserModel>();
+        return [];
     }
 
-    public override async Task<Models.MatchModel?> GetMoreQuestionsAsync(int MatchId, int NumberOfQuestionsToAdd = 1, Models.Difficulty difficulty = Models.Difficulty.Easy, CancellationToken ct = default)
+    public override async Task<MatchModel?> GetMoreQuestionsAsync(int MatchId, int NumberOfQuestionsToAdd = 1, Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
     {
         try
         {
-            Services.QuestionProvider source = new();
-            var newQuestions = await _service.GetQuestions(NumberOfQuestionsToAdd, difficulty, ct);
+            QuestionProvider source = new();
+            var newQuestions = await questionSource.GetQuestions(NumberOfQuestionsToAdd, difficulty, ct);
             foreach (var question in newQuestions)
             {
-                var existingQuestion = await _db.Questions.FindAsync([question.QuestionId], cancellationToken: ct);
+                var existingQuestion = await triviaSparkWebContext.Questions.FindAsync([question.QuestionId], cancellationToken: ct);
                 if (existingQuestion is null)
                 {
                     Entities.Question dbQuestion = Create(question);
-                    _db.Questions.Add(dbQuestion);
+                    triviaSparkWebContext.Questions.Add(dbQuestion);
                 }
 
-                var matchQuestion = _db.MatchQuestions.Where(w => w.MatchId == MatchId && w.QuestionId == question.QuestionId)
+                var matchQuestion = triviaSparkWebContext.MatchQuestions.Where(w => w.MatchId == MatchId && w.QuestionId == question.QuestionId)
                     .AsNoTracking()
                     .FirstOrDefault();
                 if (matchQuestion is null)
@@ -360,28 +350,28 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                         MatchId = MatchId,
                         QuestionId = question.QuestionId,
                     };
-                    _db.MatchQuestions.Add(matchQuestion);
+                    triviaSparkWebContext.MatchQuestions.Add(matchQuestion);
                 }
             }
-            await _db.SaveChangesAsync(ct);
+            await triviaSparkWebContext.SaveChangesAsync(ct);
             return Create(await GetMatchAsync(MatchId, ct));
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("GetMoreQuestionsAsync:Exception", ex);
+            logger.LogCritical("GetMoreQuestionsAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return null;
     }
-    public override async Task<Models.MatchModel> UpdateMatchAsync(Models.MatchModel match, CancellationToken ct)
+    public override async Task<MatchModel> UpdateMatchAsync(MatchModel match, CancellationToken ct)
     {
         try
         {
-            var dbMatch = await _db.Matches.FindAsync([match.MatchId], cancellationToken: ct)
+            var dbMatch = await triviaSparkWebContext.Matches.FindAsync([match.MatchId], cancellationToken: ct)
                 ?? throw new Exception("Match Not Found");
 
             dbMatch.MatchName = match?.MatchName ?? dbMatch.MatchName;
@@ -390,17 +380,17 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             dbMatch.Difficulty = match?.Difficulty ?? dbMatch.Difficulty;
             dbMatch.QuestionType = match?.QuestionType ?? dbMatch.QuestionType;
 
-            await _db.SaveChangesAsync(ct);
+            await triviaSparkWebContext.SaveChangesAsync(ct);
             return Create(await GetMatchAsync(match.MatchId, ct));
 
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("UpdateMatchAsync:Exception", ex);
+            logger.LogCritical("UpdateMatchAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return match;
@@ -409,7 +399,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
     }
 
 
-    public Models.QuestionModel? GetNextQuestion(Models.MatchModel match)
+    public QuestionModel? GetNextQuestion(MatchModel match)
     {
         try
         {
@@ -420,7 +410,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
 
             switch (match.MatchMode)
             {
-                case Models.MatchMode.OneAndDone:
+                case MatchMode.OneAndDone:
                     if (unansweredQuestion.Count > 0)
                     {
                         var index = random.Next(unansweredQuestion.Count);
@@ -428,8 +418,8 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                     }
                     break;
 
-                case Models.MatchMode.Sequential:
-                case Models.MatchMode.Adaptive:
+                case MatchMode.Sequential:
+                case MatchMode.Adaptive:
                 default:
                     if (unansweredQuestion.Count > 0)
                     {
@@ -448,23 +438,23 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("GetNextQuestion:Exception", ex);
+            logger.LogCritical("GetNextQuestion:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
 
         return null;
     }
-    public override async Task<List<Models.MatchModel>> GetUserMatchesAsync(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
+    public override async Task<List<MatchModel>> GetUserMatchesAsync(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
     {
-        List<Models.MatchModel> userMatchList = new();
+        List<MatchModel> userMatchList = new();
         try
         {
             var currentUserName = user?.Identity?.Name ?? string.Empty;
-            var currentUserId = await _db.Users
+            var currentUserId = await triviaSparkWebContext.Users
                 .Where(w => w.UserName == currentUserName)
                 .Select(s => s.Id)
                 .AsNoTracking()
@@ -473,7 +463,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
 
             // .ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
 
-            var userMatches = await _db.Matches
+            var userMatches = await triviaSparkWebContext.Matches
                 .Where(w => w.UserId == currentUserId)
                 .Include(i => i.User)
                 .Include(i => i.MatchQuestions)
@@ -492,35 +482,35 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("GetUserMatchesAsync:Exception", ex);
+            logger.LogCritical("GetUserMatchesAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return userMatchList;
 
     }
 
-    public override async Task<Models.MatchModel> CreateMatchAsync(Models.MatchModel newMatch, ClaimsPrincipal user, CancellationToken ct = default)
+    public override async Task<MatchModel> CreateMatchAsync(MatchModel newMatch, ClaimsPrincipal user, CancellationToken ct = default)
     {
         var currentUserName = user?.Identity?.Name ?? string.Empty;
-        var currentUserId = await _db.Users
+        var currentUserId = await triviaSparkWebContext.Users
             .Where(w => w.UserName == currentUserName)
             .Select(s => s.Id)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken: ct);
         Entities.Match match = Create(newMatch, currentUserId);
-        _db.Matches.Add(match);
-        await _db.SaveChangesAsync(ct);
+        triviaSparkWebContext.Matches.Add(match);
+        await triviaSparkWebContext.SaveChangesAsync(ct);
 
         newMatch = await GetMoreQuestionsAsync(match.MatchId, newMatch.NumberOfQuestions, newMatch.Difficulty, ct);
 
         return newMatch;
     }
 
-    private Entities.Match Create(Models.MatchModel newMatch, string? currentUserId)
+    private Entities.Match Create(MatchModel newMatch, string? currentUserId)
     {
         return new Entities.Match()
         {
@@ -536,12 +526,12 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         };
     }
 
-    public override async Task<Models.MatchModel?> GetUserMatchAsync(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
+    public override async Task<MatchModel?> GetUserMatchAsync(ClaimsPrincipal user, int? MatchId = null, CancellationToken ct = default)
     {
         try
         {
             var currentUserName = user?.Identity?.Name ?? string.Empty;
-            var currentUserId = await _db.Users
+            var currentUserId = await triviaSparkWebContext.Users
                 .Where(w => w.UserName == currentUserName)
                 .Select(s => s.Id)
                 .AsNoTracking()
@@ -550,7 +540,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             Entities.Match? match;
             if ((MatchId is null || MatchId == 0) && currentUserId is not null)
             {
-                match = await _db.Matches
+                match = await triviaSparkWebContext.Matches
                     .Where(w => w.UserId == currentUserId)
                     .Include(i => i.User)
                     .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -560,7 +550,7 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
             }
             else
             {
-                match = await _db.Matches
+                match = await triviaSparkWebContext.Matches
                     .Where(w => w.MatchId == MatchId)
                     .Include(i => i.User)
                     .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -569,13 +559,13 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
                     .FirstOrDefaultAsync(ct);
             }
             if (match is not null) return Create(match);
-            Models.MatchModel newMatch = new();
+            MatchModel newMatch = new();
             match = Create(newMatch, currentUserId);
-            _db.Matches.Add(match);
-            await _db.SaveChangesAsync(ct);
+            triviaSparkWebContext.Matches.Add(match);
+            await triviaSparkWebContext.SaveChangesAsync(ct);
             MatchId = match.MatchId;
 
-            match = await _db.Matches
+            match = await triviaSparkWebContext.Matches
                 .Where(w => w.MatchId == MatchId)
                 .Include(i => i.User)
                 .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -587,24 +577,24 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("GetUserMatchAsync:Exception", ex);
+            logger.LogCritical("GetUserMatchAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return null;
     }
 
-    public override async Task<Models.MatchModel?> GetMatchAsync(int? MatchId = null, CancellationToken ct = default)
+    public override async Task<MatchModel?> GetMatchAsync(int? MatchId = null, CancellationToken ct = default)
     {
         try
         {
             Entities.Match? match;
             if (MatchId is null || MatchId == 0) throw new ArgumentNullException(nameof(MatchId));
 
-            match = await _db.Matches
+            match = await triviaSparkWebContext.Matches
                 .Where(w => w.MatchId == MatchId)
                 .Include(i => i.User)
                 .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
@@ -618,11 +608,11 @@ public class TriviaMatchService : Services.BaseMatchService, Services.IMatchServ
         }
         catch (Exception ex)
         {
-            _logger.LogCritical("GetUserMatchAsync:Exception", ex);
+            logger.LogCritical("GetUserMatchAsync:Exception", ex);
         }
         finally
         {
-            _db.ChangeTracker.Clear();
+            triviaSparkWebContext.ChangeTracker.Clear();
             SqliteConnection.ClearAllPools();
         }
         return null;

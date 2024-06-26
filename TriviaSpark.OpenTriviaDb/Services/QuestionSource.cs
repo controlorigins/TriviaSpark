@@ -2,20 +2,16 @@
 using HttpClientDecorator.Models;
 using Microsoft.Extensions.Logging;
 using TriviaSpark.Core.Extensions;
+using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Services;
 using TriviaSpark.OpenTriviaDb.Models;
 
 namespace TriviaSpark.OpenTriviaDb.Services;
 
-public class OpenTriviaDbQuestionSource : Core.Services.IQuestionSourceAdapter
+public class OpenTriviaDbQuestionSource(
+    ILogger<OpenTriviaDbQuestionSource> logger, 
+    IHttpGetCallService httpGetCallService) : IQuestionSourceAdapter
 {
-    private readonly IHttpGetCallService _httpClientService;
-    private readonly ILogger<OpenTriviaDbQuestionSource> _logger;
-
-    public OpenTriviaDbQuestionSource(ILogger<OpenTriviaDbQuestionSource> logger, IHttpGetCallService httpGetCallService)
-    {
-        _httpClientService = httpGetCallService;
-        _logger = logger;
-    }
 
     /// <summary>
     /// Creates a sequence of QuestionModel objects from the specified sequence of Trivia objects.
@@ -24,31 +20,31 @@ public class OpenTriviaDbQuestionSource : Core.Services.IQuestionSourceAdapter
     /// <returns>A sequence of QuestionModel objects.</returns>
     /// <exception cref="ArgumentNullException">Thrown if the trivia parameter is null.</exception>
     /// <exception cref="ArgumentException">Thrown if the trivia parameter contains null or empty elements.</exception>
-    private IEnumerable<Core.Models.QuestionModel> Create(IEnumerable<Trivia>? trivia)
+    private IEnumerable<QuestionModel> Create(IEnumerable<Trivia>? trivia)
     {
         if (trivia == null)
         {
-            _logger.LogError("The trivia parameter cannot contain null elements.");
+            logger.LogError("The trivia parameter cannot contain null elements.");
             throw new ArgumentNullException(nameof(trivia), "The trivia parameter cannot be null.");
         }
 
         if (trivia.Any(t => t == null))
         {
-            _logger.LogError("The trivia parameter cannot contain null elements.");
+            logger.LogError("The trivia parameter cannot contain null elements.");
             throw new ArgumentException("The trivia parameter cannot contain null elements.", nameof(trivia));
         }
         return trivia.Select(t => Create(t));
     }
 
-    private Core.Models.QuestionModel Create(Trivia trivia)
+    private QuestionModel Create(Trivia trivia)
     {
-        Core.Models.QuestionModel questionModel = new Core.Models.QuestionModel
+        QuestionModel questionModel = new()
         {
             QuestionId = trivia.question.GetDeterministicHashCode().ToString(),
             Category = trivia.category,
-            Difficulty = trivia.difficulty.ParseEnum<Core.Models.Difficulty>(),
+            Difficulty = trivia.difficulty.ParseEnum<Difficulty>(),
             QuestionText = trivia.question,
-            Type = trivia.type.ParseEnum<Core.Models.QuestionType>(),
+            Type = trivia.type.ParseEnum<QuestionType>(),
             Source = "OpenTriviaDb"
         };
         questionModel.AddAnswer(trivia.correct_answer, true);
@@ -59,19 +55,19 @@ public class OpenTriviaDbQuestionSource : Core.Services.IQuestionSourceAdapter
         return questionModel;
     }
 
-    public async Task<List<Core.Models.QuestionModel>> GetQuestions(int questionCount = 1, Core.Models.Difficulty difficulty = Core.Models.Difficulty.Easy, CancellationToken ct = default)
+    public async Task<List<QuestionModel>> GetQuestions(int questionCount = 1, Difficulty difficulty = Difficulty.Easy, CancellationToken ct = default)
     {
-        var questionList = new List<Core.Models.QuestionModel>();
+        var questionList = new List<QuestionModel>();
         ;
         var results = new HttpGetCallResults<OpenTBbResponse>
         {
             RequestPath = $"https://opentdb.com/api.php?amount={questionCount}&difficulty={difficulty.ToString().ToLower()}&type=multiple"
         };
-        results = await _httpClientService.GetAsync(results, ct);
+        results = await httpGetCallService.GetAsync(results, ct);
 
         if (results?.ResponseResults?.results is null)
         {
-            _logger.LogError("No results returned from OpenTriviaDb");
+            logger.LogError("No results returned from OpenTriviaDb");
         }
         questionList.AddRange(Create(results?.ResponseResults?.results));
         return questionList;
