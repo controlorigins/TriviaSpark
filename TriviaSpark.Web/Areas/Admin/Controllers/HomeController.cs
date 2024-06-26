@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TriviaSpark.Web.Areas.Admin.Controllers
+namespace TriviaSpark.Web.Areas.Admin.Controllers;
+
+[Area("Admin")]
+public class HomeController : Controller
 {
-    [Area("Admin")]
-    public class HomeController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

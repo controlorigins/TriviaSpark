@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -14,12 +13,16 @@
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Questions\IQuestionProvider.cs" />
+		<Compile Remove="Questions\IQuestionProvider.cs" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Match\Entities\" />
+		<PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 </Project>

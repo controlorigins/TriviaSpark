@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriviaSpark.Core.Tests", "T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{16CB41D4-27A5-4862-ABE2-59AC91F912CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JeopardyData.Console", "JeopardyData.Console\JeopardyData.Console.csproj", "{1D83EC36-83B6-4395-ADE9-676D221CCC00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JeopardyData.Console", "JeopardyData.Console\JeopardyData.Console.csproj", "{1D83EC36-83B6-4395-ADE9-676D221CCC00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

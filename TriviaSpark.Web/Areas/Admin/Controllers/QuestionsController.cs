@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class QuestionsController : Controller
     {
-        private readonly TriviaSparkWebContext _context;
+        private readonly Core.Match.Entities.TriviaSparkWebContext _context;
 
-        public QuestionsController(TriviaSparkWebContext context)
+        public QuestionsController(Core.Match.Entities.TriviaSparkWebContext context)
         {
             _context = context;
         }
@@ -51,7 +50,7 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QuestionId,QuestionText,Category,Difficulty,Type,Source,CreatedDate,ModifiedDate")] Question question)
+        public async Task<IActionResult> Create([Bind("QuestionId,QuestionText,Category,Difficulty,Type,Source,CreatedDate,ModifiedDate")] Core.Match.Entities.Question question)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +82,7 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("QuestionId,QuestionText,Category,Difficulty,Type,Source,CreatedDate,ModifiedDate")] Question question)
+        public async Task<IActionResult> Edit(string id, [Bind("QuestionId,QuestionText,Category,Difficulty,Type,Source,CreatedDate,ModifiedDate")] Core.Match.Entities.Question question)
         {
             if (id != question.QuestionId)
             {

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TriviaSpark.Web.Areas.Admin.Models;
-using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Controllers
@@ -24,7 +23,7 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
         {
             var users = await _userManager.Users.ToListAsync();
             var userRolesViewModel = new List<UserRolesViewModel>();
-            foreach (TriviaSparkWebUser user in users)
+            foreach (Core.Match.Entities.TriviaSparkWebUser user in users)
             {
                 var thisViewModel = new UserRolesViewModel();
                 thisViewModel.UserId = user.Id;
@@ -109,7 +108,7 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
-        private async Task<List<string>> GetUserRoles(TriviaSparkWebUser user)
+        private async Task<List<string>> GetUserRoles(Core.Match.Entities.TriviaSparkWebUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
@@ -121,10 +120,10 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
 
             if (CurrentRoles.Count < 1)
             {
-                await _roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
-                await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-                await _roleManager.CreateAsync(new IdentityRole(Roles.Moderator.ToString()));
-                await _roleManager.CreateAsync(new IdentityRole(Roles.Basic.ToString()));
+                await _roleManager.CreateAsync(new IdentityRole(Core.Match.Entities.Roles.SuperAdmin.ToString()));
+                await _roleManager.CreateAsync(new IdentityRole(Core.Match.Entities.Roles.Admin.ToString()));
+                await _roleManager.CreateAsync(new IdentityRole(Core.Match.Entities.Roles.Moderator.ToString()));
+                await _roleManager.CreateAsync(new IdentityRole(Core.Match.Entities.Roles.Basic.ToString()));
             }
         }
 

@@ -1,22 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TriviaSpark.Web.Areas.Identity.Data;
 
-namespace TriviaSpark.Web.Areas.Admin.Pages.Questions
+namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
+
+public class IndexModel : AdminPageModel
 {
-    public class IndexModel : AdminPageModel
+    public IndexModel(Core.Match.Entities.TriviaSparkWebContext context) : base(context)
     {
-        public IndexModel(TriviaSparkWebContext context) : base(context)
-        {
-        }
+    }
 
-        public IList<Question> Question { get; set; } = default!;
+    public IList<Core.Match.Entities.Question> Question { get; set; } = default!;
 
-        public async Task OnGetAsync()
+    public async Task OnGetAsync()
+    {
+        if (_context.Questions != null)
         {
-            if (_context.Questions != null)
-            {
-                Question = await _context.Questions.ToListAsync();
-            }
+            Question = await _context.Questions.ToListAsync();
         }
     }
 }

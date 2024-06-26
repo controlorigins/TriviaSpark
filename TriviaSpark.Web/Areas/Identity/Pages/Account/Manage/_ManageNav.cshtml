@@ -1,4 +1,5 @@
-﻿@inject SignInManager<TriviaSparkWebUser> SignInManager
+﻿@using TriviaSpark.Core.Match.Entities
+@inject SignInManager<TriviaSparkWebUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

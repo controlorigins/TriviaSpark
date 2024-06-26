@@ -6,7 +6,6 @@ using NLog;
 using NLog.Web;
 using TriviaSpark.Core.Match.Services;
 using TriviaSpark.OpenTriviaDb.Services;
-using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -17,10 +16,10 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     var ConnectionString = "Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + "TriviaSpark.Web.db";
-    builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
+    builder.Services.AddDbContext<TriviaSpark.Core.Match.Entities.TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
     builder.Services
-        .AddIdentity<TriviaSparkWebUser, IdentityRole>()
-        .AddEntityFrameworkStores<TriviaSparkWebContext>()
+        .AddIdentity<TriviaSpark.Core.Match.Entities.TriviaSparkWebUser, IdentityRole>()
+        .AddEntityFrameworkStores<TriviaSpark.Core.Match.Entities.TriviaSparkWebContext>()
         .AddUserManager<ApplicationUserManager>()
         .AddDefaultTokenProviders()
         .AddDefaultUI();
@@ -57,7 +56,7 @@ try
     builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
     builder.Services.AddScoped<TriviaSpark.Core.Match.Services.IMatchService, TriviaMatchService>();
 
-    builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSparkWebContext>();
+    builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSpark.Core.Match.Entities.TriviaSparkWebContext>();
 
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace TriviaSpark.Web.Areas.Identity.Data;
+namespace TriviaSpark.Core.Match.Entities;
 
 // Add profile data for application users by adding properties to the TriviaSparkWebUser class
 public class TriviaSparkWebUser : IdentityUser

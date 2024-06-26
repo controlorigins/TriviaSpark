@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using TriviaSpark.Core.Match.Models;
-using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Services;
 
-public class ApplicationUserManager : UserManager<TriviaSparkWebUser>
+public class ApplicationUserManager : UserManager<Core.Match.Entities.TriviaSparkWebUser>
 {
     public ApplicationUserManager(
-        IUserStore<TriviaSparkWebUser> store,
+        IUserStore<Core.Match.Entities.TriviaSparkWebUser> store,
         IOptions<IdentityOptions> optionsAccessor,
-        IPasswordHasher<TriviaSparkWebUser> passwordHasher,
-        IEnumerable<IUserValidator<TriviaSparkWebUser>> userValidators,
-        IEnumerable<IPasswordValidator<TriviaSparkWebUser>> passwordValidators,
+        IPasswordHasher<Core.Match.Entities.TriviaSparkWebUser> passwordHasher,
+        IEnumerable<IUserValidator<Core.Match.Entities.TriviaSparkWebUser>> userValidators,
+        IEnumerable<IPasswordValidator<Core.Match.Entities.TriviaSparkWebUser>> passwordValidators,
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
         IServiceProvider services,
-        ILogger<UserManager<TriviaSparkWebUser>> logger) :
+        ILogger<UserManager<Core.Match.Entities.TriviaSparkWebUser>> logger) :
         base(store,
             optionsAccessor,
             passwordHasher,
@@ -45,7 +44,7 @@ public class ApplicationUserManager : UserManager<TriviaSparkWebUser>
         return Create(user);
     }
 
-    private static UserModel Create(TriviaSparkWebUser user)
+    private static UserModel Create(Core.Match.Entities.TriviaSparkWebUser user)
     {
         return new UserModel
         {
