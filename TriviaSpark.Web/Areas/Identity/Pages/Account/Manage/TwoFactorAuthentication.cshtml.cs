@@ -10,12 +10,12 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class TwoFactorAuthenticationModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
     private readonly ILogger<TwoFactorAuthenticationModel> _logger;
 
     public TwoFactorAuthenticationModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager, SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager, ILogger<TwoFactorAuthenticationModel> logger)
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager, SignInManager<Core.Entities.TriviaSparkWebUser> signInManager, ILogger<TwoFactorAuthenticationModel> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;

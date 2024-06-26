@@ -11,12 +11,12 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class IndexModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
 
     public IndexModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager)
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -61,7 +61,7 @@ public class IndexModel : PageModel
         public byte[] ProfilePicture { get; set; }
     }
 
-    private async Task LoadAsync(Core.Match.Entities.TriviaSparkWebUser user)
+    private async Task LoadAsync(Core.Entities.TriviaSparkWebUser user)
     {
         var userName = await _userManager.GetUserNameAsync(user);
         var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

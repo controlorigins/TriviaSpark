@@ -1,5 +1,5 @@
 ﻿@page
-@model                                     Areas.Admin.Pages.Questions.IndexModel
+@model IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -32,29 +32,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Question) {
-        <tr>
-            <td>
-                @Html.Raw(item.QuestionText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Source)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.QuestionId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.QuestionId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.QuestionId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Question)
+        {
+            <tr>
+                <td>
+                    @Html.Raw(item.QuestionText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Source)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.QuestionId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.QuestionId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.QuestionId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

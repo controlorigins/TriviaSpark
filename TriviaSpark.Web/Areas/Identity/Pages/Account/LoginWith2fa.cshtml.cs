@@ -11,13 +11,13 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class LoginWith2faModel : PageModel
 {
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<LoginWith2faModel> _logger;
 
     public LoginWith2faModel(
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager,
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<LoginWith2faModel> logger)
     {
         _signInManager = signInManager;

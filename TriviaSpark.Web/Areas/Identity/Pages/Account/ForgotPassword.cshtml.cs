@@ -13,10 +13,10 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class ForgotPasswordModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     //private readonly IEmailSender _emailSender;
 
-    public ForgotPasswordModel(UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager)
+    public ForgotPasswordModel(UserManager<Core.Entities.TriviaSparkWebUser> userManager)
     {
         _userManager = userManager;
         //  _emailSender = emailSender;

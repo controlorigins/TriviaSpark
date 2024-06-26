@@ -1,42 +1,32 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TriviaSpark.Core.Match.Models;
+using TriviaSpark.Core.Models;
+using TriviaSpark.Core.Services;
 
 namespace TriviaSpark.Web.Pages;
 
 [Authorize]
-public class UserMatchesModel : PageModel
+public class UserMatchesModel(
+    ILogger<UserMatchesModel> logger,
+    IMatchService MatchService) : PageModel
 {
-    private readonly ILogger<UserMatchesModel> _logger;
-    private readonly Core.Match.Services.IMatchService _matchService;
-
-    public UserMatchesModel(
-        ILogger<UserMatchesModel> logger,
-        Core.Match.Services.IMatchService MatchService)
-    {
-        _logger = logger;
-        _matchService = MatchService;
-        Matches = new List<MatchModel>();
-        NewMatch = new MatchModel();
-    }
+    [BindProperty]
+    public List<MatchModel> Matches { get; set; } = new List<MatchModel>();
 
     [BindProperty]
-    public List<MatchModel> Matches { get; set; }
-
-    [BindProperty]
-    public MatchModel NewMatch { get; set; }
+    public MatchModel NewMatch { get; set; } = new MatchModel();
 
     public async Task OnGet()
     {
-        Matches = await _matchService.GetUserMatchesAsync(User, null);
+        Matches = await MatchService.GetUserMatchesAsync(User, null);
     }
 
     public async Task<IActionResult> OnPost(CancellationToken ct)
     {
         if (ModelState.IsValid)
         {
-            NewMatch = await _matchService.CreateMatchAsync(NewMatch, User, ct);
+            NewMatch = await MatchService.CreateMatchAsync(NewMatch, User, ct);
             return RedirectToPage("./UserMatches");
         }
         else

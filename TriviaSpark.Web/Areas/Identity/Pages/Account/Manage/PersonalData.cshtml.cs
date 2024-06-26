@@ -8,11 +8,11 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class PersonalDataModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<PersonalDataModel> _logger;
 
     public PersonalDataModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<PersonalDataModel> logger)
     {
         _userManager = userManager;

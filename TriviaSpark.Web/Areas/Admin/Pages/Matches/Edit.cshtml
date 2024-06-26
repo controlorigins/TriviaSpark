@@ -1,5 +1,4 @@
 ﻿@page
-@using TriviaSpark.Core.Match.Models
 @model EditModel
 
 @{
@@ -27,17 +26,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Match.MatchMode" class="control-label"></label>
-                <select asp-for="Match.MatchMode" class="form-control" asp-items="Html.GetEnumSelectList<MatchMode>()"></select>
+                <select asp-for="Match.MatchMode" class="form-control" asp-items="Html.GetEnumSelectList<Core.Models.MatchMode>()"></select>
                 <span asp-validation-for="Match.MatchMode" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Match.Difficulty" class="control-label"></label>
-                <select asp-for="Match.Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Difficulty>()"></select>
+                <select asp-for="Match.Difficulty" class="form-control" asp-items="Html.GetEnumSelectList<Core.Models.Difficulty>()"></select>
                 <span asp-validation-for="Match.Difficulty" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Match.QuestionType" class="control-label"></label>
-                <select asp-for="Match.QuestionType" class="form-control" asp-items="Html.GetEnumSelectList<QuestionType>()"></select>
+                <select asp-for="Match.QuestionType" class="form-control" asp-items="Html.GetEnumSelectList<Core.Models.QuestionType>()"></select>
                 <span asp-validation-for="Match.QuestionType" class="text-danger"></span>
             </div>
             <div class="form-group">

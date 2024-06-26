@@ -12,9 +12,9 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class ConfirmEmailModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
 
-    public ConfirmEmailModel(UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager)
+    public ConfirmEmailModel(UserManager<Core.Entities.TriviaSparkWebUser> userManager)
     {
         _userManager = userManager;
     }

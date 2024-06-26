@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TriviaSpark.Core.Entities;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
 
-public class IndexModel : AdminPageModel
+public class IndexModel(TriviaSparkWebContext context) : AdminPageModel(context)
 {
-    public IndexModel(Core.Match.Entities.TriviaSparkWebContext context) : base(context)
-    {
-    }
-
-    public IList<Core.Match.Entities.Question> Question { get; set; } = default!;
+    public IList<Question> Question { get; set; } = default!;
 
     public async Task OnGetAsync()
     {

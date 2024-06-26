@@ -10,13 +10,13 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class ResetAuthenticatorModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
     private readonly ILogger<ResetAuthenticatorModel> _logger;
 
     public ResetAuthenticatorModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager,
         ILogger<ResetAuthenticatorModel> logger)
     {
         _userManager = userManager;

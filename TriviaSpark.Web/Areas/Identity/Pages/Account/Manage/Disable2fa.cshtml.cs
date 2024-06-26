@@ -10,11 +10,11 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class Disable2faModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<Disable2faModel> _logger;
 
     public Disable2faModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<Disable2faModel> logger)
     {
         _userManager = userManager;

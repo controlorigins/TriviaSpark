@@ -1,23 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TriviaSpark.Core.Entities;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
 
-public class CreateModel : AdminPageModel
+public class CreateModel(TriviaSparkWebContext context) : AdminPageModel(context)
 {
-    public CreateModel(Core.Match.Entities.TriviaSparkWebContext context) : base(context)
-    {
-    }
-
     public IActionResult OnGet()
     {
         return Page();
     }
 
     [BindProperty]
-    public Core.Match.Entities.Question Question { get; set; } = default!;
+    public Question Question { get; set; } = default!;
 
 
-    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    // To protect from over posting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid || _context.Questions == null || Question == null)

@@ -1,54 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TriviaSpark.Core.Match.Models;
 
-namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
+namespace TriviaSpark.Web.Areas.Admin.Pages.Matches;
+
+public class CreateModel : PageModel
 {
-    public class CreateModel : PageModel
+    private readonly Core.Services.IMatchService _matchService;
+
+    public CreateModel(Core.Services.IMatchService matchService)
     {
-        private readonly Core.Match.Services.IMatchService _matchService;
+        _matchService = matchService;
+    }
 
-        public CreateModel(Core.Match.Services.IMatchService matchService)
+    private static SelectListItem Create(Core.Models.UserModel user)
+    {
+        return new SelectListItem()
         {
-            _matchService = matchService;
-        }
+            Text = user.UserName,
+            Value = user.UserId
+        };
+    }
+    private IEnumerable<SelectListItem> Create(List<Core.Models.UserModel> users)
+    {
+        return users.Select(Create);
+    }
 
-        private static SelectListItem Create(UserModel user)
-        {
-            return new SelectListItem()
-            {
-                Text = user.UserName,
-                Value = user.UserId
-            };
-        }
-        private IEnumerable<SelectListItem> Create(List<UserModel> users)
-        {
-            return users.Select(Create);
-        }
+    public async Task<IActionResult> OnGet(CancellationToken ct)
+    {
+        Users = Create(await _matchService.GetUsersAsync(ct));
+        return Page();
+    }
 
-        public async Task<IActionResult> OnGet(CancellationToken ct)
+
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
+    {
+        if (!ModelState.IsValid || Match == null)
         {
-            Users = Create(await _matchService.GetUsersAsync(ct));
             return Page();
         }
+        var result = await _matchService.CreateMatchAsync(Match, User, ct);
 
-
-        public async Task<IActionResult> OnPostAsync(CancellationToken ct)
-        {
-            if (!ModelState.IsValid || Match == null)
-            {
-                return Page();
-            }
-            var result = await _matchService.CreateMatchAsync(Match, User, ct);
-
-            return RedirectToPage("./Index");
-        }
-
-        [BindProperty]
-        public MatchModel Match { get; set; } = default!;
-
-        [BindProperty]
-        public IEnumerable<SelectListItem> Users { get; set; }
+        return RedirectToPage("./Index");
     }
+
+    [BindProperty]
+    public Core.Models.MatchModel Match { get; set; } = default!;
+
+    [BindProperty]
+    public IEnumerable<SelectListItem> Users { get; set; }
 }

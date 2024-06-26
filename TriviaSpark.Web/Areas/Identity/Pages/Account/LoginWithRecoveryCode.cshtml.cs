@@ -10,13 +10,13 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class LoginWithRecoveryCodeModel : PageModel
 {
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<LoginWithRecoveryCodeModel> _logger;
 
     public LoginWithRecoveryCodeModel(
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager,
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<LoginWithRecoveryCodeModel> logger)
     {
         _signInManager = signInManager;

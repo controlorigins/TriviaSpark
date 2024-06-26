@@ -11,11 +11,11 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class DownloadPersonalDataModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<DownloadPersonalDataModel> _logger;
 
     public DownloadPersonalDataModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<DownloadPersonalDataModel> logger)
     {
         _userManager = userManager;
@@ -39,7 +39,7 @@ public class DownloadPersonalDataModel : PageModel
 
         // Only include personal data for download
         var personalData = new Dictionary<string, string>();
-        var personalDataProps = typeof(Core.Match.Entities.TriviaSparkWebUser).GetProperties().Where(
+        var personalDataProps = typeof(Core.Entities.TriviaSparkWebUser).GetProperties().Where(
                         prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
         foreach (var p in personalDataProps)
         {

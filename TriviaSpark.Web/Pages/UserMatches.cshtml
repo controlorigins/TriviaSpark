@@ -1,5 +1,5 @@
 ﻿@page
-@using TriviaSpark.Core.Match.Models
+@using TriviaSpark.Core.Models
 @model UserMatchesModel
 @{
 }
@@ -50,11 +50,11 @@ else
                 <div class="row d-flex flex-wrap gx-5">
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.MatchMode" class="form-label"></label>
-                        @Html.DropDownListFor(m => m.NewMatch.MatchMode, Html.GetEnumSelectList<MatchMode>().Where(e => e.Value != "0"), new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.NewMatch.MatchMode, Html.GetEnumSelectList<Core.Models.MatchMode>().Where(e => e.Value != "0"), new { @class = "form-control" })
                     </div>
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.Difficulty" class="form-label"></label>
-                        @Html.DropDownListFor(m => m.NewMatch.Difficulty, Html.GetEnumSelectList<Difficulty>().Where(e => e.Value != "0"), new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.NewMatch.Difficulty, Html.GetEnumSelectList<Core.Models.Difficulty>().Where(e => e.Value != "0"), new { @class = "form-control" })
                     </div>
                     <div class="col-sm-12 col-md-3 my-3 ">
                         <label asp-for="NewMatch.NumberOfQuestions" class="form-label"></label>

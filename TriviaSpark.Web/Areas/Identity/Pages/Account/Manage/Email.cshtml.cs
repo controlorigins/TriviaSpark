@@ -13,13 +13,13 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class EmailModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
     //private readonly IEmailSender _emailSender;
 
     public EmailModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager
         )
     {
         _userManager = userManager;
@@ -68,7 +68,7 @@ public class EmailModel : PageModel
         public string NewEmail { get; set; }
     }
 
-    private async Task LoadAsync(Core.Match.Entities.TriviaSparkWebUser user)
+    private async Task LoadAsync(Core.Entities.TriviaSparkWebUser user)
     {
         var email = await _userManager.GetEmailAsync(user);
         Email = email;

@@ -1,5 +1,5 @@
 ﻿@page
-@model                         DeleteModel
+@model DeleteModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -43,7 +43,7 @@
             @Html.DisplayFor(model => model.Question.Source)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Question.QuestionId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

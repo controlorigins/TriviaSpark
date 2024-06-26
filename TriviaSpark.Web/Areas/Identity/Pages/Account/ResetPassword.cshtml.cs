@@ -13,9 +13,9 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class ResetPasswordModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
 
-    public ResetPasswordModel(UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager)
+    public ResetPasswordModel(UserManager<Core.Entities.TriviaSparkWebUser> userManager)
     {
         _userManager = userManager;
     }

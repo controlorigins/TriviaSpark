@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TriviaSpark.Core.Entities;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
 
-public class EditModel : AdminPageModel
+public class EditModel(TriviaSparkWebContext context) : AdminPageModel(context)
 {
-    public EditModel(Core.Match.Entities.TriviaSparkWebContext context) : base(context)
-    {
-    }
-
     [BindProperty]
-    public Core.Match.Entities.Question Question { get; set; } = default!;
+    public Question Question { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(string id)
     {

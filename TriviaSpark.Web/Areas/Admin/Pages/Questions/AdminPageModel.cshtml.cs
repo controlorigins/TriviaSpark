@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TriviaSpark.Core.Match.Entities;
+using TriviaSpark.Core.Entities;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
 
-public class AdminPageModel : PageModel
+public class AdminPageModel(TriviaSparkWebContext context) : PageModel
 {
-    protected readonly TriviaSparkWebContext _context;
-
-    public AdminPageModel(TriviaSparkWebContext context)
-    {
-        _context = context;
-    }
+    public TriviaSparkWebContext _context { get; } = context;
 }

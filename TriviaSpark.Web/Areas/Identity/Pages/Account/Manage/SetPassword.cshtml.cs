@@ -11,12 +11,12 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class SetPasswordModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
 
     public SetPasswordModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager)
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;

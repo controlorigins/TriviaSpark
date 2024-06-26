@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 namespace TriviaSpark.Web.Areas.Admin.Pages.Questions;
 public class DeleteModel : AdminPageModel
 {
-    public DeleteModel(Core.Match.Entities.TriviaSparkWebContext context) : base(context)
+    public DeleteModel(Core.Entities.TriviaSparkWebContext context) : base(context)
     {
     }
 
     [BindProperty]
-    public Core.Match.Entities.Question Question { get; set; } = default!;
+    public Core.Entities.Question Question { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(string id)
     {

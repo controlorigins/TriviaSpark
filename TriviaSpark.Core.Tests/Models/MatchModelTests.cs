@@ -1,188 +1,189 @@
-﻿using TriviaSpark.Core.Match;
-using TriviaSpark.Core.Match.Models;
-using TriviaSpark.Core.Questions;
+﻿namespace TriviaSpark.Core.Tests.Models;
 
-namespace TriviaSpark.Core.Tests.Models
+
+[TestClass]
+public class MatchModelTests
 {
-
-    [TestClass]
-    public class MatchModelTests
+    [TestMethod]
+    public void MatchModel_MatchId_IsSet()
     {
-        [TestMethod]
-        public void MatchModel_MatchId_IsSet()
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.MatchId = 1;
+            MatchId = 1
+        };
 
-            // Assert
-            Assert.AreEqual(1, matchModel.MatchId);
-        }
+        // Assert
+        Assert.AreEqual(1, matchModel.MatchId);
+    }
 
-        [TestMethod]
-        public void MatchModel_MatchName_IsSet()
+    [TestMethod]
+    public void MatchModel_MatchName_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.MatchName = "Test Match";
+            MatchName = "Test Match"
+        };
 
-            // Assert
-            Assert.AreEqual("Test Match", matchModel.MatchName);
-        }
+        // Assert
+        Assert.AreEqual("Test Match", matchModel.MatchName);
+    }
 
-        [TestMethod]
-        public void MatchModel_MatchDate_IsSet()
+    [TestMethod]
+    public void MatchModel_MatchDate_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.MatchDate = new DateTime(2022, 3, 3);
+            MatchDate = new DateTime(2022, 3, 3)
+        };
 
-            // Assert
-            Assert.AreEqual(new DateTime(2022, 3, 3), matchModel.MatchDate);
-        }
+        // Assert
+        Assert.AreEqual(new DateTime(2022, 3, 3), matchModel.MatchDate);
+    }
 
-        [TestMethod]
-        public void MatchModel_MatchQuestions_IsSet()
+    [TestMethod]
+    public void MatchModel_MatchQuestions_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.MatchQuestions = new QuestionProvider();
+            MatchQuestions = new Services.QuestionProvider()
+        };
 
-            // Assert
-            Assert.IsNotNull(matchModel.MatchQuestions);
-        }
+        // Assert
+        Assert.IsNotNull(matchModel.MatchQuestions);
+    }
 
-        [TestMethod]
-        public void MatchModel_MatchQuestionAnswers_IsSet()
+    [TestMethod]
+    public void MatchModel_MatchQuestionAnswers_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.MatchQuestionAnswers = new List<MatchQuestionAnswerModel>();
+            MatchQuestionAnswers = new List<Core.Models.MatchQuestionAnswerModel>()
+        };
 
-            // Assert
-            Assert.IsNotNull(matchModel.MatchQuestionAnswers);
-        }
+        // Assert
+        Assert.IsNotNull(matchModel.MatchQuestionAnswers);
+    }
 
-        [TestMethod]
-        public void MatchModel_UserId_IsSet()
+    [TestMethod]
+    public void MatchModel_UserId_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-
             // Act
-            matchModel.UserId = "123";
+            UserId = "123"
+        };
 
-            // Assert
-            Assert.AreEqual("123", matchModel.UserId);
-        }
+        // Assert
+        Assert.AreEqual("123", matchModel.UserId);
+    }
 
-        [TestMethod]
-        public void MatchModel_User_IsSet()
+    [TestMethod]
+    public void MatchModel_User_IsSet()
+    {
+        // Arrange
+        var matchModel = new Core.Models.MatchModel();
+        var user = new Core.Models.UserModel { UserId = "123", UserName = "Test User" };
+
+        // Act
+        matchModel.User = user;
+
+        // Assert
+        Assert.IsNotNull(matchModel.User);
+        Assert.AreEqual("123", matchModel.User.UserId);
+        Assert.AreEqual("Test User", matchModel.User.UserName);
+    }
+
+    [TestMethod]
+    public void MatchModel_MatchQuestions_AreEqual()
+    {
+        // Arrange
+        var matchModel1 = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel = new MatchModel();
-            var user = new UserModel { UserId = "123", UserName = "Test User" };
+            MatchId = 1,
+            MatchName = "Test Match",
+            MatchDate = new DateTime(2022, 3, 3),
+            MatchQuestions = new Services.QuestionProvider()
+        };
 
-            // Act
-            matchModel.User = user;
-
-            // Assert
-            Assert.IsNotNull(matchModel.User);
-            Assert.AreEqual("123", matchModel.User.UserId);
-            Assert.AreEqual("Test User", matchModel.User.UserName);
-        }
-
-        [TestMethod]
-        public void MatchModel_MatchQuestions_AreEqual()
+        var matchModel2 = new Core.Models.MatchModel
         {
-            // Arrange
-            var matchModel1 = new MatchModel
-            {
-                MatchId = 1,
-                MatchName = "Test Match",
-                MatchDate = new DateTime(2022, 3, 3),
-                MatchQuestions = new QuestionProvider()
-            };
+            MatchId = 1,
+            MatchName = "Test Match",
+            MatchDate = new DateTime(2022, 3, 3),
+            MatchQuestions = new Services.QuestionProvider()
+        };
 
-            var matchModel2 = new MatchModel
-            {
-                MatchId = 1,
-                MatchName = "Test Match",
-                MatchDate = new DateTime(2022, 3, 3),
-                MatchQuestions = new QuestionProvider()
-            };
+        // Act
+        var areEqual = matchModel1 == matchModel2;
 
-            // Act
-            var areEqual = matchModel1 == matchModel2;
+        // Assert
+        Assert.IsTrue(areEqual);
+    }
 
-            // Assert
-            Assert.IsTrue(areEqual);
-        }
+    [TestMethod]
+    public void Equals_ReturnsTrue_WhenMatchIdsAreEqual()
+    {
+        // Arrange
+        var match1 = new Core.Models.MatchModel { MatchId = 1 };
+        var match2 = new Core.Models.MatchModel { MatchId = 1 };
 
-        [TestMethod]
-        public void Equals_ReturnsTrue_WhenMatchIdsAreEqual()
-        {
-            // Arrange
-            var match1 = new MatchModel { MatchId = 1 };
-            var match2 = new MatchModel { MatchId = 1 };
+        // Act
+        var result = match1.Equals(match2);
 
-            // Act
-            var result = match1.Equals(match2);
+        // Assert
+        Assert.IsTrue(result);
+    }
 
-            // Assert
-            Assert.IsTrue(result);
-        }
+    [TestMethod]
+    public void Equals_ReturnsFalse_WhenMatchIdsAreDifferent()
+    {
+        // Arrange
+        var match1 = new Core.Models.MatchModel { MatchId = 1 };
+        var match2 = new Core.Models.MatchModel { MatchId = 2 };
 
-        [TestMethod]
-        public void Equals_ReturnsFalse_WhenMatchIdsAreDifferent()
-        {
-            // Arrange
-            var match1 = new MatchModel { MatchId = 1 };
-            var match2 = new MatchModel { MatchId = 2 };
+        // Act
+        var result = match1.Equals(match2);
 
-            // Act
-            var result = match1.Equals(match2);
+        // Assert
+        Assert.IsFalse(result);
+    }
 
-            // Assert
-            Assert.IsFalse(result);
-        }
+    [TestMethod]
+    public void Equals_ReturnsFalse_WhenObjectIsNull()
+    {
+        // Arrange
+        var match = new Core.Models.MatchModel { MatchId = 1 };
 
-        [TestMethod]
-        public void Equals_ReturnsFalse_WhenObjectIsNull()
-        {
-            // Arrange
-            var match = new MatchModel { MatchId = 1 };
+        // Act
+        var result = match.Equals(null);
 
-            // Act
-            var result = match.Equals(null);
+        // Assert
+        Assert.IsFalse(result);
+    }
 
-            // Assert
-            Assert.IsFalse(result);
-        }
+    [TestMethod]
+    public void Equals_ReturnsFalse_WhenObjectIsNotMatchModel()
+    {
+        // Arrange
+        var match = new Core.Models.MatchModel { MatchId = 1 };
+        var obj = new object();
 
-        [TestMethod]
-        public void Equals_ReturnsFalse_WhenObjectIsNotMatchModel()
-        {
-            // Arrange
-            var match = new MatchModel { MatchId = 1 };
-            var obj = new object();
+        // Act
+        var result = match.Equals(obj);
 
-            // Act
-            var result = match.Equals(obj);
-
-            // Assert
-            Assert.IsFalse(result);
-        }
+        // Assert
+        Assert.IsFalse(result);
     }
 }
 

@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TriviaSpark.Core.Match.Models;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches;
 
 public class DeleteModel : PageModel
 {
-    private readonly Core.Match.Services.IMatchService _matchService;
+    private readonly Core.Services.IMatchService _matchService;
 
-    public DeleteModel(Core.Match.Services.IMatchService matchService)
+    public DeleteModel(Core.Services.IMatchService matchService)
     {
         _matchService = matchService;
     }
@@ -41,5 +40,5 @@ public class DeleteModel : PageModel
     }
 
     [BindProperty]
-    public MatchModel Match { get; set; } = default!;
+    public Core.Models.MatchModel Match { get; set; } = default!;
 }

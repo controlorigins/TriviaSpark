@@ -10,11 +10,11 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class GenerateRecoveryCodesModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     private readonly ILogger<GenerateRecoveryCodesModel> _logger;
 
     public GenerateRecoveryCodesModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
         ILogger<GenerateRecoveryCodesModel> logger)
     {
         _userManager = userManager;

@@ -12,10 +12,10 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 
 public class LoginModel : PageModel
 {
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
     private readonly ILogger<LoginModel> _logger;
 
-    public LoginModel(SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager, ILogger<LoginModel> logger)
+    public LoginModel(SignInManager<Core.Entities.TriviaSparkWebUser> signInManager, ILogger<LoginModel> logger)
     {
         _signInManager = signInManager;
         _logger = logger;

@@ -14,10 +14,10 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 [AllowAnonymous]
 public class RegisterConfirmationModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
     //private readonly IEmailSender _sender;
 
-    public RegisterConfirmationModel(UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager)
+    public RegisterConfirmationModel(UserManager<Core.Entities.TriviaSparkWebUser> userManager)
     {
         _userManager = userManager;
         //_sender = sender;

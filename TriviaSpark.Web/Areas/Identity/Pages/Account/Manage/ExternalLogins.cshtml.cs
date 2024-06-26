@@ -11,14 +11,14 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account.Manage;
 
 public class ExternalLoginsModel : PageModel
 {
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
-    private readonly IUserStore<Core.Match.Entities.TriviaSparkWebUser> _userStore;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly IUserStore<Core.Entities.TriviaSparkWebUser> _userStore;
 
     public ExternalLoginsModel(
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager,
-        IUserStore<Core.Match.Entities.TriviaSparkWebUser> userStore)
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager,
+        IUserStore<Core.Entities.TriviaSparkWebUser> userStore)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -64,7 +64,7 @@ public class ExternalLoginsModel : PageModel
             .ToList();
 
         string passwordHash = null;
-        if (_userStore is IUserPasswordStore<Core.Match.Entities.TriviaSparkWebUser> userPasswordStore)
+        if (_userStore is IUserPasswordStore<Core.Entities.TriviaSparkWebUser> userPasswordStore)
         {
             passwordHash = await userPasswordStore.GetPasswordHashAsync(user, HttpContext.RequestAborted);
         }

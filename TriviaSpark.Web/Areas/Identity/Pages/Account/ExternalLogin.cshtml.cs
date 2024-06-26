@@ -16,17 +16,17 @@ namespace TriviaSpark.Web.Areas.Identity.Pages.Account;
 [AllowAnonymous]
 public class ExternalLoginModel : PageModel
 {
-    private readonly SignInManager<Core.Match.Entities.TriviaSparkWebUser> _signInManager;
-    private readonly UserManager<Core.Match.Entities.TriviaSparkWebUser> _userManager;
-    private readonly IUserStore<Core.Match.Entities.TriviaSparkWebUser> _userStore;
-    private readonly IUserEmailStore<Core.Match.Entities.TriviaSparkWebUser> _emailStore;
+    private readonly SignInManager<Core.Entities.TriviaSparkWebUser> _signInManager;
+    private readonly UserManager<Core.Entities.TriviaSparkWebUser> _userManager;
+    private readonly IUserStore<Core.Entities.TriviaSparkWebUser> _userStore;
+    private readonly IUserEmailStore<Core.Entities.TriviaSparkWebUser> _emailStore;
     // private readonly IEmailSender _emailSender;
     private readonly ILogger<ExternalLoginModel> _logger;
 
     public ExternalLoginModel(
-        SignInManager<Core.Match.Entities.TriviaSparkWebUser> signInManager,
-        UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager,
-        IUserStore<Core.Match.Entities.TriviaSparkWebUser> userStore,
+        SignInManager<Core.Entities.TriviaSparkWebUser> signInManager,
+        UserManager<Core.Entities.TriviaSparkWebUser> userManager,
+        IUserStore<Core.Entities.TriviaSparkWebUser> userStore,
         ILogger<ExternalLoginModel> logger
         )
     {
@@ -190,26 +190,26 @@ public class ExternalLoginModel : PageModel
         return Page();
     }
 
-    private Core.Match.Entities.TriviaSparkWebUser CreateUser()
+    private Core.Entities.TriviaSparkWebUser CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<Core.Match.Entities.TriviaSparkWebUser>();
+            return Activator.CreateInstance<Core.Entities.TriviaSparkWebUser>();
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(Core.Match.Entities.TriviaSparkWebUser)}'. " +
-                $"Ensure that '{nameof(Core.Match.Entities.TriviaSparkWebUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(Core.Entities.TriviaSparkWebUser)}'. " +
+                $"Ensure that '{nameof(Core.Entities.TriviaSparkWebUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                 $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
         }
     }
 
-    private IUserEmailStore<Core.Match.Entities.TriviaSparkWebUser> GetEmailStore()
+    private IUserEmailStore<Core.Entities.TriviaSparkWebUser> GetEmailStore()
     {
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
-        return (IUserEmailStore<Core.Match.Entities.TriviaSparkWebUser>)_userStore;
+        return (IUserEmailStore<Core.Entities.TriviaSparkWebUser>)_userStore;
     }
 }
