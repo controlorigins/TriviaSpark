@@ -8,6 +8,6 @@
         public string? PhoneNumber { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public List<string> UserRoles { get; set; } = new List<string>();
+        public List<string> UserRoles { get; set; } = [];
     }
 }

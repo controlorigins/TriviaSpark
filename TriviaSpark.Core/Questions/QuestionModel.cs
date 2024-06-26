@@ -23,7 +23,7 @@ namespace TriviaSpark.Core.Questions
 
         public void AddAnswer(string answerText, bool isCorrect)
         {
-            Answers ??= new List<QuestionAnswerModel>();
+            Answers ??= [];
 
             Answers.Add(new QuestionAnswerModel()
             {
@@ -74,7 +74,7 @@ namespace TriviaSpark.Core.Questions
         {
             get
             {
-                Answers ??= new List<QuestionAnswerModel>();
+                Answers ??= [];
 
                 return Answers.Where(w => w.IsCorrect == true).Select(s => s.AnswerText).FirstOrDefault();
             }
@@ -86,7 +86,7 @@ namespace TriviaSpark.Core.Questions
         {
             get
             {
-                Answers ??= new List<QuestionAnswerModel>();
+                Answers ??= [];
 
                 return Answers.Where(w => w.IsCorrect == false).Select(s => s.AnswerText).ToList();
             }

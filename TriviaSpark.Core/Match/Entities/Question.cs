@@ -4,7 +4,7 @@ using TriviaSpark.Core.Match.Models;
 
 namespace TriviaSpark.Core.Match.Entities;
 
-public class Question : Entities.BaseEntity
+public class Question : BaseEntity
 {
     [Key]
     public string QuestionId { get; set; }
@@ -13,16 +13,16 @@ public class Question : Entities.BaseEntity
     public Difficulty Difficulty { get; set; }
     public QuestionType Type { get; set; }
     public string Source { get; set; }
-    public virtual ICollection<Entities.MatchQuestion> MatchQuestions { get; set; }
+    public virtual ICollection<MatchQuestion> MatchQuestions { get; set; }
     public virtual ICollection<MatchQuestionAnswer> MatchQuestionAnswers { get; set; }
-    public virtual ICollection<Entities.QuestionAnswer> Answers { get; set; }
+    public virtual ICollection<QuestionAnswer> Answers { get; set; }
 
     [NotMapped]
     public string CorrectAnswer
     {
         get
         {
-            Answers ??= new List<Entities.QuestionAnswer>();
+            Answers ??= [];
 
             return Answers.Where(w => w.IsCorrect == true).Select(s => s.AnswerText).FirstOrDefault();
         }
@@ -33,7 +33,7 @@ public class Question : Entities.BaseEntity
     {
         get
         {
-            Answers ??= new List<Entities.QuestionAnswer>();
+            Answers ??= [];
 
             return Answers.Where(w => w.IsCorrect == false).Select(s => s.AnswerText).ToList();
         }

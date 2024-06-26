@@ -26,7 +26,7 @@
         {
             if (item is null) return 0;
 
-            _list ??= new List<T>();
+            _list ??= [];
 
             if (_list.Contains(item))
             {

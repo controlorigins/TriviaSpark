@@ -25,7 +25,7 @@ namespace TriviaSpark.Core.Questions
 
         public ScoreCardModel CalculateScore(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
-            List<QuestionAnswerSet> unasweredQuestions = new();
+            List<QuestionAnswerSet> unasweredQuestions = [];
             var correctAnswersByQuestion = CorrectAnswersByQuestion();
             var attemptedAnswersByQuestion = AttemptedAnswersByQuestion(matchQuestionAnswers);
             // Calculate the number of questions and number of questions answers
@@ -113,11 +113,11 @@ namespace TriviaSpark.Core.Questions
 
         public List<QuestionModel> GetIncorrectQuestions(IEnumerable<MatchQuestionAnswerModel> matchQuestionAnswers)
         {
-            if (matchQuestionAnswers.Count() == 0) return new List<QuestionModel>();
+            if (matchQuestionAnswers.Count() == 0) return [];
 
             if (!Items.Any(Items => Items.Answers is not null))
             {
-                return new List<QuestionModel>();
+                return [];
             }
             var correctAnswers = Items
                 .SelectMany(q => q.Answers)

@@ -19,7 +19,7 @@ namespace TriviaSpark.Core.Match.Services
             {
                 UserId = "66eae7b7-c163-4913-8aaf-421a23f0d5d9",
                 MatchQuestions = new QuestionProvider(),
-                MatchQuestionAnswers = new List<MatchQuestionAnswerModel>(),
+                MatchQuestionAnswers = [],
                 MatchName = "Trivia Match"
             };
         }
@@ -79,7 +79,7 @@ namespace TriviaSpark.Core.Match.Services
 
         public virtual Task<List<UserModel>> GetUsersAsync(CancellationToken ct)
         {
-            return Task.FromResult<List<UserModel>>(new List<UserModel>());
+            return Task.FromResult<List<UserModel>>([]);
         }
 
         public virtual Task<MatchModel> UpdateMatchAsync(MatchModel match, CancellationToken ct)

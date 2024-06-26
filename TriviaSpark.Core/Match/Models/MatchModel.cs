@@ -61,7 +61,7 @@ namespace TriviaSpark.Core.Match.Models
         [DisplayName("Mode of Game Play")]
         public MatchMode MatchMode { get; set; }
         public string? MatchName { get; set; }
-        public List<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = new List<MatchQuestionAnswerModel>();
+        public List<MatchQuestionAnswerModel> MatchQuestionAnswers { get; set; } = [];
         public QuestionProvider MatchQuestions { get; set; } = new();
 
         [DisplayName("Number of Questions")]
