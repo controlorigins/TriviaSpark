@@ -2,8 +2,8 @@
 using HttpClientDecorator.Models;
 using Microsoft.Extensions.Logging;
 using TriviaSpark.Core.Extensions;
-using TriviaSpark.Core.Interfaces;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
+using TriviaSpark.Core.Match.Services;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.OpenTriviaDb.Models;
 
@@ -49,9 +49,9 @@ namespace TriviaSpark.OpenTriviaDb.Services
             {
                 QuestionId = trivia.question.GetDeterministicHashCode().ToString(),
                 Category = trivia.category,
-                Difficulty = trivia.difficulty.ParseEnum<Core.Match.Difficulty>(),
+                Difficulty = trivia.difficulty.ParseEnum<Difficulty>(),
                 QuestionText = trivia.question,
-                Type = trivia.type.ParseEnum<Core.Match.QuestionType>(),
+                Type = trivia.type.ParseEnum<QuestionType>(),
                 Source = "OpenTriviaDb"
             };
             questionModel.AddAnswer(trivia.correct_answer, true);

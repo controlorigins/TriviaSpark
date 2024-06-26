@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 
 namespace TriviaSpark.Core.Questions
 {

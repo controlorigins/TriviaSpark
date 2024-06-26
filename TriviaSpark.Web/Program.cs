@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
-using TriviaSpark.Core.Interfaces;
+using TriviaSpark.Core.Match.Services;
 using TriviaSpark.OpenTriviaDb.Services;
 using TriviaSpark.Web.Areas.Identity.Data;
 using TriviaSpark.Web.Areas.Identity.Services;
@@ -55,7 +55,7 @@ try
     });
 
     builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
-    builder.Services.AddScoped<IMatchService, TriviaMatchService>();
+    builder.Services.AddScoped<TriviaSpark.Core.Match.Services.IMatchService, TriviaMatchService>();
 
     builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSparkWebContext>();
 

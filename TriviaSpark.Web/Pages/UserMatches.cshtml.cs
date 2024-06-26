@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TriviaSpark.Core.Match;
-using TriviaSpark.Web.Areas.Identity.Services;
+using TriviaSpark.Core.Match.Models;
 
 namespace TriviaSpark.Web.Pages;
 
@@ -10,11 +9,11 @@ namespace TriviaSpark.Web.Pages;
 public class UserMatchesModel : PageModel
 {
     private readonly ILogger<UserMatchesModel> _logger;
-    private readonly IMatchService _matchService;
+    private readonly Core.Match.Services.IMatchService _matchService;
 
     public UserMatchesModel(
         ILogger<UserMatchesModel> logger,
-        IMatchService MatchService)
+        Core.Match.Services.IMatchService MatchService)
     {
         _logger = logger;
         _matchService = MatchService;

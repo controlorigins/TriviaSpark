@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Match
+﻿namespace TriviaSpark.Core.Match.Models
 {
     public enum QuestionType
     {

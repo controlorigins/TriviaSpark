@@ -1,4 +1,4 @@
-﻿using TriviaSpark.Core.Match;
+﻿using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Core.Utility;
 
 namespace TriviaSpark.Core.Questions
@@ -83,7 +83,7 @@ namespace TriviaSpark.Core.Questions
         {
             var results = new Dictionary<string, HashSet<int>>();
 
-            if(!Items.Any(Items => Items.Answers is not null ))
+            if (!Items.Any(Items => Items.Answers is not null))
             {
                 return results;
             }

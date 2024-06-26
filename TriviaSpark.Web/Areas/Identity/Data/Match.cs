@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 
 namespace TriviaSpark.Web.Areas.Identity.Data
 {

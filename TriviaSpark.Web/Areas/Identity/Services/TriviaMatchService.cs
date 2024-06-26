@@ -1,14 +1,14 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TriviaSpark.Core.Interfaces;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
+using TriviaSpark.Core.Match.Services;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Services
 {
-    public class TriviaMatchService : BaseMatchService, IMatchService
+    public class TriviaMatchService : Core.Match.Services.BaseMatchService, Core.Match.Services.IMatchService
     {
         private readonly TriviaSparkWebContext _db;
         private readonly ILogger<TriviaMatchService> _logger;

@@ -7,7 +7,7 @@
 	<PropertyGroup>
 		<Deterministic>false</Deterministic>
 		<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
-		<AssemblyVersion>0.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(dd)).$([System.Convert]::ToUInt16($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds),2))))</AssemblyVersion>
+		<AssemblyVersion>8.$([System.DateTime]::UtcNow.ToString(yyMM)).$([System.DateTime]::UtcNow.ToString(dd)).$([System.Convert]::ToUInt16($([MSBuild]::Divide($([System.DateTime]::UtcNow.TimeOfDay.TotalSeconds),2))))</AssemblyVersion>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/controlorigins/TriviaSpark</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -15,22 +15,22 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="AspNetCore.HealthChecks.Sqlite" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+	  <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.3" />
-	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.3" />
+	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.6" />
+	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.6" />
 	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
 	  <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-	  <PackageReference Include="NLog" Version="5.2.8" />
-	  <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+	  <PackageReference Include="NLog" Version="5.3.2" />
+	  <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.11" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\HttpClientDecorator\HttpClientDecorator.csproj" />

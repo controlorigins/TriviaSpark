@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Core.Questions;
 using TriviaSpark.Web.Areas.Identity.Services;
 
@@ -11,10 +11,10 @@ namespace TriviaSpark.Web.Pages
 {
     [Authorize]
     [Route("/TriviaMatch/{id}")]
-    public class TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger) : PageModel
+    public class TriviaMatchModel(Core.Match.Services.IMatchService matchService, ILogger<TriviaMatchModel> logger) : PageModel
     {
         private readonly ILogger<TriviaMatchModel> _logger = logger;
-        private readonly IMatchService _matchService = matchService;
+        private readonly Core.Match.Services.IMatchService _matchService = matchService;
 
         public async Task OnGet(int? id = 0, CancellationToken ct = default)
         {

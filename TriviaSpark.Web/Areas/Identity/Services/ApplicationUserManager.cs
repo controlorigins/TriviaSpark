@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Web.Areas.Identity.Data;
 
 namespace TriviaSpark.Web.Areas.Identity.Services;

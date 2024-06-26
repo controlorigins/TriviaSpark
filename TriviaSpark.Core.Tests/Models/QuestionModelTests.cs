@@ -1,4 +1,5 @@
-﻿using TriviaSpark.Core.Questions;
+﻿using TriviaSpark.Core.Match.Models;
+using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Core.Tests.Models
 {
@@ -16,8 +17,8 @@ namespace TriviaSpark.Core.Tests.Models
                 QuestionId = "Q001",
                 QuestionText = "What is the capital of France?",
                 Category = "Geography",
-                Difficulty = Core.Match.Difficulty.Easy,
-                Type = Core.Match.QuestionType.Multiple,
+                Difficulty = Difficulty.Easy,
+                Type = QuestionType.Multiple,
                 Answers = new List<QuestionAnswerModel>()
             {
                 new QuestionAnswerModel()

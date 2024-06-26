@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Match
+﻿namespace TriviaSpark.Core.Match.Models
 {
     /// <summary>
     /// Model representing the match between a question and its answer.

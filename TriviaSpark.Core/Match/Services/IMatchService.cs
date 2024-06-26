@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Core.Questions;
 
-namespace TriviaSpark.Web.Areas.Identity.Services
+namespace TriviaSpark.Core.Match.Services
 {
     public interface IMatchService
     {

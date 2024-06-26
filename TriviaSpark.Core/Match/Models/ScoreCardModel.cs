@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Match
+﻿namespace TriviaSpark.Core.Match.Models
 {
     /// <summary>
     /// Represents a scorecard for a quiz or trivia game.
@@ -36,7 +36,7 @@
         {
             get
             {
-                return Math.Round((double)QuestionsAttempted / (double)QuestionCount, 2);
+                return Math.Round(QuestionsAttempted / (double)QuestionCount, 2);
             }
         }
     }

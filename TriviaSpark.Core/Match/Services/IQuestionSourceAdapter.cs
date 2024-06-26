@@ -1,7 +1,7 @@
-﻿using TriviaSpark.Core.Match;
+﻿using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Core.Questions;
 
-namespace TriviaSpark.Core.Interfaces
+namespace TriviaSpark.Core.Match.Services
 {
     public interface IQuestionSourceAdapter
     {

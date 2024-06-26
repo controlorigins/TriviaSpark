@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TriviaSpark.Core.Questions;
 
-namespace TriviaSpark.Core.Match
+namespace TriviaSpark.Core.Match.Models
 {
     public class MatchModel : IComparable<MatchModel>, IEquatable<MatchModel>
     {
@@ -16,7 +16,7 @@ namespace TriviaSpark.Core.Match
         {
             if (ReferenceEquals(a, b)) return true;
 
-            if ((a is null) || (b is null)) return false;
+            if (a is null || b is null) return false;
 
             return a.MatchId == b.MatchId;
         }

@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Web.Areas.Identity.Services;
 
 namespace TriviaSpark.Web.Areas.Admin.Pages.Matches
 {
     public class EditModel : PageModel
     {
-        private readonly IMatchService _matchService;
+        private readonly Core.Match.Services.IMatchService _matchService;
 
-        public EditModel(IMatchService matchService)
+        public EditModel(Core.Match.Services.IMatchService matchService)
         {
             _matchService = matchService;
         }

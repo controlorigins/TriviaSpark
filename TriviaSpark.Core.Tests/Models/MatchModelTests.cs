@@ -1,4 +1,5 @@
 ﻿using TriviaSpark.Core.Match;
+using TriviaSpark.Core.Match.Models;
 using TriviaSpark.Core.Questions;
 
 namespace TriviaSpark.Core.Tests.Models
