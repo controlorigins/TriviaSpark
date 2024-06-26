@@ -19,7 +19,7 @@ public class ForgotPasswordModel : PageModel
     public ForgotPasswordModel(UserManager<Core.Match.Entities.TriviaSparkWebUser> userManager)
     {
         _userManager = userManager;
-      //  _emailSender = emailSender;
+        //  _emailSender = emailSender;
     }
 
     /// <summary>

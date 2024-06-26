@@ -16,9 +16,9 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
         // GET: Admin/Questions
         public async Task<IActionResult> Index()
         {
-              return _context.Questions != null ? 
-                          View(await _context.Questions.ToListAsync()) :
-                          Problem("Entity set 'TriviaSparkWebContext.Questions'  is null.");
+            return _context.Questions != null ?
+                        View(await _context.Questions.ToListAsync()) :
+                        Problem("Entity set 'TriviaSparkWebContext.Questions'  is null.");
         }
 
         // GET: Admin/Questions/Details/5
@@ -144,14 +144,14 @@ namespace TriviaSpark.Web.Areas.Admin.Controllers
             {
                 _context.Questions.Remove(question);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool QuestionExists(string id)
         {
-          return (_context.Questions?.Any(e => e.QuestionId == id)).GetValueOrDefault();
+            return (_context.Questions?.Any(e => e.QuestionId == id)).GetValueOrDefault();
         }
     }
 }
