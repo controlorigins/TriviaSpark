@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using TriviaSpark.Core.Services;
-using TriviaSpark.OpenTriviaDb.Services;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -52,7 +51,7 @@ try
         return telemetryService;
     });
 
-    builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
+    builder.Services.AddScoped<IQuestionSourceAdapter, TriviaSpark.Core.OpenTriviaDb.OpenTriviaDbQuestionSource>();
     builder.Services.AddScoped<IMatchService, TriviaMatchService>();
 
     builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSpark.Core.Entities.TriviaSparkWebContext>();

@@ -4,12 +4,11 @@ using Microsoft.Extensions.Logging;
 using TriviaSpark.Core.Extensions;
 using TriviaSpark.Core.Models;
 using TriviaSpark.Core.Services;
-using TriviaSpark.OpenTriviaDb.Models;
 
-namespace TriviaSpark.OpenTriviaDb.Services;
+namespace TriviaSpark.Core.OpenTriviaDb;
 
 public class OpenTriviaDbQuestionSource(
-    ILogger<OpenTriviaDbQuestionSource> logger, 
+    ILogger<OpenTriviaDb.OpenTriviaDbQuestionSource> logger, 
     IHttpGetCallService httpGetCallService) : IQuestionSourceAdapter
 {
 
