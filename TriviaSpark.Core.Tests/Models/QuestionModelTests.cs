@@ -16,8 +16,8 @@ public class QuestionModelTests
             Category = "Geography",
             Difficulty = Core.Models.Difficulty.Easy,
             Type = Core.Models.QuestionType.Multiple,
-            Answers = new List<Core.Models.QuestionAnswerModel>()
-        {
+            Answers =
+        [
             new Core.Models.QuestionAnswerModel()
             {
                 AnswerText = "Paris",
@@ -54,7 +54,7 @@ public class QuestionModelTests
                 IsValid = true,
                 Value = 0
             }
-        }
+        ]
         };
     }
 

@@ -168,8 +168,8 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         return new Entities.Match()
         {
             UserId = "66eae7b7-c163-4913-8aaf-421a23f0d5d9",
-            MatchQuestions = new List<Entities.MatchQuestion>(),
-            MatchQuestionAnswers = new List<Entities.MatchQuestionAnswer>(),
+            MatchQuestions = [],
+            MatchQuestionAnswers = [],
             MatchName = "Trivia Match",
             Difficulty = Difficulty.Easy,
             QuestionType = QuestionType.Multiple,
@@ -184,8 +184,8 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
             .Include(i => i.User)
             .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
             .Include(i => i.MatchQuestionAnswers)
-            .AsSingleQuery()
             .AsNoTracking()
+            .AsSplitQuery()
             .FirstOrDefaultAsync(ct);
         return match ?? CreateMatch();
     }
@@ -196,8 +196,8 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
             .Include(i => i.User)
             .Include(i => i.MatchQuestionAnswers)
             .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
-            .AsSingleQuery()
             .AsNoTracking()
+            .AsSplitQuery()
             .ToListAsync(ct);
         return match.Select(s => Create(s)).ToList() ?? [];
     }
@@ -468,8 +468,8 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                 .Include(i => i.User)
                 .Include(i => i.MatchQuestions)
                 .Include(i => i.MatchQuestionAnswers)
-                .AsSingleQuery()
                 .AsNoTracking()
+                .AsSplitQuery()
                 .ToListAsync(ct);
 
             foreach (Entities.Match match in userMatches)
@@ -514,8 +514,8 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
     {
         return new Entities.Match()
         {
-            MatchQuestions = new List<Entities.MatchQuestion>(),
-            MatchQuestionAnswers = new List<Entities.MatchQuestionAnswer>(),
+            MatchQuestions = [],
+            MatchQuestionAnswers = [],
             MatchName = "UserMatch",
             UserId = currentUserId ?? string.Empty,
             MatchMode = newMatch.MatchMode,
@@ -546,6 +546,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                     .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                     .Include(i => i.MatchQuestionAnswers)
                     .AsNoTracking()
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(ct);
             }
             else
@@ -556,6 +557,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                     .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                     .Include(i => i.MatchQuestionAnswers)
                     .AsNoTracking()
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(ct);
             }
             if (match is not null) return Create(match);
@@ -571,6 +573,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                 .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                 .Include(i => i.MatchQuestionAnswers)
                 .AsNoTracking()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(cancellationToken: ct);
 
             return Create(match);
@@ -600,6 +603,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                 .Include(i => i.MatchQuestions).ThenInclude(i => i.Question).ThenInclude(i => i.Answers)
                 .Include(i => i.MatchQuestionAnswers)
                 .AsNoTracking()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(ct);
 
             if (match is not null) return Create(match);

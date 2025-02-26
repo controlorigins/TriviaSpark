@@ -13,52 +13,52 @@ public class QuestionProviderTests
             {
                 QuestionId = "Q1",
                 QuestionText = "What is the capital of France?",
-                Answers = new List<Core.Models.QuestionAnswerModel>
-                {
+                Answers =
+                [
                     new Core.Models.QuestionAnswerModel {QuestionId="Q1", AnswerId = 1, AnswerText = "Paris", IsCorrect = true },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q1", AnswerId = 2, AnswerText = "London", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q1", AnswerId = 3, AnswerText = "Rome", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q1", AnswerId = 4, AnswerText = "Berlin", IsCorrect = false }
-                }
+                ]
             });
         myMatch.MatchQuestions.Add(
             new Core.Models.QuestionModel
             {
                 QuestionId = "Q2",
                 QuestionText = "What is the capital of the United Kingdom?",
-                Answers = new List<Core.Models.QuestionAnswerModel>
-                {
+                Answers =
+                [
                     new Core.Models.QuestionAnswerModel {QuestionId="Q2", AnswerId = 5, AnswerText = "London", IsCorrect = true },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q2", AnswerId = 6, AnswerText = "Paris", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q2", AnswerId = 7, AnswerText = "Rome", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q2", AnswerId = 8, AnswerText = "Berlin", IsCorrect = false }
-                }
+                ]
             });
         myMatch.MatchQuestions.Add(
             new Core.Models.QuestionModel
             {
                 QuestionId = "Q3",
                 QuestionText = "What is the capital of Italy?",
-                Answers = new List<Core.Models.QuestionAnswerModel>
-                {
+                Answers =
+                [
                     new Core.Models.QuestionAnswerModel {QuestionId="Q3", AnswerId = 9, AnswerText = "Rome", IsCorrect = true },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q3", AnswerId = 10, AnswerText = "London", IsCorrect = false},
                     new Core.Models.QuestionAnswerModel {QuestionId="Q3", AnswerId = 11, AnswerText = "Paris", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q3", AnswerId = 12, AnswerText = "Berlin", IsCorrect = false }
-                }
+                ]
             });
         myMatch.MatchQuestions.Add(
             new Core.Models.QuestionModel
             {
                 QuestionId = "Q4",
                 QuestionText = "What is the capital of Germany?",
-                Answers = new List<Core.Models.QuestionAnswerModel>
-                {
+                Answers =
+                [
                     new Core.Models.QuestionAnswerModel {QuestionId="Q4", AnswerId = 13, AnswerText = "Berlin", IsCorrect = true },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q4", AnswerId = 14, AnswerText = "Rome", IsCorrect = false },
                     new Core.Models.QuestionAnswerModel {QuestionId="Q4", AnswerId = 15, AnswerText = "London", IsCorrect = false},
                     new Core.Models.QuestionAnswerModel {QuestionId="Q4", AnswerId = 16, AnswerText = "Paris", IsCorrect = false }
-                }
+                ]
             });
 
     }
