@@ -1,4 +1,4 @@
-﻿using HttpClientDecorator.Interfaces;
+using HttpClientDecorator.Interfaces;
 using HttpClientDecorator.Models;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -58,7 +58,7 @@ public class HttpGetCallService : IHttpGetCallService
                 catch (Exception ex)
                 {
                     getCallResults.ErrorMessage = $"HttpGetCallService:GetAsync:DeserializeException:{ex.Message}";
-                    _logger.LogCritical("HttpGetCallService:GetAsync:DeserializeException", ex.Message);
+                    _logger.LogCritical(ex, "HttpGetCallService:GetAsync:DeserializeException: {ErrorMessage}", ex.Message);
                     return getCallResults;
                 }
             }
@@ -67,7 +67,7 @@ public class HttpGetCallService : IHttpGetCallService
                 getCallResults.ErrorMessage = $"HttpGetCallService:GetAsync:Exception:{ex.Message}";
                 if (++retryCount >= maxRetries)
                 {
-                    _logger.LogCritical("HttpGetCallService:GetAsync:Exception", new { retryCount, ex.Message });
+                    _logger.LogCritical(ex, "HttpGetCallService:GetAsync:Exception after {RetryCount} retries: {ErrorMessage}", retryCount, ex.Message);
                     return getCallResults;
                 }
             }

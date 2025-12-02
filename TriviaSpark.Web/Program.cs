@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using TriviaSpark.Core.Entities;
+using TriviaSpark.Core.OpenTriviaDb;
 using TriviaSpark.Core.Services;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -14,10 +16,10 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     var ConnectionString = "Data Source=" + AppDomain.CurrentDomain.GetData("DataDirectory") + "TriviaSpark.Web.db";
-    builder.Services.AddDbContext<TriviaSpark.Core.Entities.TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
+    builder.Services.AddDbContext<TriviaSparkWebContext>(options => options.UseSqlite(ConnectionString));
     builder.Services
-        .AddIdentity<TriviaSpark.Core.Entities.TriviaSparkWebUser, IdentityRole>()
-        .AddEntityFrameworkStores<TriviaSpark.Core.Entities.TriviaSparkWebContext>()
+        .AddIdentity<TriviaSparkWebUser, IdentityRole>()
+        .AddEntityFrameworkStores<TriviaSparkWebContext>()
         .AddUserManager<ApplicationUserManager>()
         .AddDefaultTokenProviders()
         .AddDefaultUI();
@@ -34,7 +36,6 @@ try
     builder.Services.AddHttpClient("TriviaSpark", client =>
     {
         client.Timeout = TimeSpan.FromMilliseconds(1500);
-
         client.DefaultRequestHeaders.Add("Accept", "application/json");
         client.DefaultRequestHeaders.Add("User-Agent", "TriviaSpark");
         client.DefaultRequestHeaders.Add("X-Request-QuestionId", Guid.NewGuid().ToString());
@@ -51,10 +52,10 @@ try
         return telemetryService;
     });
 
-    builder.Services.AddScoped<IQuestionSourceAdapter, TriviaSpark.Core.OpenTriviaDb.OpenTriviaDbQuestionSource>();
+    builder.Services.AddScoped<IQuestionSourceAdapter, OpenTriviaDbQuestionSource>();
     builder.Services.AddScoped<IMatchService, TriviaMatchService>();
 
-    builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSpark.Core.Entities.TriviaSparkWebContext>();
+    builder.Services.AddHealthChecks().AddDbContextCheck<TriviaSparkWebContext>();
 
     // NLog: Setup NLog for Dependency injection
     builder.Logging.ClearProviders();
@@ -79,17 +80,14 @@ try
     app.UseAuthorization();
     app.UseCookiePolicy();
     app.UseSession();
+    
+    // Top-level route registrations (ASP0014 fix)
+    app.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
     app.MapRazorPages();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllerRoute(
-          name: "areas",
-          pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-        );
-        endpoints.MapRazorPages();
-        endpoints.MapHealthChecks("/health");
-    });
+    app.MapHealthChecks("/health");
+    
     app.Run();
 
 }

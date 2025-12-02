@@ -1,17 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TriviaSpark.Core.Models;
 
 public class QuestionModel : IComparable<Models.QuestionModel>, IQuestionModel, IEquatable<Models.QuestionModel>
 {
+    [SetsRequiredMembers]
+    public QuestionModel()
+    {
+        QuestionId = string.Empty;
+        QuestionText = string.Empty;
+        Category = string.Empty;
+        Source = string.Empty;
+        Answers = new List<QuestionAnswerModel>();
+    }
 
-    public static bool operator !=(Models.QuestionModel a, Models.QuestionModel b)
+    public static bool operator !=(Models.QuestionModel? a, Models.QuestionModel? b)
     {
         return !(a == b);
     }
 
-    public static bool operator ==(Models.QuestionModel a, Models.QuestionModel b)
+    public static bool operator ==(Models.QuestionModel? a, Models.QuestionModel? b)
     {
         if (ReferenceEquals(a, b)) return true;
 
@@ -43,7 +53,7 @@ public class QuestionModel : IComparable<Models.QuestionModel>, IQuestionModel, 
         }
         return string.Compare(QuestionId, other.QuestionId, StringComparison.Ordinal);
     }
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || !(obj is Models.QuestionModel))
         {
@@ -65,11 +75,11 @@ public class QuestionModel : IComparable<Models.QuestionModel>, IQuestionModel, 
         return QuestionId == other.QuestionId;
     }
 
-    public ICollection<QuestionAnswerModel> Answers { get; set; }
-    public string Category { get; set; }
+    public required ICollection<QuestionAnswerModel> Answers { get; set; }
+    public required string Category { get; set; }
 
     [NotMapped]
-    public string CorrectAnswer
+    public string? CorrectAnswer
     {
         get
         {
@@ -91,10 +101,10 @@ public class QuestionModel : IComparable<Models.QuestionModel>, IQuestionModel, 
         }
     }
     [Key]
-    public string QuestionId { get; set; }
-    public string QuestionText { get; set; }
+    public required string QuestionId { get; set; }
+    public required string QuestionText { get; set; }
 
-    public string Source { get; set; }
+    public required string Source { get; set; }
     public QuestionType Type { get; set; }
 }
 

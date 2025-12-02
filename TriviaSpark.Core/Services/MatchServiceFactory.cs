@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Services;
+namespace TriviaSpark.Core.Services;
 
 public class MatchServiceFactory(
     Dictionary<Models.MatchMode,
@@ -6,7 +6,7 @@ public class MatchServiceFactory(
 {
     public Services.IMatchService CreateMatchService(Models.MatchMode mode)
     {
-        if (serviceFactories.TryGetValue(mode, out Func<Services.IMatchService> serviceFactory))
+        if (serviceFactories.TryGetValue(mode, out Func<Services.IMatchService>? serviceFactory) && serviceFactory != null)
         {
             return serviceFactory();
         }

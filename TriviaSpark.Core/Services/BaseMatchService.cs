@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace TriviaSpark.Core.Services;
 
@@ -57,7 +57,6 @@ public abstract class BaseMatchService(Models.MatchModel _match) : IMatchService
         {
             case Models.MatchMode.OneAndDone:
                 return match.MatchQuestions.GetAttemptedQuestions(match.MatchQuestionAnswers).Count == match.MatchQuestions.Count;
-                break;
             default:
                 var result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);
                 if (result.Count == 0) result = match.MatchQuestions.GetIncorrectQuestions(match.MatchQuestionAnswers);

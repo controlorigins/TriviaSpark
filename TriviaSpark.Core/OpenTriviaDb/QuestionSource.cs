@@ -8,7 +8,7 @@ using TriviaSpark.Core.Services;
 namespace TriviaSpark.Core.OpenTriviaDb;
 
 public class OpenTriviaDbQuestionSource(
-    ILogger<OpenTriviaDb.OpenTriviaDbQuestionSource> logger, 
+    ILogger<OpenTriviaDbQuestionSource> logger, 
     IHttpGetCallService httpGetCallService) : IQuestionSourceAdapter
 {
 

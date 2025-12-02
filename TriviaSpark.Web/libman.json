@@ -19,12 +19,12 @@
     },
     {
       "destination": "wwwroot/lib/datatables",
-      "library": "datatables.net@2.1.1",
+      "library": "datatables.net@2.1.6",
       "files": ["jquery.dataTables.min.js"]
     },
     {
       "destination": "wwwroot/lib/datatables.net-bs/",
-      "library": "datatables.net-bs5@2.0.8",
+      "library": "datatables.net-bs5@2.1.6",
       "files": ["dataTables.bootstrap5.min.css","dataTables.bootstrap5.min.js"]
     },
     {

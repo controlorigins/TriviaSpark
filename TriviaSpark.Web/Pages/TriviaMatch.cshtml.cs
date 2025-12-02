@@ -8,7 +8,7 @@ using TriviaSpark.Core.Services;
 namespace TriviaSpark.Web.Pages;
 
 [Authorize]
-[Route("/TriviaMatch/{id}")]
+// Route removed - use @page directive in .cshtml file instead (MVC1003 fix)
 public class TriviaMatchModel(IMatchService matchService, ILogger<TriviaMatchModel> logger) : PageModel
 {
     private readonly ILogger<TriviaMatchModel> _logger = logger;
