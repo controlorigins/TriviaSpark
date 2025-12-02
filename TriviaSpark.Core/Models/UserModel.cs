@@ -1,8 +1,17 @@
-﻿namespace TriviaSpark.Core.Models;
+using System.Diagnostics.CodeAnalysis;
+
+namespace TriviaSpark.Core.Models;
 
 public class UserModel
 {
-    public string UserId { get; set; }
+    [SetsRequiredMembers]
+    public UserModel()
+    {
+        UserId = string.Empty;
+        UserRoles = [];
+    }
+
+    public required string UserId { get; set; }
     public string? UserName { get; set; }
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }

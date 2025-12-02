@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable all nullable reference types features -->
+    <Nullable>enable</Nullable>
+    
+    <!-- Treat warnings as errors in Release builds (optional - commented out for now) -->
+    <!-- <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors> -->
+    
+    <!-- Enable latest C# language version -->
+    <LangVersion>latest</LangVersion>
+    
+    <!-- Enable deterministic builds for better reproducibility -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    
+    <!-- Code analysis settings -->
+    <AnalysisMode>Default</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    
+    <!-- Suppress specific warnings that are being addressed -->
+    <!-- Uncomment below to suppress warnings during transition period -->
+    <!--
+    <NoWarn>$(NoWarn);NU1510</NoWarn>
+    -->
+  </PropertyGroup>
+</Project>

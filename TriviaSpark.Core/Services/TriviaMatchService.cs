@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
@@ -19,7 +19,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
             [
                 new Entities.QuestionAnswer()
                 {
-                    AnswerText = question.CorrectAnswer,
+                    AnswerText = question.CorrectAnswer ?? string.Empty,
                     IsCorrect = true,
                     IsValid = true,
                     ErrorMessage = string.Empty,
@@ -48,7 +48,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogError("CreateQuestionFromTriviaQuestion:Exception", ex);
+            logger.LogError(ex, "CreateQuestionFromTriviaQuestion:Exception: {ErrorMessage}", ex.Message);
 
         }
         return results;
@@ -123,7 +123,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogError("CreateMatchModelFromMatch:Exception", ex);
+            logger.LogError(ex, "CreateMatchModelFromMatch:Exception: {ErrorMessage}", ex.Message);
         }
         return match;
     }
@@ -199,7 +199,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync(ct);
-        return match.Select(s => Create(s)).ToList() ?? [];
+        return match.Select(s => Create(s)).OfType<MatchModel>().ToList();
     }
     public override async Task<int> DeleteUserMatchAsync(ClaimsPrincipal user, int? id, CancellationToken ct)
     {
@@ -270,7 +270,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical(ex, "SetMatchAnswer Exception");
+            logger.LogCritical(ex, "SetMatchAnswer Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -291,7 +291,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogError("AddAnswerAsync:Exception", ex);
+            logger.LogError(ex, "AddAnswerAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -315,7 +315,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogError("AddAnswerAsync:Exception", ex);
+            logger.LogError(ex, "GetUsersAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -354,11 +354,17 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
                 }
             }
             await triviaSparkWebContext.SaveChangesAsync(ct);
-            return Create(await GetMatchAsync(MatchId, ct));
+            var matchEntity = await GetMatchAsync(MatchId, ct);
+            // GetMatchAsync always returns a non-null entity (creates default if not found)
+            // Suppress warnings as we know matchEntity is non-null and Create should return non-null for valid matches
+#pragma warning disable CS8602, CS8603
+            var result = Create(matchEntity);
+            return result;
+#pragma warning restore CS8602, CS8603
         }
         catch (Exception ex)
         {
-            logger.LogCritical("GetMoreQuestionsAsync:Exception", ex);
+            logger.LogCritical(ex, "GetMoreQuestionsAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -386,7 +392,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical("UpdateMatchAsync:Exception", ex);
+            logger.LogCritical(ex, "UpdateMatchAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -399,7 +405,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
     }
 
 
-    public QuestionModel? GetNextQuestion(MatchModel match)
+    public override QuestionModel? GetNextQuestion(MatchModel match)
     {
         try
         {
@@ -438,7 +444,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical("GetNextQuestion:Exception", ex);
+            logger.LogCritical(ex, "GetNextQuestion:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -482,7 +488,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical("GetUserMatchesAsync:Exception", ex);
+            logger.LogCritical(ex, "GetUserMatchesAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -505,9 +511,9 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         triviaSparkWebContext.Matches.Add(match);
         await triviaSparkWebContext.SaveChangesAsync(ct);
 
-        newMatch = await GetMoreQuestionsAsync(match.MatchId, newMatch.NumberOfQuestions, newMatch.Difficulty, ct);
+        var updatedMatch = await GetMoreQuestionsAsync(match.MatchId, newMatch.NumberOfQuestions, newMatch.Difficulty, ct);
 
-        return newMatch;
+        return updatedMatch ?? newMatch;
     }
 
     private Entities.Match Create(MatchModel newMatch, string? currentUserId)
@@ -580,7 +586,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical("GetUserMatchAsync:Exception", ex);
+            logger.LogCritical(ex, "GetUserMatchAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {
@@ -612,7 +618,7 @@ Entities.TriviaSparkWebContext triviaSparkWebContext) : BaseMatchService(new Mat
         }
         catch (Exception ex)
         {
-            logger.LogCritical("GetUserMatchAsync:Exception", ex);
+            logger.LogCritical(ex, "GetMatchAsync:Exception: {ErrorMessage}", ex.Message);
         }
         finally
         {

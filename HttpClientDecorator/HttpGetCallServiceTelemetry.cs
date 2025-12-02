@@ -1,4 +1,4 @@
-﻿using HttpClientDecorator.Interfaces;
+using HttpClientDecorator.Interfaces;
 using HttpClientDecorator.Models;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -43,7 +43,7 @@ public class HttpGetCallServiceTelemetry : IHttpGetCallService
         catch (Exception ex)
         {
             response.ErrorMessage = $"Telemetry:GetAsync:Exception:{ex.Message}";
-            _logger.LogCritical("Telemetry:GetAsync:Exception", ex.Message);
+            _logger.LogCritical(ex, "Telemetry:GetAsync:Exception: {ErrorMessage}", ex.Message);
         }
         sw.Stop();
         response.ElapsedMilliseconds = sw.ElapsedMilliseconds;

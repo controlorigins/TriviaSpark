@@ -80,17 +80,14 @@ try
     app.UseAuthorization();
     app.UseCookiePolicy();
     app.UseSession();
+    
+    // Top-level route registrations (ASP0014 fix)
+    app.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
     app.MapRazorPages();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllerRoute(
-          name: "areas",
-          pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-        );
-        endpoints.MapRazorPages();
-        endpoints.MapHealthChecks("/health");
-    });
+    app.MapHealthChecks("/health");
+    
     app.Run();
 
 }

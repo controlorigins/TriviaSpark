@@ -1,4 +1,4 @@
-﻿namespace TriviaSpark.Core.Models;
+namespace TriviaSpark.Core.Models;
 
 public interface IQuestionModel
 {
@@ -8,7 +8,7 @@ public interface IQuestionModel
 
     ICollection<Models.QuestionAnswerModel> Answers { get; set; }
     string Category { get; set; }
-    string CorrectAnswer { get; }
+    string? CorrectAnswer { get; }
     Models.Difficulty Difficulty { get; set; }
     List<string> IncorrectAnswers { get; }
     string QuestionId { get; set; }
